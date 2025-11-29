@@ -3,7 +3,7 @@
 import pytest
 import asyncio
 from unittest.mock import MagicMock, AsyncMock, patch
-from datetime import datetime
+from datetime import datetime, timezone
 from src.logic.crawler.core.batch import BatchCrawler
 from src.logic.crawler.models.batch import BatchOperation
 from src.models.project_status import ProjectStatus
@@ -278,7 +278,7 @@ class TestBatchCrawler:
 
         # With operation
         crawler.operation = BatchOperation(projects=["p1", "p2"])
-        crawler.operation.estimated_completion = datetime.utcnow()
+        crawler.operation.estimated_completion = datetime.now(timezone.utc)
 
         assert crawler.get_estimated_completion() is not None
 

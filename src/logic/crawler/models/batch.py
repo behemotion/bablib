@@ -15,7 +15,7 @@ class BatchOperation(BaseModel):
     current_index: int = Field(default=0, ge=0)
     completed: list[str] = Field(default_factory=list)
     failed: list[tuple[str, str]] = Field(default_factory=list)  # (project, error)
-    start_time: datetime = Field(default_factory=datetime.utcnow)
+    start_time: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     end_time: datetime | None = None
     estimated_completion: datetime | None = None
     continue_on_error: bool = Field(default=True)

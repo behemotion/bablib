@@ -172,13 +172,20 @@ class TestBoxModel:
         box2 = Box(name="my-box2", type=BoxType.RAG, url="   ")
         assert box2.url is None
 
-    def test_drag_box_requires_url(self):
-        """Test that drag boxes require a URL."""
-        with pytest.raises(BoxValidationError, match="Drag boxes require a URL"):
-            Box(name="crawler", type=BoxType.DRAG)
+    def test_drag_box_without_url_allowed(self):
+        """Test that drag boxes can be created without URL.
 
-        with pytest.raises(BoxValidationError, match="Drag boxes require a URL"):
-            Box(name="crawler", type=BoxType.DRAG, url="")
+        URL requirement is enforced at fill/crawl operation level, not at
+        box creation level. This allows the Shelf-Box Rhyme System pattern:
+        create empty box → fill later with content.
+        """
+        # Creating drag box without URL is allowed
+        box = Box(name="crawler", type=BoxType.DRAG)
+        assert box.url is None
+
+        # Empty string URL becomes None
+        box2 = Box(name="crawler2", type=BoxType.DRAG, url="")
+        assert box2.url is None
 
     def test_non_drag_box_no_url_requirement(self):
         """Test that non-drag boxes don't require URLs."""
