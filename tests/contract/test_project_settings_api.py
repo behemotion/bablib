@@ -71,7 +71,7 @@ class TestProjectSettingsAPI:
         """Test project settings persistence."""
         project_dir = tmp_path / "test_project"
         project_dir.mkdir()
-        settings_file = project_dir / ".docbro" / "settings.yaml"
+        settings_file = project_dir / ".bablib" / "settings.yaml"
 
         service = SettingsService()
 

@@ -1,4 +1,4 @@
-"""QdrantContainerService with "docbro-memory-qdrant" naming enforcement."""
+"""QdrantContainerService with "bablib-memory-qdrant" naming enforcement."""
 import asyncio
 from typing import Any
 
@@ -15,11 +15,11 @@ class QdrantContainerService:
     def __init__(self, docker_manager: DockerServiceManager | None = None):
         """Initialize Qdrant container service."""
         self.docker_manager = docker_manager or DockerServiceManager()
-        self.standard_name = "docbro-memory-qdrant"
+        self.standard_name = "bablib-memory-qdrant"
         self.image = "qdrant/qdrant:v1.12.1"  # Stable version
         self.default_port = 6333
         self.grpc_port = 6334
-        self.volume_name = "docbro-qdrant-data"
+        self.volume_name = "bablib-qdrant-data"
 
     async def install_qdrant(
         self,
@@ -27,9 +27,9 @@ class QdrantContainerService:
         custom_port: int | None = None,
         data_dir: str | None = None
     ) -> dict[str, Any]:
-        """Install Qdrant with DocBro standard naming."""
+        """Install Qdrant with Bablib standard naming."""
         try:
-            logger.info("Starting Qdrant installation with DocBro standards")
+            logger.info("Starting Qdrant installation with Bablib standards")
 
             # Check for existing containers
             existing_containers = await self._find_existing_qdrant_containers()
@@ -112,7 +112,7 @@ class QdrantContainerService:
     async def _find_existing_qdrant_containers(self) -> list[dict[str, Any]]:
         """Find existing Qdrant containers."""
         try:
-            all_containers = await self.docker_manager.list_docbro_containers()
+            all_containers = await self.docker_manager.list_bablib_containers()
             qdrant_containers = []
 
             for container in all_containers:

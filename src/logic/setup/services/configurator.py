@@ -20,7 +20,7 @@ class SetupConfigurator:
             home_dir: Optional home directory for testing
         """
         self.home_dir = home_dir or Path.home()
-        self.config_dir = self.home_dir / ".config" / "docbro"
+        self.config_dir = self.home_dir / ".config" / "bablib"
         self.config_file = self.config_dir / "settings.yaml"
 
     def load_config(self) -> dict[str, Any]:

@@ -6,7 +6,7 @@ import re
 from datetime import datetime
 from typing import Any
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.core.lib_logger import get_component_logger
 from src.logic.rag.analytics.rag_metrics import RAGMetrics
 from src.logic.rag.analytics.quality_metrics import RAGQualityMetrics
@@ -35,7 +35,7 @@ class RAGSearchService:
         self,
         vector_store: VectorStoreService,
         embedding_service: EmbeddingService,
-        config: DocBroConfig | None = None,
+        config: BablibConfig | None = None,
         enable_metrics: bool = True,
     ):
         """Initialize enhanced RAG search service.
@@ -43,12 +43,12 @@ class RAGSearchService:
         Args:
             vector_store: Vector store service
             embedding_service: Embedding service
-            config: DocBro configuration
+            config: Bablib configuration
             enable_metrics: Enable performance and quality metrics tracking
         """
         self.vector_store = vector_store
         self.embedding_service = embedding_service
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.logger = get_component_logger("rag")
 
         # Initialize new services

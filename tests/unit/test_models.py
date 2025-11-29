@@ -32,11 +32,11 @@ class TestInstallationContext:
             version="1.0.0",
             python_version="3.13.1",
             uv_version="0.4.0",
-            install_path=Path("/usr/local/bin/docbro"),
+            install_path=Path("/usr/local/bin/bablib"),
             is_global=True,
-            user_data_dir=Path.home() / ".local" / "share" / "docbro",
-            config_dir=Path.home() / ".config" / "docbro",
-            cache_dir=Path.home() / ".cache" / "docbro"
+            user_data_dir=Path.home() / ".local" / "share" / "bablib",
+            config_dir=Path.home() / ".config" / "bablib",
+            cache_dir=Path.home() / ".cache" / "bablib"
         )
 
         assert context.install_method == "uvx"
@@ -55,11 +55,11 @@ class TestInstallationContext:
                 install_date=datetime.now(),
                 version="1.0.0",
                 python_version="3.13.1",
-                install_path=Path("/usr/local/bin/docbro"),
+                install_path=Path("/usr/local/bin/bablib"),
                 is_global=True,
-                user_data_dir=Path.home() / ".local" / "share" / "docbro",
-                config_dir=Path.home() / ".config" / "docbro",
-                cache_dir=Path.home() / ".cache" / "docbro"
+                user_data_dir=Path.home() / ".local" / "share" / "bablib",
+                config_dir=Path.home() / ".config" / "bablib",
+                cache_dir=Path.home() / ".cache" / "bablib"
             )
             assert context.install_method == method
 
@@ -70,11 +70,11 @@ class TestInstallationContext:
                 install_date=datetime.now(),
                 version="1.0.0",
                 python_version="3.13.1",
-                install_path=Path("/usr/local/bin/docbro"),
+                install_path=Path("/usr/local/bin/bablib"),
                 is_global=True,
-                user_data_dir=Path.home() / ".local" / "share" / "docbro",
-                config_dir=Path.home() / ".config" / "docbro",
-                cache_dir=Path.home() / ".cache" / "docbro"
+                user_data_dir=Path.home() / ".local" / "share" / "bablib",
+                config_dir=Path.home() / ".config" / "bablib",
+                cache_dir=Path.home() / ".cache" / "bablib"
             )
         assert "install_method must be one of" in str(exc_info.value)
 
@@ -88,11 +88,11 @@ class TestInstallationContext:
                 install_date=datetime.now(),
                 version=version,
                 python_version="3.13.1",
-                install_path=Path("/usr/local/bin/docbro"),
+                install_path=Path("/usr/local/bin/bablib"),
                 is_global=True,
-                user_data_dir=Path.home() / ".local" / "share" / "docbro",
-                config_dir=Path.home() / ".config" / "docbro",
-                cache_dir=Path.home() / ".cache" / "docbro"
+                user_data_dir=Path.home() / ".local" / "share" / "bablib",
+                config_dir=Path.home() / ".config" / "bablib",
+                cache_dir=Path.home() / ".cache" / "bablib"
             )
             assert context.version == version
 
@@ -105,11 +105,11 @@ class TestInstallationContext:
                     install_date=datetime.now(),
                     version=version,
                     python_version="3.13.1",
-                    install_path=Path("/usr/local/bin/docbro"),
+                    install_path=Path("/usr/local/bin/bablib"),
                     is_global=True,
-                    user_data_dir=Path.home() / ".local" / "share" / "docbro",
-                    config_dir=Path.home() / ".config" / "docbro",
-                    cache_dir=Path.home() / ".cache" / "docbro"
+                    user_data_dir=Path.home() / ".local" / "share" / "bablib",
+                    config_dir=Path.home() / ".config" / "bablib",
+                    cache_dir=Path.home() / ".cache" / "bablib"
                 )
 
     def test_python_version_validation(self):
@@ -122,11 +122,11 @@ class TestInstallationContext:
                 install_date=datetime.now(),
                 version="1.0.0",
                 python_version=py_version,
-                install_path=Path("/usr/local/bin/docbro"),
+                install_path=Path("/usr/local/bin/bablib"),
                 is_global=True,
-                user_data_dir=Path.home() / ".local" / "share" / "docbro",
-                config_dir=Path.home() / ".config" / "docbro",
-                cache_dir=Path.home() / ".cache" / "docbro"
+                user_data_dir=Path.home() / ".local" / "share" / "bablib",
+                config_dir=Path.home() / ".config" / "bablib",
+                cache_dir=Path.home() / ".cache" / "bablib"
             )
             assert context.python_version == py_version
 
@@ -139,11 +139,11 @@ class TestInstallationContext:
                     install_date=datetime.now(),
                     version="1.0.0",
                     python_version=py_version,
-                    install_path=Path("/usr/local/bin/docbro"),
+                    install_path=Path("/usr/local/bin/bablib"),
                     is_global=True,
-                    user_data_dir=Path.home() / ".local" / "share" / "docbro",
-                    config_dir=Path.home() / ".config" / "docbro",
-                    cache_dir=Path.home() / ".cache" / "docbro"
+                    user_data_dir=Path.home() / ".local" / "share" / "bablib",
+                    config_dir=Path.home() / ".config" / "bablib",
+                    cache_dir=Path.home() / ".cache" / "bablib"
                 )
 
     def test_path_validation(self):
@@ -154,7 +154,7 @@ class TestInstallationContext:
             install_date=datetime.now(),
             version="1.0.0",
             python_version="3.13.1",
-            install_path=Path("/usr/local/bin/docbro").absolute(),
+            install_path=Path("/usr/local/bin/bablib").absolute(),
             is_global=True,
             user_data_dir=Path.home().absolute() / "data",
             config_dir=Path.home().absolute() / "config",
@@ -174,11 +174,11 @@ class TestInstallationContext:
             version="1.0.0",
             python_version="3.13.1",
             uv_version="0.4.0",
-            install_path=Path("/usr/local/bin/docbro"),
+            install_path=Path("/usr/local/bin/bablib"),
             is_global=True,
-            user_data_dir=Path.home() / ".local" / "share" / "docbro",
-            config_dir=Path.home() / ".config" / "docbro",
-            cache_dir=Path.home() / ".cache" / "docbro"
+            user_data_dir=Path.home() / ".local" / "share" / "bablib",
+            config_dir=Path.home() / ".config" / "bablib",
+            cache_dir=Path.home() / ".cache" / "bablib"
         )
 
         # Serialize to JSON
@@ -201,11 +201,11 @@ class TestInstallationContext:
             version="1.0.0",
             python_version="3.13.1",
             uv_version=None,
-            install_path=Path("/usr/local/bin/docbro"),
+            install_path=Path("/usr/local/bin/bablib"),
             is_global=True,
-            user_data_dir=Path.home() / ".local" / "share" / "docbro",
-            config_dir=Path.home() / ".config" / "docbro",
-            cache_dir=Path.home() / ".cache" / "docbro"
+            user_data_dir=Path.home() / ".local" / "share" / "bablib",
+            config_dir=Path.home() / ".config" / "bablib",
+            cache_dir=Path.home() / ".cache" / "bablib"
         )
 
         assert context.uv_version is None
@@ -401,33 +401,33 @@ class TestPackageMetadata:
     def test_valid_package_metadata_creation(self):
         """Test creating a valid PackageMetadata instance."""
         metadata = PackageMetadata(
-            name="docbro",
+            name="bablib",
             version="1.0.0",
             description="Documentation crawler and search tool",
             homepage="https://github.com/behemotion/doc-bro",
             repository_url="https://github.com/behemotion/doc-bro.git",
-            entry_points={"console_scripts": "docbro = src.cli.main:main"},
+            entry_points={"console_scripts": "bablib = src.cli.main:main"},
             dependencies=["pydantic>=2.0", "click>=8.0"],
             python_requires=">=3.13",
             install_source="git+https://github.com/behemotion/doc-bro"
         )
 
-        assert metadata.name == "docbro"
+        assert metadata.name == "bablib"
         assert metadata.version == "1.0.0"
         assert metadata.homepage.startswith("https://")
 
     def test_package_name_validation(self):
-        """Test that package name must be 'docbro'."""
+        """Test that package name must be 'bablib'."""
         # Valid name
         metadata = PackageMetadata(
-            name="docbro",
+            name="bablib",
             version="1.0.0",
             description="Test",
             homepage="https://example.com",
             repository_url="https://example.com/repo",
             install_source="test"
         )
-        assert metadata.name == "docbro"
+        assert metadata.name == "bablib"
 
         # Invalid name
         with pytest.raises(ValidationError) as exc_info:
@@ -439,7 +439,7 @@ class TestPackageMetadata:
                 repository_url="https://example.com/repo",
                 install_source="test"
             )
-        assert "name must be 'docbro'" in str(exc_info.value)
+        assert "name must be 'bablib'" in str(exc_info.value)
 
     def test_version_validation(self):
         """Test that version must follow semantic versioning."""
@@ -504,7 +504,7 @@ class TestPackageMetadata:
             install_source="test"
         )
 
-        assert metadata.name == "docbro"  # default
+        assert metadata.name == "bablib"  # default
         assert metadata.entry_points == {}
         assert metadata.dependencies == []
         assert metadata.python_requires == ">=3.13"
@@ -765,7 +765,7 @@ class TestCriticalDecisionPoint:
             decision_id="install_location_001",
             decision_type="install_location",
             title="Choose Installation Location",
-            description="Select where to install DocBro",
+            description="Select where to install Bablib",
             options=[
                 {"id": "global", "label": "Global installation"},
                 {"id": "local", "label": "Local installation"}

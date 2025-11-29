@@ -1,10 +1,10 @@
 #!/bin/bash
-# Setup script for DocBro
+# Setup script for Bablib
 
 set -e
 
 echo "==================================="
-echo "     DocBro Setup Script"
+echo "     Bablib Setup Script"
 echo "==================================="
 echo
 
@@ -108,11 +108,11 @@ echo -e "${GREEN}✓ Data directories created${NC}"
 
 # Test installation
 echo
-echo "Testing DocBro installation..."
+echo "Testing Bablib installation..."
 if python3 -c "from src.cli.main import main; print('CLI OK')" &> /dev/null; then
-    echo -e "${GREEN}✓ DocBro CLI is working${NC}"
+    echo -e "${GREEN}✓ Bablib CLI is working${NC}"
 else
-    echo -e "${RED}✗ DocBro CLI test failed${NC}"
+    echo -e "${RED}✗ Bablib CLI test failed${NC}"
     exit 1
 fi
 
@@ -127,12 +127,12 @@ echo "1. Make sure Ollama is running: ollama serve"
 if [ "$DOCKER_AVAILABLE" = false ]; then
     echo "2. Install and start Docker for vector storage"
 fi
-echo "3. Create your first project: docbro create <name> --url <docs-url>"
-echo "4. Start crawling: docbro crawl <name>"
-echo "5. Search documentation: docbro search <query>"
+echo "3. Create your first project: bablib create <name> --url <docs-url>"
+echo "4. Start crawling: bablib crawl <name>"
+echo "5. Search documentation: bablib search <query>"
 echo
 echo "For MCP integration:"
-echo "  docbro serve --port 8000"
+echo "  bablib serve --port 8000"
 echo
-echo "View all commands: docbro --help"
+echo "View all commands: bablib --help"
 echo

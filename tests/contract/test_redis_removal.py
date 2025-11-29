@@ -38,16 +38,16 @@ class TestRedisRemoval:
 
     def test_redis_config_rejected(self):
         """Verify Redis configuration is rejected."""
-        from src.core.config import DocBroConfig
+        from src.core.config import BablibConfig
 
         # Test that Redis environment variables are rejected
-        os.environ["DOCBRO_REDIS_URL"] = "redis://localhost:6379"
+        os.environ["BABLIB_REDIS_URL"] = "redis://localhost:6379"
 
         with pytest.raises(ValueError, match="Redis configuration detected"):
-            config = DocBroConfig()
+            config = BablibConfig()
 
         # Clean up
-        del os.environ["DOCBRO_REDIS_URL"]
+        del os.environ["BABLIB_REDIS_URL"]
 
     def test_no_redis_in_docker_compose(self):
         """Verify Redis is not in Docker Compose configuration."""
@@ -60,9 +60,9 @@ class TestRedisRemoval:
         """Verify core services initialize without Redis."""
         from src.services.database import DatabaseManager
         from src.services.vector_store import VectorStoreService
-        from src.core.config import DocBroConfig
+        from src.core.config import BablibConfig
 
         # These should initialize without any Redis dependency
-        config = DocBroConfig()
+        config = BablibConfig()
         assert hasattr(config, 'qdrant_url'), "Qdrant config should exist"
         assert not hasattr(config, 'redis_url'), "Redis config should not exist"

@@ -85,8 +85,8 @@ class TestServerInfo:
 
     def test_create_server_info(self):
         """Test creating server info."""
-        info = ServerInfo(name="docbro", version="1.0.0")
-        assert info.name == "docbro"
+        info = ServerInfo(name="bablib", version="1.0.0")
+        assert info.name == "bablib"
         assert info.version == "1.0.0"
 
 
@@ -97,13 +97,13 @@ class TestInitializeResponse:
         """Test creating initialize response."""
         capabilities = ServerCapabilities.default_read_only()
         response = InitializeResponse.create(
-            server_name="docbro",
+            server_name="bablib",
             server_version="1.0.0",
             capabilities=capabilities,
         )
 
         assert response.protocol_version == "2024-11-05"
-        assert response.server_info.name == "docbro"
+        assert response.server_info.name == "bablib"
         assert response.server_info.version == "1.0.0"
         assert response.capabilities == capabilities
 
@@ -111,7 +111,7 @@ class TestInitializeResponse:
         """Test initialize response with custom protocol version."""
         capabilities = ServerCapabilities.default_admin()
         response = InitializeResponse.create(
-            server_name="docbro-admin",
+            server_name="bablib-admin",
             server_version="1.0.0",
             capabilities=capabilities,
             protocol_version="2025-01-01",
@@ -123,7 +123,7 @@ class TestInitializeResponse:
         """Test that response serializes with camelCase aliases."""
         capabilities = ServerCapabilities.default_read_only()
         response = InitializeResponse.create(
-            server_name="docbro",
+            server_name="bablib",
             server_version="1.0.0",
             capabilities=capabilities,
         )

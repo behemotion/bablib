@@ -1,4 +1,4 @@
-# DocBro Manual Testing - Issues Fixed
+# Bablib Manual Testing - Issues Fixed
 
 **Date:** 2025-09-30
 **Session Duration:** ~90 minutes
@@ -39,7 +39,7 @@
 **Commit:** 9bd27c8
 
 **Problem:**
-- `docbro box list` crashed with: `'str' object has no attribute 'value'`
+- `bablib box list` crashed with: `'str' object has no attribute 'value'`
 - Code accessed `box.type.value` but type was string, not BoxType enum
 - Root cause: `model_config` had `'use_enum_values': True`
 
@@ -54,7 +54,7 @@
 - Simplified box_service.py (Pydantic now handles conversion)
 
 **Result:**
-- `docbro box list` works correctly
+- `bablib box list` works correctly
 - Box types display as "drag", "rag", "bag"
 - All box commands functional
 
@@ -75,8 +75,8 @@
 
 **Solution:**
 - Enhanced error message with two clear options:
-  1. Specify shelf: `docbro box create <name> --type <type> --shelf <shelf>`
-  2. Set current: `docbro shelf current <shelf>`
+  1. Specify shelf: `bablib box create <name> --type <type> --shelf <shelf>`
+  2. Set current: `bablib shelf current <shelf>`
 - Applied to both `create` command and helper function
 
 **Result:**
@@ -93,7 +93,7 @@
 
 **Problem:**
 - Commands taking 120+ seconds (expected <5s)
-- `docbro shelf create` appears hung
+- `bablib shelf create` appears hung
 - Poor user experience
 
 **Why Not Fixed:**
@@ -109,8 +109,8 @@
 **Status:** NOT FIXED
 
 **Problem:**
-- Setup creates config in `~/.config/docbro/` (XDG standard)
-- Health checks look in `~/Library/Application Support/docbro/` (macOS standard)
+- Setup creates config in `~/.config/bablib/` (XDG standard)
+- Health checks look in `~/Library/Application Support/bablib/` (macOS standard)
 - Health reports "settings file not found" despite successful setup
 
 **Why Not Fixed:**

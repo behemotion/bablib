@@ -11,20 +11,20 @@ echo "Cleaning UV cache..."
 uv cache clean > /dev/null 2>&1
 
 echo "Reinstalling package..."
-uv tool uninstall docbro > /dev/null 2>&1 || true
+uv tool uninstall bablib > /dev/null 2>&1 || true
 uv tool install . --force --reinstall > /dev/null 2>&1
 
 # Test critical imports
 echo "Testing critical imports..."
-cd /Users/alexandr/.local/share/uv/tools/docbro/lib/python3.13/site-packages
+cd /Users/alexandr/.local/share/uv/tools/bablib/lib/python3.13/site-packages
 
 # Test each critical model import
 python -c "from src.models import SetupSession; print('✓ SetupSession')" 2>/dev/null
 python -c "from src.models import Project; print('✓ Project')" 2>/dev/null
 python -c "from src.models import InstallationContext; print('✓ InstallationContext')" 2>/dev/null
 
-# Test docbro command works
-echo "Testing docbro command..."
-docbro --help > /dev/null 2>&1 && echo "✓ docbro command"
+# Test bablib command works
+echo "Testing bablib command..."
+bablib --help > /dev/null 2>&1 && echo "✓ bablib command"
 
 echo "✅ Package installation verified successfully!"

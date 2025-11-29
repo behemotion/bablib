@@ -1,6 +1,6 @@
 """System requirements validation service.
 
-This service validates the current system against DocBro's installation requirements.
+This service validates the current system against Bablib's installation requirements.
 It provides async methods to check Python version, memory, disk space, platform support,
 and UV availability. Returns SystemRequirements model instances with validation results.
 """
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class SystemRequirementsService:
-    """Service for validating system requirements for DocBro installation."""
+    """Service for validating system requirements for Bablib installation."""
 
     def __init__(self, timeout: int = 5):
         """Initialize the system requirements service.
@@ -263,7 +263,7 @@ class SystemRequirementsService:
         return platform_map.get(system, system.lower())
 
     def _is_platform_supported(self, platform_name: str) -> bool:
-        """Check if platform is supported by DocBro.
+        """Check if platform is supported by Bablib.
 
         Args:
             platform_name: Platform name to check

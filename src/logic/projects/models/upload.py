@@ -180,7 +180,7 @@ class UploadOperation(BaseModel):
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), description="Unique operation identifier")
-    project_id: str = Field(..., description="Target project identifier")
+    box_id: str = Field(..., description="Target box identifier")
     source: UploadSource = Field(..., description="Upload source configuration")
     status: UploadStatus = Field(default=UploadStatus.INITIATED, description="Current operation status")
 
@@ -331,7 +331,7 @@ class UploadOperation(BaseModel):
 
         return {
             'operation_id': self.id,
-            'project_id': self.project_id,
+            'box_id': self.box_id,
             'source_type': self.source.type.value,
             'source_location': self.source.get_display_location(),
             'status': self.status.value,
@@ -379,7 +379,7 @@ class UploadOperation(BaseModel):
 
     def __repr__(self) -> str:
         """Detailed string representation."""
-        return (f"UploadOperation(id='{self.id}', project_id='{self.project_id}', "
+        return (f"UploadOperation(id='{self.id}', box_id='{self.box_id}', "
                 f"status={self.status.value}, source_type={self.source.type.value})")
 
 

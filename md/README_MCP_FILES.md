@@ -1,6 +1,6 @@
 # MCP Connection Files - Quick Start
 
-This directory contains everything you need to connect to the DocBro MCP server.
+This directory contains everything you need to connect to the Bablib MCP server.
 
 ## 📁 Files in This Directory
 
@@ -74,7 +74,7 @@ chmod +x test_mcp_connection.sh
 ```
 
 **What it tests:**
-1. ✓ Dependencies (curl, docbro)
+1. ✓ Dependencies (curl, bablib)
 2. ✓ Server process running
 3. ✓ Ports in use (9383, 9384)
 4. ✓ Health endpoints reachable
@@ -95,14 +95,14 @@ chmod +x test_mcp_connection.sh
 
 ```bash
 # Read-only server (safe, public access)
-docbro serve
+bablib serve
 
 # Or admin server (localhost only, full control)
-docbro serve --admin
+bablib serve --admin
 
 # Or both
-docbro serve &
-docbro serve --admin &
+bablib serve &
+bablib serve --admin &
 ```
 
 ### Step 2: Verify Connection
@@ -188,7 +188,7 @@ Admin Server:     http://127.0.0.1:9384 (localhost only)
 
 ```
 ✓ All read-only operations plus:
-✓ execute_command - Run DocBro commands
+✓ execute_command - Run Bablib commands
 ✓ create_project  - Create new projects
 ✓ crawl          - Start crawling operations
 ✓ batch_process  - Batch operations
@@ -209,16 +209,16 @@ Admin Server:     http://127.0.0.1:9384 (localhost only)
 lsof -i :9383
 
 # Use different port
-docbro serve --port 9385
+bablib serve --port 9385
 ```
 
 ### Connection Refused
 ```bash
 # Check if server is running
-ps aux | grep docbro
+ps aux | grep bablib
 
 # Start server in foreground to see errors
-docbro serve --foreground
+bablib serve --foreground
 ```
 
 ### "Invalid method" Error
@@ -254,7 +254,7 @@ docbro serve --foreground
 ## 🔗 Additional Resources
 
 - **MCP Protocol Spec:** https://modelcontextprotocol.io
-- **DocBro Docs:** See `../CLAUDE.md` in repository root
+- **Bablib Docs:** See `../CLAUDE.md` in repository root
 - **Claude Desktop:** https://claude.ai/download
 - **Manual Test Results:** See `manual_test_m.md` for testing session
 
@@ -264,8 +264,8 @@ docbro serve --foreground
 
 ```bash
 # Start servers
-docbro serve                      # Read-only server
-docbro serve --admin              # Admin server
+bablib serve                      # Read-only server
+bablib serve --admin              # Admin server
 
 # Test connection
 ./test_mcp_connection.sh          # Automated tests
@@ -276,15 +276,15 @@ pip install httpx asyncio         # Install deps
 python3 mcp_client_example.py     # Run example
 
 # Check server status
-ps aux | grep docbro              # Find process
+ps aux | grep bablib              # Find process
 lsof -i :9383                     # Check port
-docbro health --system            # System health
+bablib health --system            # System health
 ```
 
 ---
 
 **Last Updated:** 2025-10-01
-**DocBro Version:** 0.3.2+
+**Bablib Version:** 0.3.2+
 **All Tests Passing:** ✅
 
 ---

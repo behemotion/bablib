@@ -1,4 +1,4 @@
-"""Integration tests for switching vector store with docbro setup."""
+"""Integration tests for switching vector store with bablib setup."""
 
 import pytest
 from pathlib import Path
@@ -10,7 +10,7 @@ from src.models.vector_store_types import VectorStoreProvider
 
 
 class TestSetupVectorStoreSwitch:
-    """Test switching vector store provider with docbro setup."""
+    """Test switching vector store provider with bablib setup."""
 
     @pytest.fixture
     def runner(self):
@@ -20,7 +20,7 @@ class TestSetupVectorStoreSwitch:
     @pytest.fixture
     def initialized_config(self, tmp_path):
         """Create initialized configuration with Qdrant."""
-        config_dir = tmp_path / ".config" / "docbro"
+        config_dir = tmp_path / ".config" / "bablib"
         config_dir.mkdir(parents=True)
 
         config_file = config_dir / "config.yaml"
@@ -88,7 +88,7 @@ class TestSetupVectorStoreSwitch:
         work_dir, config_file = initialized_config
 
         # Create mock projects
-        projects_dir = work_dir / ".local" / "share" / "docbro" / "projects"
+        projects_dir = work_dir / ".local" / "share" / "bablib" / "projects"
         projects_dir.mkdir(parents=True)
         (projects_dir / "python-docs").mkdir()
         (projects_dir / "fastapi-docs").mkdir()
@@ -150,7 +150,7 @@ class TestSetupVectorStoreSwitch:
 
     def test_setup_switch_from_sqlite_vec_to_qdrant(self, runner, tmp_path):
         """Test switching from SQLite-vec to Qdrant."""
-        config_dir = tmp_path / ".config" / "docbro"
+        config_dir = tmp_path / ".config" / "bablib"
         config_dir.mkdir(parents=True)
 
         config_file = config_dir / "config.yaml"

@@ -58,7 +58,7 @@ class FileProcessor:
 
     async def __aenter__(self):
         """Async context manager entry"""
-        self.temp_dir = tempfile.mkdtemp(prefix="docbro_processor_")
+        self.temp_dir = tempfile.mkdtemp(prefix="bablib_processor_")
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):

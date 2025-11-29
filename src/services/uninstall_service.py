@@ -237,7 +237,7 @@ class UninstallService:
 
         # 6. Uninstall package last
         if components.get('package'):
-            op = RemovalOperation.create_uninstall_package('docbro')
+            op = RemovalOperation.create_uninstall_package('bablib')
             operations.append(op)
 
         # Sort by priority
@@ -295,7 +295,7 @@ class UninstallService:
             return False
 
     async def scan_installed_components(self) -> list[UninstallComponent]:
-        """Scan and return all installed DocBro components."""
+        """Scan and return all installed Bablib components."""
         components = await self.detection_service.detect_all_components()
         uninstall_components = []
 
@@ -347,7 +347,7 @@ class UninstallService:
         if components.get('package'):
             uninstall_components.append(UninstallComponent(
                 component_type=ComponentType.PACKAGE,
-                name="docbro",
+                name="bablib",
                 path=None,
                 size_mb=0,
                 is_external=False
@@ -356,7 +356,7 @@ class UninstallService:
         return uninstall_components
 
     async def check_running_services(self) -> list[str]:
-        """Check for running DocBro services that need shutdown."""
+        """Check for running Bablib services that need shutdown."""
         running_services = []
 
         try:
@@ -364,9 +364,9 @@ class UninstallService:
             containers = client.containers.list()
 
             for container in containers:
-                # Check if it's a DocBro-related container
+                # Check if it's a Bablib-related container
                 container_name = container.name
-                if any(keyword in container_name.lower() for keyword in ['docbro', 'qdrant']):
+                if any(keyword in container_name.lower() for keyword in ['bablib', 'qdrant']):
                     if container.status == 'running':
                         running_services.append(container_name)
 
@@ -394,7 +394,7 @@ class UninstallService:
             data_types = ["Application components"]
 
         message = (
-            f"This will permanently remove DocBro and all associated data.\n"
+            f"This will permanently remove Bablib and all associated data.\n"
             f"Components to be removed: {len(components)}\n"
             f"Data types affected: {', '.join(set(data_types))}"
         )
@@ -407,7 +407,7 @@ class UninstallService:
         )
 
     async def stop_all_services(self, service_names: list[str]) -> dict[str, bool]:
-        """Stop all running DocBro services before uninstall."""
+        """Stop all running Bablib services before uninstall."""
         results = {}
 
         try:
@@ -440,10 +440,10 @@ class UninstallService:
         try:
             logger.info("Removing all projects as part of uninstall")
             # Import database manager to get projects
-            from src.core.config import DocBroConfig
+            from src.core.config import BablibConfig
             from src.services.database import DatabaseManager
 
-            config = DocBroConfig()
+            config = BablibConfig()
             db_manager = DatabaseManager(config)
             await db_manager.initialize()
 

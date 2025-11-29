@@ -183,20 +183,20 @@ class ContextFormatter:
                     actions.append({
                         "action": "create_box",
                         "description": "Create a box to store content",
-                        "command": f"docbro box create <box-name> --shelf {entity_name} --type <drag|rag|bag>"
+                        "command": f"bablib box create <box-name> --shelf {entity_name} --type <drag|rag|bag>"
                     })
 
                 if not is_configured:
                     actions.append({
                         "action": "configure",
                         "description": "Configure shelf settings",
-                        "command": f"docbro shelf {entity_name} --init"
+                        "command": f"bablib shelf {entity_name} --init"
                     })
 
                 actions.append({
                     "action": "view",
                     "description": "View shelf details and contents",
-                    "command": f"docbro shelf {entity_name} --verbose"
+                    "command": f"bablib shelf {entity_name} --verbose"
                 })
 
             elif entity_type == "box":
@@ -205,32 +205,32 @@ class ContextFormatter:
                         actions.append({
                             "action": "fill",
                             "description": "Crawl a website to fill this drag box",
-                            "command": f"docbro fill {entity_name} --source <website_url>"
+                            "command": f"bablib fill {entity_name} --source <website_url>"
                         })
                     elif box_type == "rag":
                         actions.append({
                             "action": "fill",
                             "description": "Upload documents to fill this rag box",
-                            "command": f"docbro fill {entity_name} --source <file_path>"
+                            "command": f"bablib fill {entity_name} --source <file_path>"
                         })
                     elif box_type == "bag":
                         actions.append({
                             "action": "fill",
                             "description": "Add files to fill this bag box",
-                            "command": f"docbro fill {entity_name} --source <content_path>"
+                            "command": f"bablib fill {entity_name} --source <content_path>"
                         })
 
                 if not is_configured:
                     actions.append({
                         "action": "configure",
                         "description": "Configure box settings",
-                        "command": f"docbro box {entity_name} --init"
+                        "command": f"bablib box {entity_name} --init"
                     })
 
                 actions.append({
                     "action": "view",
                     "description": "View box details and content",
-                    "command": f"docbro box {entity_name} --verbose"
+                    "command": f"bablib box {entity_name} --verbose"
                 })
 
             return actions

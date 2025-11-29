@@ -11,14 +11,14 @@ This checklist covers manual validation scenarios for context-aware command enha
 ## Prerequisites
 
 ```bash
-# Ensure DocBro is installed
+# Ensure Bablib is installed
 uv tool install . --force --reinstall
 
 # Verify installation
-docbro --version
+bablib --version
 
 # Check system health
-docbro health --system --services
+bablib health --system --services
 ```
 
 ## Scenario 1: New User Setting Up Documentation
@@ -29,7 +29,7 @@ docbro health --system --services
 
 - [ ] **Step 1.1**: Access non-existent shelf
   ```bash
-  docbro shelf project-docs
+  bablib shelf project-docs
   ```
   - **Expected**: Prompt "Shelf 'project-docs' not found. Create it? (y/n)"
   - **Action**: Enter `y`
@@ -55,7 +55,7 @@ docbro health --system --services
 
 - [ ] **Step 1.3**: Verify shelf configuration
   ```bash
-  docbro shelf project-docs
+  bablib shelf project-docs
   ```
   - **Expected**: Shows configured shelf status
   - **Expected**: Shows "Shelf is empty. Would you like to create some boxes?"
@@ -74,7 +74,7 @@ docbro health --system --services
 
 - [ ] **Step 2.1**: Create drag box with wizard
   ```bash
-  docbro box website-docs --type drag --init
+  bablib box website-docs --type drag --init
   ```
   - **Expected**: Box created, wizard launches
   - **Step 1**: Type confirmation (drag - Website crawler)
@@ -86,7 +86,7 @@ docbro health --system --services
 
 - [ ] **Step 2.2**: Create rag box with wizard
   ```bash
-  docbro box local-files --type rag --init
+  bablib box local-files --type rag --init
   ```
   - **Expected**: Box created, wizard launches
   - **Wizard collects**: File patterns, chunk size preferences
@@ -94,7 +94,7 @@ docbro health --system --services
 
 - [ ] **Step 2.3**: Create bag box with wizard
   ```bash
-  docbro box data-store --type bag --init
+  bablib box data-store --type bag --init
   ```
   - **Expected**: Box created, wizard launches
   - **Wizard collects**: Storage preferences, file type filters
@@ -102,17 +102,17 @@ docbro health --system --services
 
 - [ ] **Step 2.4**: Access each empty box
   ```bash
-  docbro box website-docs
+  bablib box website-docs
   ```
   - **Expected**: Type-specific prompt for website URL
 
   ```bash
-  docbro box local-files
+  bablib box local-files
   ```
   - **Expected**: Type-specific prompt for file path
 
   ```bash
-  docbro box data-store
+  bablib box data-store
   ```
   - **Expected**: Type-specific prompt for content path
 
@@ -129,7 +129,7 @@ docbro health --system --services
 
 - [ ] **Step 3.1**: Launch MCP setup wizard
   ```bash
-  docbro serve --init
+  bablib serve --init
   ```
   - **Expected**: MCP setup wizard launches
   - **Step 1**: "Enable read-only server? (y/n)"
@@ -147,7 +147,7 @@ docbro health --system --services
 
 - [ ] **Step 3.2**: Start configured servers
   ```bash
-  docbro serve
+  bablib serve
   ```
   - **Expected**: Both servers start with configured settings
   - **Expected**: Connection info displayed for AI assistant setup
@@ -177,20 +177,20 @@ docbro health --system --services
 
 - [ ] **Step 4.1**: Test short flag consistency
   ```bash
-  docbro shelf list -v          # --verbose
-  docbro box create test -t drag -i  # --type, --init
-  docbro fill web-box -s https://example.com -d 3  # --source, --depth
-  docbro serve -a -h 127.0.0.1 -p 9385  # --admin, --host, --port
+  bablib shelf list -v          # --verbose
+  bablib box create test -t drag -i  # --type, --init
+  bablib fill web-box -s https://example.com -d 3  # --source, --depth
+  bablib serve -a -h 127.0.0.1 -p 9385  # --admin, --host, --port
   ```
   - **Expected**: All commands execute with short flags
   - **Expected**: Consistent behavior across commands
 
 - [ ] **Step 4.2**: Test help consistency
   ```bash
-  docbro shelf --help
-  docbro box --help
-  docbro fill --help
-  docbro serve --help
+  bablib shelf --help
+  bablib box --help
+  bablib fill --help
+  bablib serve --help
   ```
   - **Expected**: Standardized flag format in help output
   - **Expected**: Same flag style and descriptions
@@ -198,12 +198,12 @@ docbro health --system --services
 
 - [ ] **Step 4.3**: Test error message consistency
   ```bash
-  docbro box create test --invalid-flag
+  bablib box create test --invalid-flag
   ```
   - **Expected**: "Unknown flag '--invalid-flag'. Did you mean '--init' (-i)?"
 
   ```bash
-  docbro fill nonexistent --source test
+  bablib fill nonexistent --source test
   ```
   - **Expected**: "Box 'nonexistent' not found. Create it? (y/n)"
 
@@ -218,27 +218,27 @@ docbro health --system --services
 
 - [ ] **Context detection (<500ms)**
   ```bash
-  time docbro shelf test-shelf
-  time docbro box test-box
+  time bablib shelf test-shelf
+  time bablib box test-box
   ```
   - **Expected**: Response time < 500ms for each
 
 - [ ] **Wizard step transitions (<200ms)**
-  - Start wizard: `docbro shelf new-shelf --init`
+  - Start wizard: `bablib shelf new-shelf --init`
   - Measure time between step prompts
   - **Expected**: Each transition < 200ms
 
 - [ ] **Status display (<1s)**
   ```bash
-  time docbro shelf existing-shelf
-  time docbro box existing-box
+  time bablib shelf existing-shelf
+  time bablib box existing-box
   ```
   - **Expected**: Display time < 1s for each
 
 - [ ] **Creation operations (<2s)**
   ```bash
-  time docbro shelf create perf-test
-  time docbro box create perf-box --type rag
+  time bablib shelf create perf-test
+  time bablib box create perf-box --type rag
   ```
   - **Expected**: Creation time < 2s for each
 
@@ -246,14 +246,14 @@ docbro health --system --services
 
 - [ ] **Check baseline memory**
   ```bash
-  ps aux | grep docbro
+  ps aux | grep bablib
   ```
   - Record baseline memory usage
 
 - [ ] **Run multiple wizards simultaneously**
   ```bash
   for i in {1..5}; do
-    docbro shelf test-shelf-$i --init &
+    bablib shelf test-shelf-$i --init &
   done
   ```
   - Monitor memory during concurrent wizards
@@ -261,7 +261,7 @@ docbro health --system --services
 
 - [ ] **Check memory after wizards complete**
   ```bash
-  ps aux | grep docbro
+  ps aux | grep bablib
   ```
   - Verify memory is released after completion
 
@@ -270,20 +270,20 @@ docbro health --system --services
 - [ ] **Test context caching**
   ```bash
   # First call - queries database
-  docbro shelf test-shelf
+  bablib shelf test-shelf
 
   # Second call - should use cache
-  docbro shelf test-shelf
+  bablib shelf test-shelf
 
   # Third call - should use cache
-  docbro shelf test-shelf
+  bablib shelf test-shelf
   ```
   - Monitor database queries (if logging enabled)
   - **Expected**: Only first call queries database
 
 - [ ] **Test list operations**
   ```bash
-  docbro shelf list --verbose
+  bablib shelf list --verbose
   ```
   - **Expected**: No N+1 queries (should batch load box counts)
 
@@ -293,13 +293,13 @@ docbro health --system --services
 
 - [ ] **Set environment**
   ```bash
-  export DOCBRO_VECTOR_STORE=sqlite_vec
+  export BABLIB_VECTOR_STORE=sqlite_vec
   ```
 
 - [ ] **Test context awareness**
   ```bash
-  docbro shelf sqlite-test --init
-  docbro box create sqlite-box --type drag --init
+  bablib shelf sqlite-test --init
+  bablib box create sqlite-box --type drag --init
   ```
   - **Expected**: All context features work correctly
   - **Expected**: Wizard flows complete successfully
@@ -308,13 +308,13 @@ docbro health --system --services
 
 - [ ] **Set environment**
   ```bash
-  export DOCBRO_VECTOR_STORE=qdrant
+  export BABLIB_VECTOR_STORE=qdrant
   ```
 
 - [ ] **Test context awareness**
   ```bash
-  docbro shelf qdrant-test --init
-  docbro box create qdrant-box --type rag --init
+  bablib shelf qdrant-test --init
+  bablib box create qdrant-box --type rag --init
   ```
   - **Expected**: Identical behavior to SQLite-vec
   - **Expected**: All features work consistently
@@ -323,7 +323,7 @@ docbro health --system --services
 
 - [ ] **Start MCP servers**
   ```bash
-  docbro serve --init
+  bablib serve --init
   ```
 
 - [ ] **Test context endpoints**
@@ -347,16 +347,16 @@ docbro health --system --services
 
 - [ ] **Test existing commands**
   ```bash
-  docbro shelf create legacy-shelf --description "Works as before"
-  docbro box create legacy-box --type rag --shelf legacy-shelf
-  docbro fill legacy-box --source /path/to/docs
+  bablib shelf create legacy-shelf --description "Works as before"
+  bablib box create legacy-box --type rag --shelf legacy-shelf
+  bablib fill legacy-box --source /path/to/docs
   ```
   - **Expected**: All commands work unchanged
   - **Expected**: No breaking changes to existing workflows
 
 - [ ] **Test legacy flag patterns**
   ```bash
-  docbro serve --host 0.0.0.0 --port 9383
+  bablib serve --host 0.0.0.0 --port 9383
   ```
   - **Expected**: Works with possible deprecation warning
   - **Suggested**: "Consider using -h and -p short forms"
@@ -365,7 +365,7 @@ docbro health --system --services
 
 - [ ] **User cancellation scenarios**
   ```bash
-  docbro shelf nonexistent
+  bablib shelf nonexistent
   ```
   - When prompted "Create it? (y/n)", respond: `n`
   - **Expected**: Shows alternative action menu
@@ -373,7 +373,7 @@ docbro health --system --services
 
 - [ ] **Wizard interruption (Ctrl+C)**
   ```bash
-  docbro box create test --init
+  bablib box create test --init
   ```
   - Press Ctrl+C during wizard
   - **Expected**: Cleanup partial state
@@ -381,7 +381,7 @@ docbro health --system --services
 
 - [ ] **Invalid wizard responses**
   ```bash
-  docbro shelf create wizard-test --init
+  bablib shelf create wizard-test --init
   ```
   - Provide invalid inputs during wizard (e.g., port 99999)
   - **Expected**: Clear error messages

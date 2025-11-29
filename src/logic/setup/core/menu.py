@@ -123,9 +123,9 @@ class InteractiveMenu:
             List of option labels
         """
         return [
-            "Initialize DocBro",
+            "Initialize Bablib",
             "Modify Configuration",
-            "Uninstall DocBro",
+            "Uninstall Bablib",
             "Reset Installation",
             "Exit"
         ]
@@ -182,15 +182,15 @@ class InteractiveMenu:
         self.console.print()  # Add space after info
 
         choices = [
-            NavigationChoice("initialize", "Initialize DocBro"),
+            NavigationChoice("initialize", "Initialize Bablib"),
             NavigationChoice("configuration", "Modify Configuration"),
-            NavigationChoice("uninstall", "Uninstall DocBro"),
+            NavigationChoice("uninstall", "Uninstall Bablib"),
             NavigationChoice("reset", "Reset Installation"),
             NavigationChoice("exit", "Exit")
         ]
 
         return self.navigator.navigate_menu(
-            title="DocBro Setup Menu",
+            title="Bablib Setup Menu",
             menu_items=choices,
             default_index=0
         )

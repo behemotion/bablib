@@ -1,4 +1,4 @@
-"""Installation state tracking model for DocBro installation process."""
+"""Installation state tracking model for Bablib installation process."""
 
 from typing import Literal
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 
 class InstallationState(BaseModel):
-    """Track the complete state of DocBro installation process.
+    """Track the complete state of Bablib installation process.
 
     This model tracks the installation through multiple phases with detailed
     progress information, error handling, and resume capabilities.

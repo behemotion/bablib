@@ -452,7 +452,7 @@ class DataProject(DataProjectContract):
         config_path.parent.mkdir(exist_ok=True)
 
         config = {
-            'collection_name': f"docbro_{project.name}",
+            'collection_name': f"bablib_{project.name}",
             'vector_size': 1024,  # Size for mxbai-embed-large
             'distance': 'cosine'
         }

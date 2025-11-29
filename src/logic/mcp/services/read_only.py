@@ -27,7 +27,7 @@ class ReadOnlyMcpService:
         shelf_name: Optional[str] = None,
         include_shelf_context: bool = False
     ) -> McpResponse:
-        """List all DocBro projects with optional filtering."""
+        """List all Bablib projects with optional filtering."""
         try:
             # Convert filter parameters to proper types
             status_enum = None

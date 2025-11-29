@@ -19,7 +19,7 @@ class MCPConfigurationService:
     def __init__(self):
         """Initialize MCP configuration service."""
         self.default_server_url = "http://localhost:8765"
-        self.default_server_name = "docbro"
+        self.default_server_name = "bablib"
 
     def generate_universal_config(
         self,
@@ -150,7 +150,7 @@ class MCPConfigurationService:
     def get_default_config_path(self) -> Path:
         """Get default MCP configuration file path."""
         # Use XDG-compliant path
-        config_dir = Path.home() / ".config" / "docbro"
+        config_dir = Path.home() / ".config" / "bablib"
         return config_dir / "mcp_config.json"
 
     def create_client_specific_config(

@@ -19,7 +19,7 @@ from src.models.configuration_state import ConfigurationState
 @pytest.fixture
 def sqlite_vec_env(monkeypatch):
     """Set environment to use SQLite-vec backend."""
-    monkeypatch.setenv("DOCBRO_VECTOR_STORE", "sqlite_vec")
+    monkeypatch.setenv("BABLIB_VECTOR_STORE", "sqlite_vec")
 
 
 @pytest.mark.asyncio

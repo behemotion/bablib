@@ -109,14 +109,14 @@ def inspect_wheel_contents(wheel_path: Path) -> dict:
 
         # Try to read entry points
         try:
-            entry_points_text = wheel.read("docbro.dist-info/entry_points.txt").decode()
+            entry_points_text = wheel.read("bablib.dist-info/entry_points.txt").decode()
             contents["entry_points"] = entry_points_text
         except KeyError:
             pass
 
         # Try to read metadata
         try:
-            metadata_text = wheel.read("docbro.dist-info/METADATA").decode()
+            metadata_text = wheel.read("bablib.dist-info/METADATA").decode()
             contents["metadata"] = metadata_text
         except KeyError:
             pass

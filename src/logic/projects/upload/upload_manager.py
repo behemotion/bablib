@@ -8,8 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from ..models.config import ProjectConfig
-from ..models.project import Project
+from src.models.box import Box
+from src.models.box_type import BoxType
 from ..models.upload import (
     ConflictResolution,
     UploadOperation,
@@ -60,7 +60,7 @@ class UploadManager:
 
     async def upload_files(
         self,
-        project: Project,
+        box: Box,
         source: UploadSource,
         recursive: bool = False,
         exclude_patterns: list[str] | None = None,
@@ -69,10 +69,10 @@ class UploadManager:
         progress_callback: Callable[[dict[str, Any]], None] | None = None
     ) -> UploadOperation:
         """
-        Upload files from source to project.
+        Upload files from source to box.
 
         Args:
-            project: Target project for uploads
+            box: Target box for uploads
             source: Upload source configuration
             recursive: Whether to recursively process directories
             exclude_patterns: File patterns to exclude
@@ -87,11 +87,11 @@ class UploadManager:
             ValueError: If source type is not supported or validation fails
             RuntimeError: If upload initialization fails
         """
-        logger.info(f"Starting upload to project {project.name} from {source.type.value} source")
+        logger.info(f"Starting upload to box {box.name} from {source.type.value} source")
 
         # Create upload operation
         operation = UploadOperation(
-            project_id=project.id,
+            box_id=box.id,
             source=source,
             recursive=recursive,
             exclude_patterns=exclude_patterns or [],
@@ -100,7 +100,7 @@ class UploadManager:
         )
 
         # Validate upload before starting
-        validation_result = await self.validate_upload(project, source)
+        validation_result = await self.validate_upload(box, source)
         if not validation_result.valid:
             operation.status = UploadStatus.REJECTED
             for error in validation_result.errors:
@@ -112,18 +112,18 @@ class UploadManager:
 
         # Start upload task
         upload_task = asyncio.create_task(
-            self._execute_upload(operation, project, progress_callback)
+            self._execute_upload(operation, box, progress_callback)
         )
         self._operation_tasks[operation.id] = upload_task
 
         return operation
 
-    async def validate_upload(self, project: Project, source: UploadSource) -> 'ValidationResult':
+    async def validate_upload(self, box: Box, source: UploadSource) -> 'ValidationResult':
         """
         Validate upload operation before execution.
 
         Args:
-            project: Target project
+            box: Target box
             source: Upload source
 
         Returns:
@@ -152,19 +152,9 @@ class UploadManager:
         except Exception as e:
             errors.append(f"Source validation failed: {e}")
 
-        # Check project compatibility
-        if not project.is_compatible_with_operation("upload"):
-            errors.append(f"Project type {project.type.value} does not support uploads")
-
-        # Validate project settings
-        try:
-            config = ProjectConfig.from_dict(project.settings)
-            config_errors = config.validate_for_type(project.type)
-            if config_errors:
-                errors.extend([f"Project config error: {err}" for err in config_errors])
-
-        except Exception as e:
-            errors.append(f"Project configuration validation failed: {e}")
+        # Check box type compatibility - RAG boxes support uploads
+        if box.type not in [BoxType.RAG, BoxType.BAG]:
+            errors.append(f"Box type {box.type.value} does not support uploads (use RAG or BAG)")
 
         return ValidationResult(
             valid=len(errors) == 0,
@@ -220,33 +210,33 @@ class UploadManager:
         logger.info(f"Cancelled upload operation: {operation_id}")
         return True
 
-    async def list_active_uploads(self, project_id: str | None = None) -> list[UploadOperation]:
+    async def list_active_uploads(self, box_id: str | None = None) -> list[UploadOperation]:
         """
         List active upload operations.
 
         Args:
-            project_id: Optional filter by project ID
+            box_id: Optional filter by box ID
 
         Returns:
             List of active UploadOperation instances
         """
         operations = [op for op in self._active_operations.values() if op.is_active()]
 
-        if project_id:
-            operations = [op for op in operations if op.project_id == project_id]
+        if box_id:
+            operations = [op for op in operations if op.box_id == box_id]
 
         return operations
 
     async def get_upload_history(
         self,
-        project_id: str | None = None,
+        box_id: str | None = None,
         limit: int | None = None
     ) -> list[dict[str, Any]]:
         """
         Get upload operation history.
 
         Args:
-            project_id: Optional filter by project ID
+            box_id: Optional filter by box ID
             limit: Maximum number of records to return
 
         Returns:
@@ -258,7 +248,7 @@ class UploadManager:
 
         for operation in self._active_operations.values():
             if not operation.is_active():
-                if project_id is None or operation.project_id == project_id:
+                if box_id is None or operation.box_id == box_id:
                     history.append(operation.get_summary())
 
         # Sort by completion time (newest first)
@@ -305,7 +295,7 @@ class UploadManager:
     async def _execute_upload(
         self,
         operation: UploadOperation,
-        project: Project,
+        box: Box,
         progress_callback: Callable[[dict[str, Any]], None] | None
     ) -> None:
         """Execute the upload operation."""
@@ -353,7 +343,7 @@ class UploadManager:
                     break
 
                 await self._process_single_file(
-                    operation, project, handler, file_path, progress_callback
+                    operation, box, handler, file_path, progress_callback
                 )
 
             # Complete operation
@@ -377,7 +367,7 @@ class UploadManager:
     async def _process_single_file(
         self,
         operation: UploadOperation,
-        project: Project,
+        box: Box,
         handler: Any,
         file_path: str,
         progress_callback: Callable[[dict[str, Any]], None] | None
@@ -395,8 +385,8 @@ class UploadManager:
             from .validators.format_validator import FormatValidator
             validator = FormatValidator()
 
-            # Check file size
-            max_size = project.settings.get('max_file_size', 10485760)
+            # Check file size - use box settings or default 10MB
+            max_size = getattr(box, 'max_file_size', None) or 10485760
             if file_size > max_size:
                 operation.record_file_failure(
                     file_path,
@@ -410,9 +400,10 @@ class UploadManager:
                 operation.record_file_success(file_path, file_size, file_info)
                 return
 
-            # Download file to temporary location
-            temp_dir = Path(project.get_project_directory()) / "temp"
-            temp_dir.mkdir(exist_ok=True)
+            # Download file to temporary location - use box data directory
+            from src.lib.paths import get_box_data_path
+            temp_dir = get_box_data_path(box.name) / "temp"
+            temp_dir.mkdir(parents=True, exist_ok=True)
 
             temp_file = temp_dir / f"upload_{uuid.uuid4().hex}"
 
@@ -429,8 +420,8 @@ class UploadManager:
                 operation.record_file_failure(file_path, "Download failed")
                 return
 
-            # Validate downloaded file format
-            allowed_formats = project.settings.get('allowed_formats', [])
+            # Validate downloaded file format - use box settings or allow all
+            allowed_formats = getattr(box, 'allowed_formats', None) or []
             if allowed_formats and '*' not in allowed_formats:
                 validation_result = await validator.validate_file_format(str(temp_file), allowed_formats)
                 if not validation_result.valid:
@@ -438,9 +429,9 @@ class UploadManager:
                     temp_file.unlink(missing_ok=True)
                     return
 
-            # Process file based on project type
-            await self._process_file_for_project_type(
-                operation, project, temp_file, file_path, file_size, file_info
+            # Process file based on box type
+            await self._process_file_for_box_type(
+                operation, box, temp_file, file_path, file_size, file_info
             )
 
             # Clean up temp file
@@ -450,52 +441,48 @@ class UploadManager:
             logger.error(f"Failed to process file {file_path}: {e}")
             operation.record_file_failure(file_path, str(e))
 
-    async def _process_file_for_project_type(
+    async def _process_file_for_box_type(
         self,
         operation: UploadOperation,
-        project: Project,
+        box: Box,
         temp_file: Path,
         original_path: str,
         file_size: int,
         file_info: dict[str, Any]
     ) -> None:
-        """Process file according to project type."""
-        from ..core.project_factory import ProjectFactory
-
-        factory = ProjectFactory()
-        handler = factory.create_project_handler(project.type)
-
-        # Handle based on project type
-        if project.type.value == 'storage':
-            # Storage projects store files directly
-            await self._store_file_in_storage_project(
-                operation, project, temp_file, original_path, file_size, file_info
+        """Process file according to box type."""
+        # Handle based on box type
+        if box.type == BoxType.BAG:
+            # BAG boxes store files directly
+            await self._store_file_in_bag_box(
+                operation, box, temp_file, original_path, file_size, file_info
             )
-        elif project.type.value == 'data':
-            # Data projects process for vector storage
-            await self._process_file_for_data_project(
-                operation, project, temp_file, original_path, file_size, file_info
+        elif box.type == BoxType.RAG:
+            # RAG boxes process for vector storage
+            await self._process_file_for_rag_box(
+                operation, box, temp_file, original_path, file_size, file_info
             )
         else:
-            # Other project types not supported for uploads
+            # Other box types not supported for uploads
             operation.record_file_failure(
                 original_path,
-                f"Project type {project.type.value} does not support file uploads"
+                f"Box type {box.type.value} does not support file uploads"
             )
 
-    async def _store_file_in_storage_project(
+    async def _store_file_in_bag_box(
         self,
         operation: UploadOperation,
-        project: Project,
+        box: Box,
         temp_file: Path,
         original_path: str,
         file_size: int,
         file_info: dict[str, Any]
     ) -> None:
-        """Store file in storage project."""
-        # Move file to project storage directory
-        storage_dir = Path(project.get_project_directory()) / "files"
-        storage_dir.mkdir(exist_ok=True)
+        """Store file in BAG box."""
+        # Move file to box storage directory
+        from src.lib.paths import get_box_data_path
+        storage_dir = get_box_data_path(box.name) / "files"
+        storage_dir.mkdir(parents=True, exist_ok=True)
 
         filename = Path(original_path).name
         final_path = storage_dir / filename
@@ -526,16 +513,16 @@ class UploadManager:
             'original_info': file_info
         })
 
-    async def _process_file_for_data_project(
+    async def _process_file_for_rag_box(
         self,
         operation: UploadOperation,
-        project: Project,
+        box: Box,
         temp_file: Path,
         original_path: str,
         file_size: int,
         file_info: dict[str, Any]
     ) -> None:
-        """Process file for data project (document processing)."""
+        """Process file for RAG box (document processing for vector storage)."""
         # Extract text content based on file type
         content = await self._extract_text_content(temp_file)
 
@@ -547,12 +534,12 @@ class UploadManager:
         from ..models.files import DataDocument
 
         document = DataDocument.from_file(
-            project_id=project.id,
+            box_id=box.id,
             title=Path(original_path).name,
             content=content,
             source_path=original_path,
             upload_source=operation.source,
-            processing_config=project.settings
+            processing_config={}  # Use default processing config
         )
 
         # Calculate quality score

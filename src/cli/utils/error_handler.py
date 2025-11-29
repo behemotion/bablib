@@ -68,10 +68,10 @@ CLI_ERROR_MESSAGES = {
 # Suggested actions for common errors
 ERROR_SUGGESTIONS = {
     "project_not_found": [
-        "Run 'docbro shelf list' to see available shelves",
-        "Run 'docbro box list' to see available boxes",
+        "Run 'bablib shelf list' to see available shelves",
+        "Run 'bablib box list' to see available boxes",
         "Check the name spelling",
-        "Create a shelf and box first: 'docbro shelf create <name>' then 'docbro box create <name> --type <type>'"
+        "Create a shelf and box first: 'bablib shelf create <name>' then 'bablib box create <name> --type <type>'"
     ],
     "authentication_failed": [
         "Verify your username and password",

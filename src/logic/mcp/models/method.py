@@ -9,7 +9,7 @@ class McpMethodDefinition(BaseModel):
     """Defines an MCP method with its metadata and validation.
 
     Attributes:
-        name: Method name (e.g., "docbro_project_list")
+        name: Method name (e.g., "bablib_project_list")
         description: Human-readable description
         parameters: JSON schema for method parameters
         server_type: Which server type exposes this method

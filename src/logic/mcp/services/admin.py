@@ -18,7 +18,7 @@ class AdminMcpService:
         self.command_executor = command_executor
 
     async def execute_command(self, request: CommandExecutionRequest) -> McpResponse:
-        """Execute a DocBro CLI command."""
+        """Execute a Bablib CLI command."""
         try:
             # Validate the command is safe to execute
             if not request.is_safe_to_execute():

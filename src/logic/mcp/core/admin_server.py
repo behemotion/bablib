@@ -23,9 +23,9 @@ logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(
-    title="DocBro MCP Admin Server",
+    title="Bablib MCP Admin Server",
     version="1.0.0",
-    description="MCP server providing full administrative control over DocBro operations"
+    description="MCP server providing full administrative control over Bablib operations"
 )
 
 # Services
@@ -56,7 +56,7 @@ async def initialize_services():
     # Initialize MCP protocol components
     capabilities = ServerCapabilities.default_admin()
     protocol_handler = ProtocolHandler(
-        server_name="docbro-admin",
+        server_name="bablib-admin",
         server_version="1.0.0",
         capabilities=capabilities,
     )
@@ -85,7 +85,7 @@ async def startup_event():
 
 @app.post("/mcp/v1/execute_command")
 async def execute_command(request: Request):
-    """Execute DocBro CLI command."""
+    """Execute Bablib CLI command."""
     try:
         body = await request.json()
         method = body.get("method")
@@ -330,7 +330,7 @@ async def delete_shelf(request: Request):
                 "message": "Shelf deletion is prohibited via MCP admin for security reasons",
                 "details": {
                     "allowed_methods": ["CLI only"],
-                    "alternative": "docbro shelf --remove <name> --force"
+                    "alternative": "bablib shelf --remove <name> --force"
                 }
             }
         )
@@ -369,7 +369,7 @@ async def health_check():
         import json
 
         result = subprocess.run(
-            ["uv", "run", "docbro", "health", "--json"],
+            ["uv", "run", "bablib", "health", "--json"],
             capture_output=True,
             text=True,
             timeout=10
@@ -386,7 +386,7 @@ async def health_check():
             data={
                 "server_type": "admin",
                 "status": "healthy" if result.returncode == 0 else "degraded",
-                "docbro_health": health_data,
+                "bablib_health": health_data,
                 "security_status": {
                     "localhost_only": True,
                     "port": 9384

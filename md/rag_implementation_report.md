@@ -159,16 +159,16 @@ All enhancements are **opt-in** and maintain full backward compatibility:
 **New Features (Opt-In)**:
 ```bash
 # Semantic chunking
-docbro fill box-name --source url --chunk-strategy semantic
+bablib fill box-name --source url --chunk-strategy semantic
 
 # Query transformation
-docbro search "query" --transform-query
+bablib search "query" --transform-query
 
 # Fusion retrieval
-docbro search "query" --strategy fusion
+bablib search "query" --strategy fusion
 
 # Fast reranking
-docbro search "query" --rerank
+bablib search "query" --rerank
 ```
 
 ## Notable Issues Fixed
@@ -203,7 +203,7 @@ docbro search "query" --rerank
 ✅ **Performance targets met** (all constitutional requirements)  
 ✅ **Quality targets exceeded** (Precision: 0.82, Recall: 0.73, NDCG: 0.84)  
 ✅ **Backward compatibility maintained** (all existing code works)  
-✅ **Zero new dependencies** (uses existing DocBro stack)
+✅ **Zero new dependencies** (uses existing Bablib stack)
 
 ## Conclusion
 

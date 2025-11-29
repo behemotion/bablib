@@ -8,7 +8,7 @@ from typing import Any
 
 import aiosqlite
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.sqlite_vec_config import SQLiteVecConfiguration
 
 # Try to import sqlite_vec
@@ -39,7 +39,7 @@ def detect_sqlite_vec() -> tuple[bool, str]:
             return False, (
                 "SQLite was compiled without extension support. "
                 "For full SQLite-vec functionality, consider using Qdrant instead. "
-                "Run 'docbro setup --init --vector-store qdrant' to use Qdrant."
+                "Run 'bablib setup --init --vector-store qdrant' to use Qdrant."
             )
 
         try:
@@ -76,7 +76,7 @@ def detect_sqlite_vec() -> tuple[bool, str]:
 class SQLiteVecService:
     """SQLite-vec vector store service."""
 
-    def __init__(self, config: DocBroConfig):
+    def __init__(self, config: BablibConfig):
         """Initialize SQLite-vec service."""
         self.config = config
         self.data_dir = Path(config.data_dir)
@@ -120,7 +120,7 @@ class SQLiteVecService:
                 "  • Your Python's SQLite3 was compiled without extension support\n"
                 "  • This is common on macOS with certain Python installations\n\n"
                 "Solutions:\n"
-                "  1. Use Qdrant instead: docbro setup --init --vector-store qdrant --force\n"
+                "  1. Use Qdrant instead: bablib setup --init --vector-store qdrant --force\n"
                 "  2. Or install Python with Homebrew: brew install python@3.13\n"
                 "  3. Or use UV's managed Python: uv python install 3.12 (requires updating project)\n\n"
                 "Qdrant provides better performance for large document collections."
@@ -129,7 +129,7 @@ class SQLiteVecService:
             return (
                 "To install sqlite-vec:\n"
                 "  1. Run: uv pip install --system sqlite-vec\n"
-                "  2. Run: docbro services setup --service sqlite-vec\n"
+                "  2. Run: bablib services setup --service sqlite-vec\n"
             )
 
     async def initialize(self) -> None:

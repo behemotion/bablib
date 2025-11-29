@@ -1,4 +1,4 @@
-"""Service configuration models for DocBro."""
+"""Service configuration models for Bablib."""
 
 import re
 from datetime import datetime

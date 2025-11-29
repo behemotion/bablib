@@ -25,7 +25,7 @@ class MCPConfiguration(BaseModel):
     """Universal MCP client configuration"""
     model_config = ConfigDict(str_strip_whitespace=True)
 
-    server_name: str = Field(default="docbro", description="Server name")
+    server_name: str = Field(default="bablib", description="Server name")
     server_url: str = Field(..., description="Server URL")
     api_version: str = Field(default="1.0", description="API version")
     capabilities: list[str] = Field(default_factory=lambda: ["search", "crawl", "embed"])

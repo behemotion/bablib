@@ -1,4 +1,4 @@
-"""MCP (Model Context Protocol) server for DocBro."""
+"""MCP (Model Context Protocol) server for Bablib."""
 
 import json
 import uuid
@@ -17,7 +17,7 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.core.lib_logger import get_component_logger
 from src.models import ProjectStatus
 from src.services.database import DatabaseManager
@@ -39,11 +39,11 @@ security = HTTPBearer()
 
 
 class MCPServer:
-    """MCP server for DocBro integration with coding agents."""
+    """MCP server for Bablib integration with coding agents."""
 
-    def __init__(self, config: DocBroConfig | None = None):
+    def __init__(self, config: BablibConfig | None = None):
         """Initialize MCP server."""
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.logger = get_component_logger("mcp_server")
 
         # Services
@@ -102,8 +102,8 @@ class MCPServer:
     def _create_app(self) -> FastAPI:
         """Create FastAPI application."""
         app = FastAPI(
-            title="DocBro MCP Server",
-            description="Model Context Protocol server for DocBro",
+            title="Bablib MCP Server",
+            description="Model Context Protocol server for Bablib",
             version="1.0.0"
         )
 
@@ -330,7 +330,7 @@ class MCPServer:
         # Installation start endpoint
         @app.post("/installation/start")
         async def installation_start(request_data: dict[str, Any]):
-            """Start DocBro installation process."""
+            """Start Bablib installation process."""
             try:
                 response = await self.installation_service.start_installation(request_data)
                 return response
@@ -572,7 +572,7 @@ class MCPServer:
                 })
 
 
-def create_app(config: DocBroConfig | None = None) -> FastAPI:
+def create_app(config: BablibConfig | None = None) -> FastAPI:
     """Create MCP server FastAPI application."""
     server = MCPServer(config)
     return server.get_app()
@@ -581,7 +581,7 @@ def create_app(config: DocBroConfig | None = None) -> FastAPI:
 def run_mcp_server(
     host: str = "0.0.0.0",
     port: int = 9382,
-    config: DocBroConfig | None = None
+    config: BablibConfig | None = None
 ) -> None:
     """Run MCP server."""
     app = create_app(config)

@@ -1,5 +1,5 @@
 """
-ASCII Branding Module for DocBro
+ASCII Branding Module for Bablib
 Provides ASCII art logo generation with 256-color gradient support
 """
 
@@ -14,7 +14,7 @@ class ASCIIBranding:
 
     def __init__(
         self,
-        text: str = "DOCBRO",
+        text: str = "BABLIB",
         subtitle: str = "BY BEHEMOTION",
         height: int = 7
     ):
@@ -22,7 +22,7 @@ class ASCIIBranding:
         Initialize ASCII branding.
 
         Args:
-            text: The main text to render (default: "DOCBRO")
+            text: The main text to render (default: "BABLIB")
             subtitle: Text below logo (default: "BY BEHEMOTION")
             height: Number of rows for ASCII art (fixed: 7)
         """
@@ -117,16 +117,16 @@ class ASCIIBranding:
         return self.generate_gradient(46, 22, self.height)
 
     def _generate_ascii_art(self) -> str:
-        """Generate the actual ASCII art for DOCBRO."""
-        # 7-row ASCII art for DOCBRO
+        """Generate the actual ASCII art for BABLIB."""
+        # 7-row ASCII art for BABLIB
         art_lines = [
-            "██████╗  ██████╗  ██████╗██████╗ ██████╗  ██████╗ ",
-            "██╔══██╗██╔═══██╗██╔════╝██╔══██╗██╔══██╗██╔═══██╗",
-            "██║  ██║██║   ██║██║     ██████╔╝██████╔╝██║   ██║",
-            "██║  ██║██║   ██║██║     ██╔══██╗██╔══██╗██║   ██║",
-            "██████╔╝╚██████╔╝╚██████╗██████╔╝██║  ██║╚██████╔╝",
-            "╚═════╝  ╚═════╝  ╚═════╝╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ",
-            "                                                    "
+            "██████╗  █████╗ ██████╗ ██╗     ██╗██████╗ ",
+            "██╔══██╗██╔══██╗██╔══██╗██║     ██║██╔══██╗",
+            "██████╔╝███████║██████╔╝██║     ██║██████╔╝",
+            "██╔══██╗██╔══██║██╔══██╗██║     ██║██╔══██╗",
+            "██████╔╝██║  ██║██████╔╝███████╗██║██████╔╝",
+            "╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝╚═════╝ ",
+            "                                           "
         ]
 
         # Ensure exactly 7 rows

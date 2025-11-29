@@ -6,7 +6,7 @@ import asyncio
 from pathlib import Path
 
 from src.services.sqlite_vec_service import SQLiteVecService
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.vector_store_types import VectorStoreProvider
 
 
@@ -20,8 +20,8 @@ class TestSQLiteVecSetupPerformance:
         start_time = time.time()
 
         # Initialize configuration
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )
@@ -64,8 +64,8 @@ class TestSQLiteVecSetupPerformance:
     @pytest.mark.asyncio
     async def test_collection_creation_performance(self, tmp_path):
         """Test performance of creating multiple collections."""
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )
@@ -94,8 +94,8 @@ class TestSQLiteVecSetupPerformance:
     @pytest.mark.asyncio
     async def test_initialization_with_existing_data(self, tmp_path):
         """Test initialization performance with existing database."""
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )
@@ -136,8 +136,8 @@ class TestSQLiteVecSetupPerformance:
     @pytest.mark.asyncio
     async def test_concurrent_setup_operations(self, tmp_path):
         """Test performance of concurrent setup operations."""
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )
@@ -175,8 +175,8 @@ class TestSQLiteVecSetupPerformance:
     @pytest.mark.parametrize("num_docs", [10, 50, 100, 500])
     async def test_batch_insert_performance(self, tmp_path, num_docs):
         """Test performance of batch document insertion."""
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )

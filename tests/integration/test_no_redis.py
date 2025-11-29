@@ -10,33 +10,33 @@ import os
 
 @pytest.mark.integration
 class TestNoRedisIntegration:
-    """Verify all DocBro functionality works without Redis."""
+    """Verify all Bablib functionality works without Redis."""
 
     @pytest.fixture
     def temp_config(self):
         """Create temporary config without Redis."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            config_dir = Path(tmpdir) / ".config" / "docbro"
+            config_dir = Path(tmpdir) / ".config" / "bablib"
             config_dir.mkdir(parents=True)
-            data_dir = Path(tmpdir) / ".local" / "share" / "docbro"
+            data_dir = Path(tmpdir) / ".local" / "share" / "bablib"
             data_dir.mkdir(parents=True)
 
             # Set environment to use temp directories
-            os.environ["DOCBRO_DATA_DIR"] = str(data_dir)
+            os.environ["BABLIB_DATA_DIR"] = str(data_dir)
             yield config_dir, data_dir
 
             # Cleanup
-            if "DOCBRO_DATA_DIR" in os.environ:
-                del os.environ["DOCBRO_DATA_DIR"]
+            if "BABLIB_DATA_DIR" in os.environ:
+                del os.environ["BABLIB_DATA_DIR"]
 
     @pytest.mark.asyncio
     async def test_status_command_without_redis(self, temp_config):
-        """Test docbro status works without Redis."""
-        from src.cli.main import DocBroApp
-        from src.core.config import DocBroConfig
+        """Test bablib status works without Redis."""
+        from src.cli.main import BablibApp
+        from src.core.config import BablibConfig
 
         # Ensure no Redis in config
-        config = DocBroConfig()
+        config = BablibConfig()
         assert not hasattr(config, 'redis_url')
 
         # Mock services
@@ -52,7 +52,7 @@ class TestNoRedisIntegration:
             mock_vector.return_value = mock_vector_instance
             mock_embed.return_value = mock_embed_instance
 
-            app = DocBroApp()
+            app = BablibApp()
             await app.initialize()
 
             # Should work without Redis
@@ -61,8 +61,8 @@ class TestNoRedisIntegration:
 
     @pytest.mark.asyncio
     async def test_create_command_without_redis(self, temp_config):
-        """Test docbro create works without Redis."""
-        from src.cli.main import DocBroApp
+        """Test bablib create works without Redis."""
+        from src.cli.main import BablibApp
         from src.models import Project
 
         with patch('src.cli.main.DatabaseManager') as mock_db, \
@@ -81,7 +81,7 @@ class TestNoRedisIntegration:
             mock_db.return_value = mock_db_instance
             mock_vector.return_value = mock_vector_instance
 
-            app = DocBroApp()
+            app = BablibApp()
             await app.initialize()
 
             # Create project should work without Redis
@@ -94,8 +94,8 @@ class TestNoRedisIntegration:
 
     @pytest.mark.asyncio
     async def test_list_command_without_redis(self, temp_config):
-        """Test docbro list works without Redis."""
-        from src.cli.main import DocBroApp
+        """Test bablib list works without Redis."""
+        from src.cli.main import BablibApp
 
         with patch('src.cli.main.DatabaseManager') as mock_db:
             mock_db_instance = AsyncMock()
@@ -103,7 +103,7 @@ class TestNoRedisIntegration:
 
             mock_db.return_value = mock_db_instance
 
-            app = DocBroApp()
+            app = BablibApp()
             await app.initialize()
 
             # List should work without Redis
@@ -114,9 +114,9 @@ class TestNoRedisIntegration:
     async def test_serve_command_without_redis(self):
         """Test MCP server starts without Redis."""
         from src.services.mcp_server import MCPServer
-        from src.core.config import DocBroConfig
+        from src.core.config import BablibConfig
 
-        config = DocBroConfig()
+        config = BablibConfig()
         assert not hasattr(config, 'redis_url')
 
         # Mock FastAPI app

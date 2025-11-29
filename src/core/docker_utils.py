@@ -1,4 +1,4 @@
-"""Docker utilities and health checks for DocBro services."""
+"""Docker utilities and health checks for Bablib services."""
 
 import asyncio
 import logging
@@ -35,15 +35,15 @@ except ImportError:
     ResponseHandlingException = Exception
     QDRANT_AVAILABLE = False
 
-from .config import DocBroConfig, ServiceDeployment
+from .config import BablibConfig, ServiceDeployment
 
 logger = logging.getLogger(__name__)
 
 
 class DockerServiceManager:
-    """Manage Docker services for DocBro."""
+    """Manage Docker services for Bablib."""
 
-    def __init__(self, config: DocBroConfig):
+    def __init__(self, config: BablibConfig):
         """Initialize with configuration."""
         self.config = config
         self.docker_compose_file = Path("docker/docker-compose.yml")
@@ -76,7 +76,7 @@ class DockerServiceManager:
             return False
 
     def get_service_containers(self) -> dict[str, ContainerType | None]:
-        """Get containers for DocBro services."""
+        """Get containers for Bablib services."""
         if not self.is_docker_available():
             return {"qdrant": None}
 
@@ -173,9 +173,9 @@ class DockerServiceManager:
 
 
 class ServiceHealthChecker:
-    """Check health of DocBro services."""
+    """Check health of Bablib services."""
 
-    def __init__(self, config: DocBroConfig):
+    def __init__(self, config: BablibConfig):
         """Initialize with configuration."""
         self.config = config
 
@@ -272,9 +272,9 @@ class ServiceHealthChecker:
 
 
 class ServiceConnectionManager:
-    """Manage connections to DocBro services with automatic retry and failover."""
+    """Manage connections to Bablib services with automatic retry and failover."""
 
-    def __init__(self, config: DocBroConfig):
+    def __init__(self, config: BablibConfig):
         """Initialize with configuration."""
         self.config = config
         self.health_checker = ServiceHealthChecker(config)

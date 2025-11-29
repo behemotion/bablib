@@ -6,7 +6,7 @@ from typing import Any
 from qdrant_client import QdrantClient
 from qdrant_client.http import models as qdrant_models
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.core.lib_logger import get_component_logger
 
 
@@ -18,9 +18,9 @@ class VectorStoreError(Exception):
 class VectorStoreService:
     """Manages vector storage operations using Qdrant."""
 
-    def __init__(self, config: DocBroConfig | None = None):
+    def __init__(self, config: BablibConfig | None = None):
         """Initialize vector store service."""
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.logger = get_component_logger("vector_store")
 
         # Qdrant client

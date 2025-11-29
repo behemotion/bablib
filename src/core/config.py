@@ -1,4 +1,4 @@
-"""Unified configuration management for DocBro."""
+"""Unified configuration management for Bablib."""
 
 import os
 from enum import Enum
@@ -23,12 +23,12 @@ class ServiceDeployment(str, Enum):
     SQLITE_VEC = "sqlite_vec"  # SQLite-vec vector store option
 
 
-class DocBroConfig(PydanticBaseSettings):
-    """DocBro unified configuration with environment variable support."""
+class BablibConfig(PydanticBaseSettings):
+    """Bablib unified configuration with environment variable support."""
 
     # Application settings
     debug: bool = Field(default=False)
-    data_dir: Path = Field(default_factory=lambda: Path.home() / ".local" / "share" / "docbro")
+    data_dir: Path = Field(default_factory=lambda: Path.home() / ".local" / "share" / "bablib")
 
     # Service deployment configuration
     qdrant_deployment: ServiceDeployment = Field(default=ServiceDeployment.DOCKER)
@@ -39,7 +39,7 @@ class DocBroConfig(PydanticBaseSettings):
         default=VectorStoreProvider.SQLITE_VEC
     )
     vector_storage: str = Field(
-        default="~/.local/share/docbro/vectors"
+        default="~/.local/share/bablib/vectors"
     )
 
     # Service URLs
@@ -97,7 +97,7 @@ class DocBroConfig(PydanticBaseSettings):
 
     # Database configuration
     database_url: str = Field(
-        default_factory=lambda: f"sqlite+aiosqlite:///{Path.home() / '.local' / 'share' / 'docbro' / 'project_registry.db'}"
+        default_factory=lambda: f"sqlite+aiosqlite:///{Path.home() / '.local' / 'share' / 'bablib' / 'project_registry.db'}"
     )
 
     # Logging configuration
@@ -108,7 +108,7 @@ class DocBroConfig(PydanticBaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
-        env_prefix="DOCBRO_",
+        env_prefix="BABLIB_",
         validate_assignment=True
     )
 
@@ -117,7 +117,7 @@ class DocBroConfig(PydanticBaseSettings):
         super().__init__(**kwargs)
 
         # Check for Redis configuration and reject it
-        if os.getenv("DOCBRO_REDIS_URL") or os.getenv("DOCBRO_REDIS_PASSWORD"):
+        if os.getenv("BABLIB_REDIS_URL") or os.getenv("BABLIB_REDIS_PASSWORD"):
             raise ValueError("Redis configuration detected but no longer supported")
 
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -237,16 +237,16 @@ class DocBroConfig(PydanticBaseSettings):
 
 
 # Global configuration instance
-config = DocBroConfig()
+config = BablibConfig()
 
 
-def get_config() -> DocBroConfig:
+def get_config() -> BablibConfig:
     """Get the global configuration instance."""
     return config
 
 
-def reload_config() -> DocBroConfig:
+def reload_config() -> BablibConfig:
     """Reload configuration from environment and files."""
     global config
-    config = DocBroConfig()
+    config = BablibConfig()
     return config

@@ -197,7 +197,7 @@ class SetupValidator:
             path.parent.mkdir(parents=True, exist_ok=True)
 
             # Try to write a test file
-            test_file = path.parent / ".docbro_test"
+            test_file = path.parent / ".bablib_test"
             test_file.touch()
             test_file.unlink()
 

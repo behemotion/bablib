@@ -1,7 +1,7 @@
-# DocBro CLI Usage Guide
+# Bablib CLI Usage Guide
 
 ## Overview
-DocBro is a powerful documentation crawler and search tool with advanced CLI capabilities. This guide covers all CLI improvements and features.
+Bablib is a powerful documentation crawler and search tool with advanced CLI capabilities. This guide covers all CLI improvements and features.
 
 ## Table of Contents
 - [Getting Help](#getting-help)
@@ -15,27 +15,27 @@ DocBro is a powerful documentation crawler and search tool with advanced CLI cap
 ## Getting Help
 
 ### Quick Help
-When you run `docbro` without any arguments, you'll see a helpful suggestion:
+When you run `bablib` without any arguments, you'll see a helpful suggestion:
 ```bash
-$ docbro
-DocBro CLI
+$ bablib
+Bablib CLI
 
-No command specified. Try 'docbro --help' for available commands.
+No command specified. Try 'bablib --help' for available commands.
 
 Quick start:
-  docbro create                 Create a new documentation project
-  docbro crawl                  Crawl documentation for a project
-  docbro search                 Search indexed documentation
-  docbro --help                Show all available commands
+  bablib create                 Create a new documentation project
+  bablib crawl                  Crawl documentation for a project
+  bablib search                 Search indexed documentation
+  bablib --help                Show all available commands
 ```
 
 ### Comprehensive Help
 The `--help` flag shows all available commands and their options:
 ```bash
-$ docbro --help
-Usage: docbro [OPTIONS] COMMAND [ARGS]...
+$ bablib --help
+Usage: bablib [OPTIONS] COMMAND [ARGS]...
 
-DocBro - Documentation crawler and search tool with RAG capabilities.
+Bablib - Documentation crawler and search tool with RAG capabilities.
 
 Options:
   --config-file PATH     Configuration file path
@@ -60,8 +60,8 @@ Commands:
 ### Command-Specific Help
 Get detailed help for any command:
 ```bash
-$ docbro crawl --help
-Usage: docbro crawl [OPTIONS] [NAME]
+$ bablib crawl --help
+Usage: bablib crawl [OPTIONS] [NAME]
 
 Crawl documentation for a project.
 
@@ -79,8 +79,8 @@ Options:
 ### Enabling Debug Output
 The `--debug` flag enables verbose logging for troubleshooting:
 ```bash
-$ docbro --debug list
-[2024-01-26 10:15:23] - cli - DEBUG - DocBro application initialized with debug mode
+$ bablib --debug list
+[2024-01-26 10:15:23] - cli - DEBUG - Bablib application initialized with debug mode
 [2024-01-26 10:15:23] - cli - DEBUG - Loading projects from database
 [2024-01-26 10:15:23] - cli - DEBUG - Found 3 projects
 ...
@@ -97,9 +97,9 @@ Third-party library logs (urllib3, requests, etc.) are automatically suppressed 
 ## Creating Projects
 
 ### Interactive Wizard Mode
-Run `docbro create` without arguments to launch the interactive wizard:
+Run `bablib create` without arguments to launch the interactive wizard:
 ```bash
-$ docbro create
+$ bablib create
 
 ╭─ Create Documentation Project ─────────────────────╮
 │                                                     │
@@ -141,7 +141,7 @@ Create project with these settings? [Y/n]: y
 ### Direct Command Mode
 Provide arguments to skip the wizard:
 ```bash
-$ docbro create my-project --url https://docs.example.com --depth 2
+$ bablib create my-project --url https://docs.example.com --depth 2
 ✓ Project 'my-project' created successfully
 ```
 
@@ -149,19 +149,19 @@ $ docbro create my-project --url https://docs.example.com --depth 2
 
 ### Single Project Crawl
 ```bash
-$ docbro crawl my-project --max-pages 100
+$ bablib crawl my-project --max-pages 100
 ```
 
 ### Update Existing Project
 Recrawl an existing project:
 ```bash
-$ docbro crawl --update my-project
+$ bablib crawl --update my-project
 ```
 
 ### Progress Visualization
 Crawling shows a two-phase progress bar:
 ```bash
-$ docbro crawl my-project
+$ bablib crawl my-project
 Crawling my-project...
 
 Analyzing headers   ████████░░ 80% 40/50 0:00:05
@@ -183,7 +183,7 @@ Project Status:
 ### Debug Mode Crawling
 Use `--debug` with crawl to see detailed output:
 ```bash
-$ docbro crawl my-project --debug
+$ bablib crawl my-project --debug
 [DEBUG] Starting crawl for my-project
 [DEBUG] Fetching: https://docs.example.com/index.html
 [DEBUG] Found 15 links
@@ -196,7 +196,7 @@ $ docbro crawl my-project --debug
 ### Update All Projects
 Recrawl all existing projects sequentially:
 ```bash
-$ docbro crawl --update --all
+$ bablib crawl --update --all
 Starting batch crawl for 5 projects
 
 Processing project-1 (1/5)
@@ -249,11 +249,11 @@ During crawling, all errors are automatically collected:
 ### Error Report Generation
 When errors occur, a report is generated:
 ```bash
-$ docbro crawl my-project
+$ bablib crawl my-project
 ...
 ⚠ Crawl completed with 5 errors
-Error report saved to: ~/.local/share/docbro/projects/my-project/reports/report_20240126_101523.txt
-Review errors: open ~/.local/share/docbro/projects/my-project/reports/report_20240126_101523.txt
+Error report saved to: ~/.local/share/bablib/projects/my-project/reports/report_20240126_101523.txt
+Review errors: open ~/.local/share/bablib/projects/my-project/reports/report_20240126_101523.txt
 ```
 
 ### Report Structure
@@ -303,7 +303,7 @@ END OF REPORT
 
 ### Report Storage
 - Reports are stored in project-specific directories
-- Path: `~/.local/share/docbro/projects/{name}/reports/`
+- Path: `~/.local/share/bablib/projects/{name}/reports/`
 - One report file per project (overwritten on recrawl)
 - Both JSON and text formats are saved
 
@@ -329,19 +329,19 @@ END OF REPORT
 2. **Enable debug for troubleshooting**: `--debug` reveals what's happening
 3. **Review error reports**: They contain valuable debugging information
 4. **Batch updates overnight**: Use `--update --all` for maintenance
-5. **Quote URLs with special characters**: `docbro create proj -u "https://example.com?param=value"`
+5. **Quote URLs with special characters**: `bablib create proj -u "https://example.com?param=value"`
 
 ## Environment Variables
 
 ```bash
 # Set default debug mode
-export DOCBRO_DEBUG=true
+export BABLIB_DEBUG=true
 
 # Set custom data directory
-export DOCBRO_DATA_DIR=/custom/path
+export BABLIB_DATA_DIR=/custom/path
 
 # Set log level
-export DOCBRO_LOG_LEVEL=DEBUG
+export BABLIB_LOG_LEVEL=DEBUG
 ```
 
 ## Examples
@@ -349,41 +349,41 @@ export DOCBRO_LOG_LEVEL=DEBUG
 ### Complete Project Setup
 ```bash
 # Create project interactively
-docbro create
+bablib create
 
 # Or create directly
-docbro create my-docs --url https://docs.example.com --depth 3
+bablib create my-docs --url https://docs.example.com --depth 3
 
 # Initial crawl
-docbro crawl my-docs --max-pages 500
+bablib crawl my-docs --max-pages 500
 
 # Search documentation
-docbro search "authentication" --project my-docs
+bablib search "authentication" --project my-docs
 ```
 
 ### Maintenance Workflow
 ```bash
 # List all projects
-docbro list
+bablib list
 
 # Update specific project
-docbro crawl --update my-docs
+bablib crawl --update my-docs
 
 # Update all projects
-docbro crawl --update --all
+bablib crawl --update --all
 
 # Check status
-docbro status
+bablib status
 ```
 
 ### Debugging Issues
 ```bash
 # Enable debug output
-docbro --debug crawl my-docs
+bablib --debug crawl my-docs
 
 # Check error reports
-ls ~/.local/share/docbro/projects/my-docs/reports/
+ls ~/.local/share/bablib/projects/my-docs/reports/
 
 # View latest report
-cat ~/.local/share/docbro/projects/my-docs/reports/report_latest.txt
+cat ~/.local/share/bablib/projects/my-docs/reports/report_latest.txt
 ```

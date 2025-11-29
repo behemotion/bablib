@@ -28,7 +28,7 @@ class TestSettingsPerformance:
         # Create settings with all fields
         settings = GlobalSettings(
             embedding_model="mxbai-embed-large",
-            vector_storage="~/.local/share/docbro/vectors",
+            vector_storage="~/.local/share/bablib/vectors",
             crawl_depth=5,
             chunk_size=2000,
             qdrant_url="http://localhost:6333",
@@ -163,7 +163,7 @@ class TestSettingsPerformance:
             "crawl_depth": 5,
             "chunk_size": 2000,
             "rag_temperature": 0.7,
-            "vector_storage": "~/.local/share/docbro/vectors",
+            "vector_storage": "~/.local/share/bablib/vectors",
             "qdrant_url": "http://localhost:6333",
             "ollama_url": "http://localhost:11434",
             "rag_top_k": 5,

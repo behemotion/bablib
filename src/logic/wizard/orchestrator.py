@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.wizard_state import WizardState
 from src.models.wizard_step import WizardStep
 from src.services.database import DatabaseManager
@@ -38,9 +38,9 @@ class StepResult:
 class WizardOrchestrator:
     """Manages wizard sessions and step processing."""
 
-    def __init__(self, config: Optional[DocBroConfig] = None):
+    def __init__(self, config: Optional[BablibConfig] = None):
         """Initialize wizard orchestrator."""
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.db_manager = DatabaseManager(self.config)
         self.session_timeout = timedelta(minutes=30)  # 30-minute session timeout
         self.max_sessions = 10  # Maximum concurrent sessions per user

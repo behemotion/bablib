@@ -59,38 +59,38 @@ class CommandRouter:
         if vector_store and not init:
             raise ValueError(
                 "--vector-store requires --init flag. "
-                "Try: docbro setup --init --vector-store sqlite_vec"
+                "Try: bablib setup --init --vector-store sqlite_vec"
             )
 
         if auto and operation_count == 0:
             raise ValueError(
                 "--auto requires an operation flag. "
-                "Try: docbro setup --init --auto"
+                "Try: bablib setup --init --auto"
             )
 
         if non_interactive and operation_count == 0:
             raise ValueError(
                 "--non-interactive requires an operation flag. "
-                "Try: docbro setup --init --non-interactive"
+                "Try: bablib setup --init --non-interactive"
             )
 
         if force and operation_count == 0:
             raise ValueError(
                 "--force requires an operation flag. "
-                "Try: docbro setup --uninstall --force"
+                "Try: bablib setup --uninstall --force"
             )
 
         # Check option flag dependencies
         if backup and not uninstall:
             raise ValueError(
                 "--backup requires --uninstall flag. "
-                "Try: docbro setup --uninstall --backup"
+                "Try: bablib setup --uninstall --backup"
             )
 
         if dry_run and not uninstall:
             raise ValueError(
                 "--dry-run requires --uninstall flag. "
-                "Try: docbro setup --uninstall --dry-run"
+                "Try: bablib setup --uninstall --dry-run"
             )
 
         if preserve_data and not (uninstall or reset):
@@ -181,11 +181,11 @@ class CommandRouter:
             Help text string
         """
         return """
-Valid flag combinations for 'docbro setup':
+Valid flag combinations for 'bablib setup':
 
 Operation Flags (choose one):
-  --init            Initialize DocBro configuration
-  --uninstall       Remove DocBro installation
+  --init            Initialize Bablib configuration
+  --uninstall       Remove Bablib installation
   --reset           Reset to fresh state (uninstall + reinit)
   (no flags)        Launch interactive menu
 
@@ -201,11 +201,11 @@ Option Flags:
   --preserve-data   Keep user project data (with --uninstall or --reset)
 
 Examples:
-  docbro setup                                  # Interactive menu
-  docbro setup --init --auto                    # Quick setup with defaults
-  docbro setup --init --vector-store sqlite_vec # Setup with specific store
-  docbro setup --uninstall --force              # Uninstall without confirmation
-  docbro setup --reset --preserve-data          # Reset but keep projects
+  bablib setup                                  # Interactive menu
+  bablib setup --init --auto                    # Quick setup with defaults
+  bablib setup --init --vector-store sqlite_vec # Setup with specific store
+  bablib setup --uninstall --force              # Uninstall without confirmation
+  bablib setup --reset --preserve-data          # Reset but keep projects
 """
 
     def parse_conflict_error(self, flags: set[str]) -> tuple[str, str]:
@@ -228,7 +228,7 @@ Examples:
             suggestion = "Use only one operation flag at a time."
         else:
             error = f"Invalid flag combination: {', '.join(flags)}"
-            suggestion = "Run 'docbro setup --help' for valid combinations."
+            suggestion = "Run 'bablib setup --help' for valid combinations."
 
         return error, suggestion
 
@@ -242,9 +242,9 @@ Examples:
             Human-readable description
         """
         descriptions = {
-            "init": "Initialize DocBro with configuration and directories",
-            "uninstall": "Remove DocBro installation and all data",
-            "reset": "Reset DocBro to a fresh installation state",
+            "init": "Initialize Bablib with configuration and directories",
+            "uninstall": "Remove Bablib installation and all data",
+            "reset": "Reset Bablib to a fresh installation state",
             "menu": "Interactive menu for setup operations"
         }
         return descriptions.get(operation_type, "Unknown operation")

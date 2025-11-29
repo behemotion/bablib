@@ -1,4 +1,4 @@
-"""Component detection service for identifying DocBro components to remove."""
+"""Component detection service for identifying Bablib components to remove."""
 
 import os
 import subprocess
@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 
 
 class ComponentDetectionService:
-    """Service for detecting DocBro components on the system."""
+    """Service for detecting Bablib components on the system."""
 
     def __init__(self, docker_client: docker.DockerClient | None = None):
         """Initialize the detection service."""
@@ -46,7 +46,7 @@ class ComponentDetectionService:
                     self.docker_client = None
 
     async def detect_all_components(self) -> dict[str, Any]:
-        """Detect all DocBro components on the system."""
+        """Detect all Bablib components on the system."""
         components = {
             'containers': await self.find_docker_containers(),
             'volumes': await self.find_docker_volumes(),
@@ -57,7 +57,7 @@ class ComponentDetectionService:
         return components
 
     async def find_docker_containers(self) -> list[ComponentStatus]:
-        """Find DocBro Docker containers."""
+        """Find Bablib Docker containers."""
         if not self.docker_client:
             return []
 
@@ -65,8 +65,8 @@ class ComponentDetectionService:
         try:
             all_containers = self.docker_client.containers.list(all=True)
             for container in all_containers:
-                # Check if it's a DocBro container by name or label
-                if self._is_docbro_container(container):
+                # Check if it's a Bablib container by name or label
+                if self._is_bablib_container(container):
                     containers.append(ComponentStatus(
                         component_type=ComponentType.CONTAINER,
                         component_name=container.name,
@@ -78,7 +78,7 @@ class ComponentDetectionService:
         return containers
 
     async def find_docker_volumes(self) -> list[ComponentStatus]:
-        """Find DocBro Docker volumes."""
+        """Find Bablib Docker volumes."""
         if not self.docker_client:
             return []
 
@@ -86,7 +86,7 @@ class ComponentDetectionService:
         try:
             all_volumes = self.docker_client.volumes.list()
             for volume in all_volumes:
-                if self._is_docbro_volume(volume):
+                if self._is_bablib_volume(volume):
                     volumes.append(ComponentStatus(
                         component_type=ComponentType.VOLUME,
                         component_name=volume.name,
@@ -99,18 +99,18 @@ class ComponentDetectionService:
         return volumes
 
     async def find_data_directories(self) -> list[ComponentStatus]:
-        """Find DocBro data directories."""
+        """Find Bablib data directories."""
         directories = []
 
         # Standard XDG directories
         paths_to_check = [
-            Path.home() / '.config' / 'docbro',
-            Path.home() / '.local' / 'share' / 'docbro',
-            Path.home() / '.cache' / 'docbro',
+            Path.home() / '.config' / 'bablib',
+            Path.home() / '.local' / 'share' / 'bablib',
+            Path.home() / '.cache' / 'bablib',
         ]
 
         # Also check for project-specific directories
-        data_dir = Path.home() / '.local' / 'share' / 'docbro'
+        data_dir = Path.home() / '.local' / 'share' / 'bablib'
         if data_dir.exists():
             # Check for projects directory
             projects_dir = data_dir / 'projects'
@@ -118,13 +118,13 @@ class ComponentDetectionService:
                 paths_to_check.append(projects_dir)
 
         # Check environment variables for custom paths
-        if 'DOCBRO_DATABASE_PATH' in os.environ:
-            custom_path = Path(os.environ['DOCBRO_DATABASE_PATH']).parent
+        if 'BABLIB_DATABASE_PATH' in os.environ:
+            custom_path = Path(os.environ['BABLIB_DATABASE_PATH']).parent
             if custom_path not in paths_to_check:
                 paths_to_check.append(custom_path)
 
-        if 'DOCBRO_DATA_DIR' in os.environ:
-            paths_to_check.append(Path(os.environ['DOCBRO_DATA_DIR']))
+        if 'BABLIB_DATA_DIR' in os.environ:
+            paths_to_check.append(Path(os.environ['BABLIB_DATA_DIR']))
 
         for path in paths_to_check:
             if path.exists() and path.is_dir():
@@ -140,14 +140,14 @@ class ComponentDetectionService:
         return directories
 
     async def find_config_files(self) -> list[ComponentStatus]:
-        """Find DocBro configuration files."""
+        """Find Bablib configuration files."""
         configs = []
 
         config_patterns = [
             '*.yaml', '*.yml', '*.json', '*.toml', '*.ini', '*.conf'
         ]
 
-        config_dir = Path.home() / '.config' / 'docbro'
+        config_dir = Path.home() / '.config' / 'bablib'
         if config_dir.exists():
             for pattern in config_patterns:
                 for config_file in config_dir.glob(pattern):
@@ -162,7 +162,7 @@ class ComponentDetectionService:
         return configs
 
     async def check_package_installation(self) -> ComponentStatus | None:
-        """Check if DocBro package is installed."""
+        """Check if Bablib package is installed."""
         try:
             # Check with UV tool
             result = subprocess.run(
@@ -172,10 +172,10 @@ class ComponentDetectionService:
                 timeout=5
             )
 
-            if result.returncode == 0 and 'docbro' in result.stdout.lower():
+            if result.returncode == 0 and 'bablib' in result.stdout.lower():
                 return ComponentStatus(
                     component_type=ComponentType.PACKAGE,
-                    component_name='docbro',
+                    component_name='bablib',
                     status=RemovalStatus.PENDING
                 )
         except (subprocess.SubprocessError, FileNotFoundError) as e:
@@ -197,36 +197,36 @@ class ComponentDetectionService:
 
         return total_size
 
-    def _is_docbro_container(self, container) -> bool:
-        """Check if container is managed by DocBro."""
+    def _is_bablib_container(self, container) -> bool:
+        """Check if container is managed by Bablib."""
         # Check by label
-        if container.labels.get('docbro.managed') == 'true':
+        if container.labels.get('bablib.managed') == 'true':
             return True
 
         # Check by name pattern
-        if container.name.startswith('docbro-'):
+        if container.name.startswith('bablib-'):
             return True
 
         return False
 
-    def _is_docbro_volume(self, volume) -> bool:
-        """Check if volume is managed by DocBro."""
+    def _is_bablib_volume(self, volume) -> bool:
+        """Check if volume is managed by Bablib."""
         # Check by label
-        if volume.attrs.get('Labels', {}).get('docbro.managed') == 'true':
+        if volume.attrs.get('Labels', {}).get('bablib.managed') == 'true':
             return True
 
         # Check by name pattern
-        if self.is_docbro_volume_name(volume.name):
+        if self.is_bablib_volume_name(volume.name):
             return True
 
         return False
 
-    def is_docbro_volume_name(self, name: str) -> bool:
-        """Check if volume name matches DocBro pattern."""
-        return name.startswith('docbro_') or name.startswith('docbro-')
+    def is_bablib_volume_name(self, name: str) -> bool:
+        """Check if volume name matches Bablib pattern."""
+        return name.startswith('bablib_') or name.startswith('bablib-')
 
     def _is_external_volume(self, volume) -> bool:
-        """Check if volume is external (not managed by DocBro)."""
+        """Check if volume is external (not managed by Bablib)."""
         # Check explicit external label
         if volume.attrs.get('Labels', {}).get('external') == 'true':
             return True
@@ -257,7 +257,7 @@ class ComponentDetectionService:
         return {
             'name': volume.name,
             'driver': volume.attrs.get('Driver', 'unknown'),
-            'managed': self._is_docbro_volume(volume),
+            'managed': self._is_bablib_volume(volume),
             'version': volume.attrs.get('Labels', {}).get('version'),
             'created_at': volume.attrs.get('CreatedAt')
         }
@@ -266,6 +266,6 @@ class ComponentDetectionService:
         """Filter volumes to get only removable ones."""
         removable = []
         for volume in volumes:
-            if not self._is_external_volume(volume) and self._is_docbro_volume(volume):
+            if not self._is_external_volume(volume) and self._is_bablib_volume(volume):
                 removable.append(volume)
         return removable

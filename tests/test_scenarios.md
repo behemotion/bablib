@@ -1,4 +1,4 @@
-# DocBro Comprehensive Testing Plan
+# Bablib Comprehensive Testing Plan
 
 ## Summary of Testing Session (2025-09-29)
 
@@ -41,7 +41,7 @@
 ## 1. Setup Command Testing
 
 ### 1.1 Interactive Mode
-- [x] Run `docbro setup` without flags - verify interactive menu appears ✅
+- [x] Run `bablib setup` without flags - verify interactive menu appears ✅
 - [ ] Test arrow navigation (↑/↓) in menu
 - [ ] Test number selection (1-9) in menu
 - [ ] Test vim keys (j/k) navigation
@@ -50,56 +50,56 @@
 - [ ] Select each menu option and verify proper routing
 
 ### 1.2 Initialization Testing
-- [ ] `docbro setup --init` - test interactive initialization
-- [x] `docbro setup --init --auto` - test automatic initialization ✅ (requires --force for reinit)
-- [x] `docbro setup --init --force` - test forced initialization ✅
-- [ ] `docbro setup --init --non-interactive` - test non-interactive mode
-- [ ] `docbro setup --init --vector-store sqlite_vec` - test SQLite-vec selection
-- [ ] `docbro setup --init --vector-store qdrant` - test Qdrant selection
-- [ ] `docbro setup --init --vector-store invalid` - verify error handling
+- [ ] `bablib setup --init` - test interactive initialization
+- [x] `bablib setup --init --auto` - test automatic initialization ✅ (requires --force for reinit)
+- [x] `bablib setup --init --force` - test forced initialization ✅
+- [ ] `bablib setup --init --non-interactive` - test non-interactive mode
+- [ ] `bablib setup --init --vector-store sqlite_vec` - test SQLite-vec selection
+- [ ] `bablib setup --init --vector-store qdrant` - test Qdrant selection
+- [ ] `bablib setup --init --vector-store invalid` - verify error handling
 - [ ] Test initialization when already initialized (should warn)
 - [ ] Test initialization with insufficient permissions
 - [ ] Test initialization with disk space issues (mock)
 - [ ] Test initialization with Python version < 3.13 (if possible)
 
 ### 1.3 Configuration Testing
-- [ ] `docbro setup --config` - test configuration display
-- [ ] `docbro setup --config --show` - test detailed config display
-- [ ] `docbro setup --config --edit` - test config editing
+- [ ] `bablib setup --config` - test configuration display
+- [ ] `bablib setup --config --show` - test detailed config display
+- [ ] `bablib setup --config --edit` - test config editing
 - [ ] Test config file corruption recovery
 - [ ] Test invalid YAML in config file
 - [ ] Test missing config file handling
 
 ### 1.8 Setup Flag Combinations
-- [ ] `docbro setup --init --force` - force reinitialize
-- [ ] `docbro setup --init --auto --force` - auto with force
-- [ ] `docbro setup --init --non-interactive --vector-store sqlite_vec`
-- [ ] `docbro setup --uninstall --backup --dry-run` - preview with backup
-- [ ] `docbro setup --reset --preserve-data --force` - reset keeping data
-- [ ] `docbro setup --uninstall --preserve-data --backup`
+- [ ] `bablib setup --init --force` - force reinitialize
+- [ ] `bablib setup --init --auto --force` - auto with force
+- [ ] `bablib setup --init --non-interactive --vector-store sqlite_vec`
+- [ ] `bablib setup --uninstall --backup --dry-run` - preview with backup
+- [ ] `bablib setup --reset --preserve-data --force` - reset keeping data
+- [ ] `bablib setup --uninstall --preserve-data --backup`
 - [ ] Test invalid combinations: `--init --uninstall`
 - [ ] Test invalid combinations: `--init --reset`
 - [ ] Test invalid combinations: `--uninstall --reset`
 
 ### 1.4 Uninstall Testing
-- [ ] `docbro setup --uninstall` - test interactive uninstall
-- [ ] `docbro setup --uninstall --force` - test forced uninstall
-- [ ] `docbro setup --uninstall --preserve-data` - test data preservation
-- [ ] `docbro setup --uninstall --dry-run` - test dry run mode
+- [ ] `bablib setup --uninstall` - test interactive uninstall
+- [ ] `bablib setup --uninstall --force` - test forced uninstall
+- [ ] `bablib setup --uninstall --preserve-data` - test data preservation
+- [ ] `bablib setup --uninstall --dry-run` - test dry run mode
 - [ ] Test uninstall with active projects
 - [ ] Test uninstall with running servers
 - [ ] Verify all directories are cleaned up properly
 - [ ] Verify MCP configs are removed
 
 ### 1.5 Reset Testing
-- [ ] `docbro setup --reset` - test full reset
-- [ ] `docbro setup --reset --preserve-data` - test data preservation
-- [ ] `docbro setup --reset --force` - test forced reset
+- [ ] `bablib setup --reset` - test full reset
+- [ ] `bablib setup --reset --preserve-data` - test data preservation
+- [ ] `bablib setup --reset --force` - test forced reset
 - [ ] Test reset with corrupted state
 - [ ] Test reset recovery mechanisms
 
 ### 1.6 Status Testing
-- [ ] `docbro setup --status` - test status display
+- [ ] `bablib setup --status` - test status display
 - [ ] Test status with all services running
 - [ ] Test status with services partially available
 - [ ] Test status with no services available
@@ -116,11 +116,11 @@
 ## 2. Project Command Testing
 
 ### 2.1 Project Creation
-- [x] `docbro project --create test1 --type crawling` ✅
-- [x] `docbro project --create test2 --type data` ✅
-- [x] `docbro project --create test3 --type storage` ✅
-- [x] `docbro project --create test-unified-1 --type crawling` ✅ (Fixed API mismatches in UnifiedProjectService)
-- [ ] `docbro project --create "test 4" --type crawling --description "Test with spaces"`
+- [x] `bablib project --create test1 --type crawling` ✅
+- [x] `bablib project --create test2 --type data` ✅
+- [x] `bablib project --create test3 --type storage` ✅
+- [x] `bablib project --create test-unified-1 --type crawling` ✅ (Fixed API mismatches in UnifiedProjectService)
+- [ ] `bablib project --create "test 4" --type crawling --description "Test with spaces"`
 - [ ] Test creation with duplicate names (should fail)
 - [ ] Test creation with invalid type
 - [ ] Test creation without required flags
@@ -130,55 +130,55 @@
 - [ ] Test creation when at project limit
 
 ### 2.2 Project Listing
-- [x] `docbro project --list` - basic listing ✅
-- [ ] `docbro project --list --verbose` - detailed listing
-- [ ] `docbro project --list --status active`
-- [ ] `docbro project --list --status inactive`
-- [ ] `docbro project --list --limit 5`
-- [ ] `docbro project --list --format json`
-- [ ] `docbro project --list --format table`
+- [x] `bablib project --list` - basic listing ✅
+- [ ] `bablib project --list --verbose` - detailed listing
+- [ ] `bablib project --list --status active`
+- [ ] `bablib project --list --status inactive`
+- [ ] `bablib project --list --limit 5`
+- [ ] `bablib project --list --format json`
+- [ ] `bablib project --list --format table`
 - [ ] Test listing with no projects
 - [ ] Test listing with 100+ projects
 - [ ] Test listing with corrupted project data
 
 ### 2.3 Project Display
-- [x] `docbro project --show test1` ✅ (Fixed)
-- [ ] `docbro project --show test1 --detailed`
-- [ ] `docbro project --show test1 --format json`
+- [x] `bablib project --show test1` ✅ (Fixed)
+- [ ] `bablib project --show test1 --detailed`
+- [ ] `bablib project --show test1 --format json`
 - [ ] Test show with non-existent project
 - [ ] Test show with special characters in name
 
 ### 2.4 Project Update
-- [ ] `docbro project --update test1 --description "Updated description"`
-- [ ] `docbro project --update test1 --settings '{"key": "value"}'`
-- [ ] `docbro project --update test1 --status inactive`
+- [ ] `bablib project --update test1 --description "Updated description"`
+- [ ] `bablib project --update test1 --settings '{"key": "value"}'`
+- [ ] `bablib project --update test1 --status inactive`
 - [ ] Test update with invalid JSON settings
 - [ ] Test update with non-existent project
 - [ ] Test concurrent updates (race conditions)
 
 ### 2.5 Project Removal
-- [ ] `docbro project --remove test1`
-- [ ] `docbro project --remove test1 --confirm`
-- [ ] `docbro project --remove test1 --backup`
-- [ ] `docbro project --remove test1 --force`
+- [ ] `bablib project --remove test1`
+- [ ] `bablib project --remove test1 --confirm`
+- [ ] `bablib project --remove test1 --backup`
+- [ ] `bablib project --remove test1 --force`
 - [ ] Test removal of non-existent project
 - [ ] Test removal of project with active crawl
 - [ ] Test removal of project being served
 - [ ] Verify data cleanup after removal
 
 ### 2.6 Interactive Mode
-- [ ] `docbro project` without flags - test interactive menu
+- [ ] `bablib project` without flags - test interactive menu
 - [ ] Test all interactive menu options
 - [ ] Test navigation in project selection
 
 ## 3. Crawl Command Testing
 
 ### 3.1 Basic Crawling
-- [x] `docbro crawl test1 --url https://example.com` ✅ (FIXED: Database migration implemented)
-- [x] `docbro crawl test-unified-1 --url https://example.com --max-pages 1` ✅ (FIXED: crawl_depth column migration added)
-- [ ] `docbro crawl test-crawl --url https://example.com --max-pages 10`
-- [ ] `docbro crawl test-crawl --url https://example.com --depth 2`
-- [ ] `docbro crawl test-crawl --url https://example.com --rate-limit 0.5`
+- [x] `bablib crawl test1 --url https://example.com` ✅ (FIXED: Database migration implemented)
+- [x] `bablib crawl test-unified-1 --url https://example.com --max-pages 1` ✅ (FIXED: crawl_depth column migration added)
+- [ ] `bablib crawl test-crawl --url https://example.com --max-pages 10`
+- [ ] `bablib crawl test-crawl --url https://example.com --depth 2`
+- [ ] `bablib crawl test-crawl --url https://example.com --rate-limit 0.5`
 - [ ] Test crawl with existing project name (update mode)
 - [ ] Test crawl with invalid URL
 - [ ] Test crawl with unreachable URL
@@ -197,21 +197,21 @@
 - [ ] Test sites with cloudflare protection
 
 ### 3.3 Batch Operations
-- [ ] `docbro crawl --update test-crawl`
-- [ ] `docbro crawl --update --all`
-- [ ] `docbro crawl --update --all --parallel 4` - parallel updates
-- [ ] `docbro crawl --update --all --parallel 1` - sequential updates
-- [ ] `docbro crawl --update --all --quiet` - suppress progress
-- [ ] `docbro crawl --update --all --debug` - detailed output
+- [ ] `bablib crawl --update test-crawl`
+- [ ] `bablib crawl --update --all`
+- [ ] `bablib crawl --update --all --parallel 4` - parallel updates
+- [ ] `bablib crawl --update --all --parallel 1` - sequential updates
+- [ ] `bablib crawl --update --all --quiet` - suppress progress
+- [ ] `bablib crawl --update --all --debug` - detailed output
 - [ ] Test batch with mixed project types
 - [ ] Test batch interruption and resume
 - [ ] Test batch with some failures
 
 ### 3.5 Crawl Flag Combinations
-- [ ] `docbro crawl test --url https://example.com --max-pages 10 --depth 2 --rate-limit 0.5`
-- [ ] `docbro crawl test --update --debug --quiet` - conflicting flags
-- [ ] `docbro crawl test --url https://example.com --parallel 8 --rate-limit 10` - aggressive crawling
-- [ ] `docbro crawl test --max-pages 1 --depth 0` - single page only
+- [ ] `bablib crawl test --url https://example.com --max-pages 10 --depth 2 --rate-limit 0.5`
+- [ ] `bablib crawl test --update --debug --quiet` - conflicting flags
+- [ ] `bablib crawl test --url https://example.com --parallel 8 --rate-limit 10` - aggressive crawling
+- [ ] `bablib crawl test --max-pages 1 --depth 0` - single page only
 - [ ] Test crawl without project name (should fail)
 - [ ] Test crawl with both --url and --update (should handle properly)
 
@@ -228,7 +228,7 @@
 ## 4. Upload Command Testing
 
 ### 4.1 Interactive Mode
-- [ ] `docbro upload` - launch interactive menu
+- [ ] `bablib upload` - launch interactive menu
 - [ ] Test project selection navigation
 - [ ] Test source type selection (local, http, ftp, sftp, smb)
 - [ ] Test file browser navigation
@@ -236,14 +236,14 @@
 - [ ] Test upload cancellation
 
 ### 4.2 Local File Upload
-- [ ] `docbro upload files --project test1 --source /path/to/file --type local`
-- [ ] `docbro upload files --project test1 --source /path/to/dir --type local --recursive`
-- [ ] `docbro upload files --project test1 --source /path/to/dir --type local --recursive --exclude "*.tmp"`
-- [ ] `docbro upload files --project test1 --source /path/to/file --type local --dry-run`
-- [ ] `docbro upload files --project test1 --source /path/to/file --type local --overwrite ask`
-- [ ] `docbro upload files --project test1 --source /path/to/file --type local --overwrite skip`
-- [ ] `docbro upload files --project test1 --source /path/to/file --type local --overwrite overwrite`
-- [ ] `docbro upload files --project test1 --source /path/to/file --type local --progress`
+- [ ] `bablib upload files --project test1 --source /path/to/file --type local`
+- [ ] `bablib upload files --project test1 --source /path/to/dir --type local --recursive`
+- [ ] `bablib upload files --project test1 --source /path/to/dir --type local --recursive --exclude "*.tmp"`
+- [ ] `bablib upload files --project test1 --source /path/to/file --type local --dry-run`
+- [ ] `bablib upload files --project test1 --source /path/to/file --type local --overwrite ask`
+- [ ] `bablib upload files --project test1 --source /path/to/file --type local --overwrite skip`
+- [ ] `bablib upload files --project test1 --source /path/to/file --type local --overwrite overwrite`
+- [ ] `bablib upload files --project test1 --source /path/to/file --type local --progress`
 - [ ] Test upload with multiple --exclude patterns
 - [ ] Test upload with non-existent file
 - [ ] Test upload with permission denied
@@ -254,9 +254,9 @@
 - [ ] Test upload with Unicode filenames
 
 ### 4.3 HTTP/HTTPS Upload
-- [ ] `docbro upload files --project test1 --source https://example.com/doc.pdf --type https`
-- [ ] `docbro upload files --project test1 --source http://example.com/data.json --type http`
-- [ ] `docbro upload files --project test1 --source https://example.com/file --type https --username user`
+- [ ] `bablib upload files --project test1 --source https://example.com/doc.pdf --type https`
+- [ ] `bablib upload files --project test1 --source http://example.com/data.json --type http`
+- [ ] `bablib upload files --project test1 --source https://example.com/file --type https --username user`
 - [ ] Test URL upload with authentication
 - [ ] Test URL upload with large files
 - [ ] Test URL upload with timeout
@@ -264,36 +264,36 @@
 - [ ] Test URL upload with SSL errors
 
 ### 4.4 FTP Upload
-- [ ] `docbro upload files --project test1 --source ftp://server/path --type ftp`
-- [ ] `docbro upload files --project test1 --source ftp://server/path --type ftp --username user`
-- [ ] `docbro upload files --project test1 --source ftp://server/path --type ftp --recursive`
+- [ ] `bablib upload files --project test1 --source ftp://server/path --type ftp`
+- [ ] `bablib upload files --project test1 --source ftp://server/path --type ftp --username user`
+- [ ] `bablib upload files --project test1 --source ftp://server/path --type ftp --recursive`
 - [ ] Test FTP with anonymous access
 - [ ] Test FTP with authentication
 - [ ] Test FTP with passive mode
 - [ ] Test FTP connection failures
 
 ### 4.5 SFTP Upload
-- [ ] `docbro upload files --project test1 --source sftp://server/path --type sftp`
-- [ ] `docbro upload files --project test1 --source sftp://server/path --type sftp --username user`
-- [ ] `docbro upload files --project test1 --source sftp://server/path --type sftp --recursive`
+- [ ] `bablib upload files --project test1 --source sftp://server/path --type sftp`
+- [ ] `bablib upload files --project test1 --source sftp://server/path --type sftp --username user`
+- [ ] `bablib upload files --project test1 --source sftp://server/path --type sftp --recursive`
 - [ ] Test SFTP with password authentication
 - [ ] Test SFTP with SSH key authentication
 - [ ] Test SFTP with non-standard port
 - [ ] Test SFTP connection failures
 
 ### 4.6 SMB Upload
-- [ ] `docbro upload files --project test1 --source smb://server/share/path --type smb`
-- [ ] `docbro upload files --project test1 --source smb://server/share/path --type smb --username user`
-- [ ] `docbro upload files --project test1 --source smb://server/share/path --type smb --recursive`
+- [ ] `bablib upload files --project test1 --source smb://server/share/path --type smb`
+- [ ] `bablib upload files --project test1 --source smb://server/share/path --type smb --username user`
+- [ ] `bablib upload files --project test1 --source smb://server/share/path --type smb --recursive`
 - [ ] Test SMB with domain authentication
 - [ ] Test SMB with guest access
 - [ ] Test SMB connection failures
 
 ### 4.7 Status Monitoring
-- [ ] `docbro upload status`
-- [ ] `docbro upload status --project test1`
-- [ ] `docbro upload status --operation upload_test1_12345`
-- [ ] `docbro upload status --active`
+- [ ] `bablib upload status`
+- [ ] `bablib upload status --project test1`
+- [ ] `bablib upload status --operation upload_test1_12345`
+- [ ] `bablib upload status --active`
 - [ ] Test status during active upload
 - [ ] Test status with completed uploads
 - [ ] Test status with failed uploads
@@ -312,18 +312,18 @@
 ## 5. Serve Command Testing
 
 ### 5.1 Read-Only Server
-- [x] `docbro serve` - default settings ✅ (Multiple servers running on different ports)
-- [ ] `docbro serve --host 0.0.0.0 --port 9382`
-- [ ] `docbro serve --host 127.0.0.1 --port 9383`
-- [ ] `docbro serve --foreground`
+- [x] `bablib serve` - default settings ✅ (Multiple servers running on different ports)
+- [ ] `bablib serve --host 0.0.0.0 --port 9382`
+- [ ] `bablib serve --host 127.0.0.1 --port 9383`
+- [ ] `bablib serve --foreground`
 - [ ] Test server with no projects
 - [ ] Test server with multiple projects
 - [ ] Test server port conflicts
 - [ ] Test server shutdown gracefully
 
 ### 5.2 Admin Server
-- [ ] `docbro serve --admin`
-- [ ] `docbro serve --admin --host 127.0.0.1 --port 9384`
+- [ ] `bablib serve --admin`
+- [ ] `bablib serve --admin --host 127.0.0.1 --port 9384`
 - [ ] Verify admin refuses non-localhost binding
 - [ ] Test admin command execution
 - [ ] Test admin security restrictions
@@ -352,20 +352,20 @@
 ## 6. Health Command Testing
 
 ### 6.1 Basic Health Checks
-- [x] `docbro health` - full health check ✅
-- [ ] `docbro health --system` - system checks only
-- [ ] `docbro health --services` - external service checks only
-- [ ] `docbro health --config` - configuration validity checks
-- [ ] `docbro health --projects` - project-specific health checks
-- [ ] `docbro health --verbose` - detailed diagnostic information
-- [ ] `docbro health --timeout 5` - quick health check
-- [ ] `docbro health --timeout 60` - thorough health check
+- [x] `bablib health` - full health check ✅
+- [ ] `bablib health --system` - system checks only
+- [ ] `bablib health --services` - external service checks only
+- [ ] `bablib health --config` - configuration validity checks
+- [ ] `bablib health --projects` - project-specific health checks
+- [ ] `bablib health --verbose` - detailed diagnostic information
+- [ ] `bablib health --timeout 5` - quick health check
+- [ ] `bablib health --timeout 60` - thorough health check
 
 ### 6.2 Health Flag Combinations
-- [ ] `docbro health --system --services` - multiple checks
-- [ ] `docbro health --config --projects --verbose` - detailed subset
-- [ ] `docbro health --services --timeout 1` - quick service check
-- [ ] `docbro health --format json` - JSON output
+- [ ] `bablib health --system --services` - multiple checks
+- [ ] `bablib health --config --projects --verbose` - detailed subset
+- [ ] `bablib health --services --timeout 1` - quick service check
+- [ ] `bablib health --format json` - JSON output
 - [ ] Test health with all flags combined
 - [ ] Test health with no vector store configured
 - [ ] Test health with degraded services
@@ -509,12 +509,12 @@
 ## 13. Documentation Testing
 
 ### 13.1 CLI Help
-- [ ] `docbro --help`
-- [ ] `docbro setup --help`
-- [ ] `docbro project --help`
-- [ ] `docbro crawl --help`
-- [ ] `docbro upload --help`
-- [ ] `docbro serve --help`
+- [ ] `bablib --help`
+- [ ] `bablib setup --help`
+- [ ] `bablib project --help`
+- [ ] `bablib crawl --help`
+- [ ] `bablib upload --help`
+- [ ] `bablib serve --help`
 - [ ] Verify all help text is accurate
 
 ### 13.2 Error Messages
@@ -531,8 +531,8 @@
 - [ ] Verify all MCP dependencies are available
 
 ### 14.2 MCP Server Setup
-- [ ] Start read-only server: `docbro serve --host 0.0.0.0 --port 9383`
-- [ ] Start admin server: `docbro serve --admin --host 127.0.0.1 --port 9384`
+- [ ] Start read-only server: `bablib serve --host 0.0.0.0 --port 9383`
+- [ ] Start admin server: `bablib serve --admin --host 127.0.0.1 --port 9384`
 - [ ] Verify both servers can run simultaneously
 - [ ] Check server logs for startup errors
 - [ ] Test server shutdown and restart
@@ -577,65 +577,65 @@
 ## 15. Additional Test Combinations
 
 ### 15.1 Setup Command Advanced Combinations
-- [ ] `docbro setup --init --auto --vector-store qdrant --force`
-- [ ] `docbro setup --init --non-interactive --force --vector-store sqlite_vec`
-- [ ] `docbro setup --uninstall --backup --preserve-data --dry-run`
-- [ ] `docbro setup --reset --force --dry-run` (should warn about conflicting flags)
-- [ ] `docbro setup --status --verbose --timeout 30`
-- [ ] `docbro setup --config --validate --fix`
+- [ ] `bablib setup --init --auto --vector-store qdrant --force`
+- [ ] `bablib setup --init --non-interactive --force --vector-store sqlite_vec`
+- [ ] `bablib setup --uninstall --backup --preserve-data --dry-run`
+- [ ] `bablib setup --reset --force --dry-run` (should warn about conflicting flags)
+- [ ] `bablib setup --status --verbose --timeout 30`
+- [ ] `bablib setup --config --validate --fix`
 
 ### 15.2 Project Command Advanced Combinations
-- [ ] `docbro project --create test --type crawling --settings '{"auto_crawl": true}' --description "Auto crawl test"`
-- [ ] `docbro project --list --status active --limit 10 --format json --verbose`
-- [ ] `docbro project --show test --detailed --format json --export /tmp/project.json`
-- [ ] `docbro project --update test --status inactive --settings '{}' --force`
-- [ ] `docbro project --remove test --backup --confirm --archive --path /backup/`
-- [ ] `docbro project --batch-create --from-file projects.yaml`
-- [ ] `docbro project --export-all --format csv --output projects.csv`
+- [ ] `bablib project --create test --type crawling --settings '{"auto_crawl": true}' --description "Auto crawl test"`
+- [ ] `bablib project --list --status active --limit 10 --format json --verbose`
+- [ ] `bablib project --show test --detailed --format json --export /tmp/project.json`
+- [ ] `bablib project --update test --status inactive --settings '{}' --force`
+- [ ] `bablib project --remove test --backup --confirm --archive --path /backup/`
+- [ ] `bablib project --batch-create --from-file projects.yaml`
+- [ ] `bablib project --export-all --format csv --output projects.csv`
 
 ### 15.3 Crawl Command Advanced Combinations
-- [ ] `docbro crawl test --url https://example.com --max-pages 100 --depth 5 --rate-limit 2.0 --exclude "*.pdf" --include "docs/*"`
-- [ ] `docbro crawl test --update --force --debug --parallel 4 --timeout 300`
-- [ ] `docbro crawl --update --all --parallel 8 --rate-limit 5.0 --retry 3 --continue-on-error`
-- [ ] `docbro crawl test --url https://example.com --headers '{"User-Agent": "Custom"}' --cookies cookies.txt`
-- [ ] `docbro crawl test --sitemap https://example.com/sitemap.xml --follow-external false`
-- [ ] `docbro crawl test --url https://example.com --screenshot --extract-metadata --store-raw`
+- [ ] `bablib crawl test --url https://example.com --max-pages 100 --depth 5 --rate-limit 2.0 --exclude "*.pdf" --include "docs/*"`
+- [ ] `bablib crawl test --update --force --debug --parallel 4 --timeout 300`
+- [ ] `bablib crawl --update --all --parallel 8 --rate-limit 5.0 --retry 3 --continue-on-error`
+- [ ] `bablib crawl test --url https://example.com --headers '{"User-Agent": "Custom"}' --cookies cookies.txt`
+- [ ] `bablib crawl test --sitemap https://example.com/sitemap.xml --follow-external false`
+- [ ] `bablib crawl test --url https://example.com --screenshot --extract-metadata --store-raw`
 
 ### 15.4 Upload Command Advanced Combinations
-- [ ] `docbro upload files --project test --source /path/ --type local --recursive --exclude "*.log" --include "*.md" --parallel 4`
-- [ ] `docbro upload files --project test --source https://example.com/file --type https --retry 5 --timeout 60 --verify-ssl false`
-- [ ] `docbro upload files --project test --source ftp://server/ --type ftp --passive --binary --recursive --preserve-timestamps`
-- [ ] `docbro upload files --project test --source sftp://server/ --type sftp --key ~/.ssh/id_rsa --port 2222 --recursive`
-- [ ] `docbro upload files --project test --source smb://server/share --type smb --domain WORKGROUP --recursive --hidden`
-- [ ] `docbro upload batch --from-file upload-list.txt --project test --parallel 10 --continue-on-error`
-- [ ] `docbro upload status --active --watch --format json --interval 1`
+- [ ] `bablib upload files --project test --source /path/ --type local --recursive --exclude "*.log" --include "*.md" --parallel 4`
+- [ ] `bablib upload files --project test --source https://example.com/file --type https --retry 5 --timeout 60 --verify-ssl false`
+- [ ] `bablib upload files --project test --source ftp://server/ --type ftp --passive --binary --recursive --preserve-timestamps`
+- [ ] `bablib upload files --project test --source sftp://server/ --type sftp --key ~/.ssh/id_rsa --port 2222 --recursive`
+- [ ] `bablib upload files --project test --source smb://server/share --type smb --domain WORKGROUP --recursive --hidden`
+- [ ] `bablib upload batch --from-file upload-list.txt --project test --parallel 10 --continue-on-error`
+- [ ] `bablib upload status --active --watch --format json --interval 1`
 
 ### 15.5 Serve Command Advanced Combinations
-- [ ] `docbro serve --host 0.0.0.0 --port 9382 --foreground --workers 4 --reload`
-- [ ] `docbro serve --admin --host 127.0.0.1 --port 9384 --ssl-cert cert.pem --ssl-key key.pem`
-- [ ] `docbro serve --host 0.0.0.0 --port 9382 --cors "*" --rate-limit 100 --timeout 30`
-- [ ] `docbro serve --admin --debug --log-level DEBUG --access-log --error-log errors.log`
-- [ ] `docbro serve --health-only --port 9385` (health endpoint only mode)
-- [ ] `docbro serve --metrics --prometheus --port 9386` (metrics endpoint)
+- [ ] `bablib serve --host 0.0.0.0 --port 9382 --foreground --workers 4 --reload`
+- [ ] `bablib serve --admin --host 127.0.0.1 --port 9384 --ssl-cert cert.pem --ssl-key key.pem`
+- [ ] `bablib serve --host 0.0.0.0 --port 9382 --cors "*" --rate-limit 100 --timeout 30`
+- [ ] `bablib serve --admin --debug --log-level DEBUG --access-log --error-log errors.log`
+- [ ] `bablib serve --health-only --port 9385` (health endpoint only mode)
+- [ ] `bablib serve --metrics --prometheus --port 9386` (metrics endpoint)
 
 ### 15.6 Health Command Advanced Combinations
-- [ ] `docbro health --all --verbose --format json --output health.json`
-- [ ] `docbro health --system --services --projects --config --timeout 60 --retry 3`
-- [ ] `docbro health --watch --interval 5 --alert-on-failure`
-- [ ] `docbro health --diagnose --fix --backup-first`
-- [ ] `docbro health --benchmark --iterations 10 --report benchmark.html`
+- [ ] `bablib health --all --verbose --format json --output health.json`
+- [ ] `bablib health --system --services --projects --config --timeout 60 --retry 3`
+- [ ] `bablib health --watch --interval 5 --alert-on-failure`
+- [ ] `bablib health --diagnose --fix --backup-first`
+- [ ] `bablib health --benchmark --iterations 10 --report benchmark.html`
 
 ### 15.7 Vector Store Specific Tests
-- [ ] `DOCBRO_VECTOR_STORE=qdrant docbro setup --init --auto`
-- [ ] `DOCBRO_VECTOR_STORE=qdrant docbro project --create qdrant-test --type data`
-- [ ] `DOCBRO_VECTOR_STORE=qdrant docbro crawl qdrant-test --url https://example.com`
-- [ ] `DOCBRO_VECTOR_STORE=qdrant docbro serve --port 9387`
-- [ ] `DOCBRO_VECTOR_STORE=sqlite_vec docbro migrate --from qdrant --to sqlite_vec`
+- [ ] `BABLIB_VECTOR_STORE=qdrant bablib setup --init --auto`
+- [ ] `BABLIB_VECTOR_STORE=qdrant bablib project --create qdrant-test --type data`
+- [ ] `BABLIB_VECTOR_STORE=qdrant bablib crawl qdrant-test --url https://example.com`
+- [ ] `BABLIB_VECTOR_STORE=qdrant bablib serve --port 9387`
+- [ ] `BABLIB_VECTOR_STORE=sqlite_vec bablib migrate --from qdrant --to sqlite_vec`
 - [ ] Test vector store with 100k+ documents
 - [ ] Test vector store failover scenarios
 
 ### 15.8 Environment Variable Combinations
-- [ ] Test with all DOCBRO_* env vars set
+- [ ] Test with all BABLIB_* env vars set
 - [ ] Test with conflicting env vars and CLI flags
 - [ ] Test with invalid env var values
 - [ ] Test env var precedence order
@@ -770,7 +770,7 @@
 ### 16.1 Read-Only Server Methods (Port 9382/9383)
 
 #### 16.1.1 list_projects Method
-**Purpose**: List all DocBro projects with optional filtering
+**Purpose**: List all Bablib projects with optional filtering
 **Parameters**:
 - `status_filter` (optional): Filter by project status
 - `limit` (optional): Limit number of results
@@ -894,7 +894,7 @@
 ### 16.2 Admin Server Methods (Port 9384)
 
 #### 16.2.1 execute_command Method
-**Purpose**: Execute arbitrary DocBro CLI commands
+**Purpose**: Execute arbitrary Bablib CLI commands
 **Parameters**:
 - `request` (CommandExecutionRequest): Command details
 
@@ -1110,7 +1110,7 @@
 ### 17.1 MCP Read-Only Server Testing (Port 9396)
 
 #### 17.1.1 Server Startup and Health Checks
-- [ ] Start server: `docbro serve --host 127.0.0.1 --port 9396 --foreground` ✅
+- [ ] Start server: `bablib serve --host 127.0.0.1 --port 9396 --foreground` ✅
 - [ ] Test health endpoint: `curl http://localhost:9396/health` ✅
 - [ ] Verify JSON response format ✅
 - [ ] Check server status and version info ✅
@@ -1120,7 +1120,7 @@
 #### 17.1.2 Project Listing Operations
 - [ ] List all projects: `curl http://localhost:9396/projects` ❌ (Endpoint not found)
 - [ ] Test empty project list response
-- [ ] Create test project: `docbro project --create mcp-test-1 --type crawling` ✅
+- [ ] Create test project: `bablib project --create mcp-test-1 --type crawling` ✅
 - [ ] Verify project appears in list ✅
 - [ ] Create multiple projects and verify listing ✅
 - [ ] Test pagination with many projects
@@ -1138,8 +1138,8 @@
 - [ ] Benchmark search performance
 
 #### 17.1.4 File Access Control Testing
-- [ ] Create storage project: `docbro project --create storage-test --type storage`
-- [ ] Create crawling project: `docbro project --create crawl-test --type crawling`
+- [ ] Create storage project: `bablib project --create storage-test --type storage`
+- [ ] Create crawling project: `bablib project --create crawl-test --type crawling`
 - [ ] Test file access for storage project (should allow content)
 - [ ] Test file access for crawling project (metadata only)
 - [ ] Test path traversal protection
@@ -1159,7 +1159,7 @@
 ### 17.2 MCP Admin Server Testing (Port 9397)
 
 #### 17.2.1 Admin Server Setup
-- [ ] Start admin server: `docbro serve --admin --host 127.0.0.1 --port 9397 --foreground`
+- [ ] Start admin server: `bablib serve --admin --host 127.0.0.1 --port 9397 --foreground`
 - [ ] Verify localhost-only binding
 - [ ] Test rejection of non-localhost connections
 - [ ] Test admin health endpoint
@@ -1383,7 +1383,7 @@
 ### 19.1 System Resilience Testing
 - [ ] **Server Port Collision Testing** - Start server on port already in use, verify graceful error handling
 - [ ] **Multiple Vector Store Migration** - Switch between SQLite-vec and Qdrant with existing data, verify data integrity
-- [ ] **Interrupted Setup Recovery** - Kill process during `docbro setup --init` and test recovery mechanism
+- [ ] **Interrupted Setup Recovery** - Kill process during `bablib setup --init` and test recovery mechanism
 - [ ] **Concurrent Server Instances** - Run 10+ MCP servers simultaneously on different ports
 - [ ] **Cross-Project Search** - Search across 50+ projects with mixed vector stores
 
@@ -1420,7 +1420,7 @@
 - [ ] **SSL Certificate Validation** - Test with self-signed, expired, invalid certificates
 - [ ] **Content Type Detection** - Upload files without extensions, verify type detection
 - [ ] **Symlink Handling** - Create projects with symlinked directories
-- [ ] **Version Compatibility Testing** - Test upgrade/downgrade between DocBro versions
+- [ ] **Version Compatibility Testing** - Test upgrade/downgrade between Bablib versions
 
 ## Priority Order
 

@@ -1,5 +1,5 @@
 """
-XDG-compliant directory utilities for DocBro settings.
+XDG-compliant directory utilities for Bablib settings.
 """
 
 import os
@@ -27,15 +27,15 @@ def get_xdg_cache_home() -> Path:
         return Path(xdg_cache)
     return Path.home() / '.cache'
 
-def get_docbro_config_dir() -> Path:
-    """Get DocBro configuration directory."""
-    config_dir = get_xdg_config_home() / 'docbro'
+def get_bablib_config_dir() -> Path:
+    """Get Bablib configuration directory."""
+    config_dir = get_xdg_config_home() / 'bablib'
     config_dir.mkdir(parents=True, exist_ok=True)
     return config_dir
 
-def get_docbro_data_dir() -> Path:
-    """Get DocBro data directory."""
-    data_dir = get_xdg_data_home() / 'docbro'
+def get_bablib_data_dir() -> Path:
+    """Get Bablib data directory."""
+    data_dir = get_xdg_data_home() / 'bablib'
     data_dir.mkdir(parents=True, exist_ok=True)
 
     # Ensure projects subdirectory exists
@@ -44,26 +44,45 @@ def get_docbro_data_dir() -> Path:
 
     return data_dir
 
-def get_docbro_cache_dir() -> Path:
-    """Get DocBro cache directory."""
-    cache_dir = get_xdg_cache_home() / 'docbro'
+def get_bablib_cache_dir() -> Path:
+    """Get Bablib cache directory."""
+    cache_dir = get_xdg_cache_home() / 'bablib'
     cache_dir.mkdir(parents=True, exist_ok=True)
     return cache_dir
 
-def get_docbro_projects_dir() -> Path:
-    """Get DocBro projects directory."""
-    # This will automatically create the projects directory via get_docbro_data_dir()
-    return get_docbro_data_dir() / 'projects'
+def get_bablib_projects_dir() -> Path:
+    """Get Bablib projects directory."""
+    # This will automatically create the projects directory via get_bablib_data_dir()
+    return get_bablib_data_dir() / 'projects'
+
+def get_bablib_boxes_dir() -> Path:
+    """Get Bablib boxes directory."""
+    boxes_dir = get_bablib_data_dir() / 'boxes'
+    boxes_dir.mkdir(parents=True, exist_ok=True)
+    return boxes_dir
+
+def get_box_data_path(box_name: str) -> Path:
+    """Get path to a specific box's data directory.
+
+    Args:
+        box_name: Name of the box
+
+    Returns:
+        Path to the box's data directory (~/.local/share/bablib/boxes/{box_name}/)
+    """
+    box_dir = get_bablib_boxes_dir() / box_name
+    box_dir.mkdir(parents=True, exist_ok=True)
+    return box_dir
 
 def get_global_settings_path() -> Path:
     """Get path to global settings file."""
-    return get_docbro_config_dir() / 'settings.yaml'
+    return get_bablib_config_dir() / 'settings.yaml'
 
 def get_project_settings_path(project_dir: Path | None = None) -> Path:
     """Get path to project settings file."""
     if project_dir is None:
         project_dir = Path.cwd()
-    return project_dir / '.docbro' / 'settings.yaml'
+    return project_dir / '.bablib' / 'settings.yaml'
 
 def ensure_directory(path: Path) -> None:
     """Ensure a directory exists."""

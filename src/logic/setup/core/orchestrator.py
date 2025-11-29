@@ -33,9 +33,9 @@ class SetupOrchestrator:
             home_dir: Optional home directory for testing
         """
         self.home_dir = home_dir or Path.home()
-        self.config_dir = self.home_dir / ".config" / "docbro"
-        self.data_dir = self.home_dir / ".local" / "share" / "docbro"
-        self.cache_dir = self.home_dir / ".cache" / "docbro"
+        self.config_dir = self.home_dir / ".config" / "bablib"
+        self.data_dir = self.home_dir / ".local" / "share" / "bablib"
+        self.cache_dir = self.home_dir / ".cache" / "bablib"
 
         # Initialize services
         self.initializer = SetupInitializer(home_dir=self.home_dir)
@@ -55,7 +55,7 @@ class SetupOrchestrator:
         non_interactive: bool = False,
         **kwargs
     ) -> SetupOperation:
-        """Initialize DocBro configuration.
+        """Initialize Bablib configuration.
 
         Args:
             auto: Use automatic mode with defaults
@@ -82,7 +82,7 @@ class SetupOrchestrator:
             # Check if already initialized
             if self._is_initialized() and not force:
                 raise RuntimeError(
-                    "DocBro is already initialized. Use --force to reinitialize."
+                    "Bablib is already initialized. Use --force to reinitialize."
                 )
 
             # Validate system requirements
@@ -110,14 +110,14 @@ class SetupOrchestrator:
             else:
                 # Only in non-interactive mode, check env var or fail
                 import os
-                env_vector_store = os.environ.get("DOCBRO_VECTOR_STORE")
+                env_vector_store = os.environ.get("BABLIB_VECTOR_STORE")
                 if env_vector_store and env_vector_store in ["sqlite_vec", "qdrant"]:
                     vector_store = env_vector_store
                     operation.add_selection("vector_store", vector_store)
                 else:
                     raise ValueError(
                         "Vector store must be specified. Use --vector-store option or "
-                        "set DOCBRO_VECTOR_STORE environment variable to 'sqlite_vec' or 'qdrant'"
+                        "set BABLIB_VECTOR_STORE environment variable to 'sqlite_vec' or 'qdrant'"
                     )
 
             # Initialize vector store
@@ -144,7 +144,7 @@ class SetupOrchestrator:
             self.configurator.save_config(config.to_yaml_dict())
 
             operation.transition_to(OperationStatus.COMPLETED)
-            logger.info("✅ DocBro initialization completed successfully")
+            logger.info("✅ Bablib initialization completed successfully")
 
         except Exception as e:
             logger.error(f"Initialization failed: {e}")
@@ -161,7 +161,7 @@ class SetupOrchestrator:
         preserve_data: bool = False,
         **kwargs
     ) -> SetupOperation:
-        """Uninstall DocBro.
+        """Uninstall Bablib.
 
         Args:
             force: Skip confirmation prompts
@@ -200,7 +200,7 @@ class SetupOrchestrator:
                     f"and free {manifest.get_size_display()}. Continue?"
                 )
                 second_prompt = (
-                    "⚠️  WARNING: This will permanently delete all DocBro data and configuration files!"
+                    "⚠️  WARNING: This will permanently delete all Bablib data and configuration files!"
                 )
 
                 if not confirm_dangerous_action(first_prompt, second_prompt):
@@ -213,7 +213,7 @@ class SetupOrchestrator:
                 operation.add_selection("backup_location", str(backup_path))
 
             # Execute uninstall
-            logger.info("Removing DocBro installation...")
+            logger.info("Removing Bablib installation...")
             result = self.uninstaller.execute(
                 manifest=manifest,
                 force=True  # Already confirmed
@@ -222,7 +222,7 @@ class SetupOrchestrator:
             operation.add_selection("removed_items", result.get("removed", []))
             operation.add_selection("space_recovered", manifest.total_size_bytes)
             operation.transition_to(OperationStatus.COMPLETED)
-            logger.info("✅ DocBro uninstalled successfully")
+            logger.info("✅ Bablib uninstalled successfully")
 
         except Exception as e:
             logger.error(f"Uninstall failed: {e}")
@@ -238,7 +238,7 @@ class SetupOrchestrator:
         preserve_data: bool = False,
         **kwargs
     ) -> SetupOperation:
-        """Reset DocBro to fresh state.
+        """Reset Bablib to fresh state.
 
         Args:
             force: Skip confirmation prompts
@@ -260,7 +260,7 @@ class SetupOrchestrator:
 
             # Double confirmation unless forced
             if not force:
-                if not confirm_action("This will reset DocBro to a fresh state. Continue?"):
+                if not confirm_action("This will reset Bablib to a fresh state. Continue?"):
                     operation.transition_to(OperationStatus.CANCELLED)
                     return operation
 
@@ -269,7 +269,7 @@ class SetupOrchestrator:
                     return operation
 
             # Execute reset
-            logger.info("Resetting DocBro installation...")
+            logger.info("Resetting Bablib installation...")
             result = self.reset_handler.execute(
                 preserve_data=preserve_data,
                 vector_store=vector_store
@@ -280,7 +280,7 @@ class SetupOrchestrator:
                 operation.add_selection("backup_path", str(result.backup_path))
 
             operation.transition_to(OperationStatus.COMPLETED)
-            logger.info("✅ DocBro reset completed successfully")
+            logger.info("✅ Bablib reset completed successfully")
 
         except Exception as e:
             logger.error(f"Reset failed: {e}")
@@ -346,7 +346,7 @@ class SetupOrchestrator:
             return operation
 
     def _is_initialized(self) -> bool:
-        """Check if DocBro is already initialized."""
+        """Check if Bablib is already initialized."""
         config_file = self.config_dir / "settings.yaml"
         return config_file.exists()
 

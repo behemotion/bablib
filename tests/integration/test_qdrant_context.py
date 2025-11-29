@@ -20,8 +20,8 @@ from src.models.configuration_state import ConfigurationState
 @pytest.fixture
 def qdrant_env(monkeypatch):
     """Set environment to use Qdrant backend."""
-    monkeypatch.setenv("DOCBRO_VECTOR_STORE", "qdrant")
-    monkeypatch.setenv("DOCBRO_QDRANT_URL", "http://localhost:6333")
+    monkeypatch.setenv("BABLIB_VECTOR_STORE", "qdrant")
+    monkeypatch.setenv("BABLIB_QDRANT_URL", "http://localhost:6333")
 
 
 @pytest.mark.asyncio

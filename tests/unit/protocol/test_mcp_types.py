@@ -57,13 +57,13 @@ class TestResource:
     def test_create_resource(self):
         """Test creating resource."""
         resource = Resource(
-            uri="docbro://shelf/test",
+            uri="bablib://shelf/test",
             name="Test Shelf",
             description="A test shelf",
             mime_type="application/json",
         )
 
-        assert resource.uri == "docbro://shelf/test"
+        assert resource.uri == "bablib://shelf/test"
         assert resource.name == "Test Shelf"
         assert resource.description == "A test shelf"
         assert resource.mime_type == "application/json"
@@ -71,11 +71,11 @@ class TestResource:
     def test_create_resource_helper(self):
         """Test Resource.create helper method."""
         resource = Resource.create(
-            uri="docbro://box/test",
+            uri="bablib://box/test",
             name="Test Box",
         )
 
-        assert resource.uri == "docbro://box/test"
+        assert resource.uri == "bablib://box/test"
         assert resource.name == "Test Box"
         assert resource.mime_type == "application/json"
 
@@ -93,12 +93,12 @@ class TestResourceContents:
     def test_create_text_contents(self):
         """Test creating text resource contents."""
         contents = ResourceContents(
-            uri="docbro://shelf/test",
+            uri="bablib://shelf/test",
             mime_type="text/plain",
             text="Test content",
         )
 
-        assert contents.uri == "docbro://shelf/test"
+        assert contents.uri == "bablib://shelf/test"
         assert contents.mime_type == "text/plain"
         assert contents.text == "Test content"
         assert contents.blob is None
@@ -106,7 +106,7 @@ class TestResourceContents:
     def test_create_binary_contents(self):
         """Test creating binary resource contents."""
         contents = ResourceContents(
-            uri="docbro://file/test",
+            uri="bablib://file/test",
             mime_type="application/octet-stream",
             blob="base64encodeddata",
         )
@@ -121,19 +121,19 @@ class TestResourceTemplate:
     def test_create_template(self):
         """Test creating resource template."""
         template = ResourceTemplate(
-            uri_template="docbro://shelf/{name}",
+            uri_template="bablib://shelf/{name}",
             name="Shelf Template",
             description="Access any shelf by name",
             mime_type="application/json",
         )
 
-        assert template.uri_template == "docbro://shelf/{name}"
+        assert template.uri_template == "bablib://shelf/{name}"
         assert template.name == "Shelf Template"
 
     def test_template_serialization(self):
         """Test template serialization."""
         template = ResourceTemplate(
-            uri_template="docbro://box/{shelf}/{name}",
+            uri_template="bablib://box/{shelf}/{name}",
             name="Box Template",
         )
         data = template.model_dump(by_alias=True)

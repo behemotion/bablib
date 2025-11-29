@@ -117,7 +117,7 @@ class TestSQLiteVecConfiguration:
     def test_database_path_validation(self, tmp_path):
         """Test database path must be within data directory."""
         # Valid path within data directory
-        data_dir = tmp_path / ".local" / "share" / "docbro"
+        data_dir = tmp_path / ".local" / "share" / "bablib"
         data_dir.mkdir(parents=True)
 
         config = SQLiteVecConfiguration(

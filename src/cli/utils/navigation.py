@@ -43,7 +43,7 @@ class NavigationChoice:
 class NavigationTheme:
     """Consistent theme settings for all navigation interfaces.
 
-    Provides unified styling across all DocBro navigation menus.
+    Provides unified styling across all Bablib navigation menus.
     """
     highlight_style: str = "blue on white"  # Selected item style
     arrow_indicator: str = "→"  # Selection indicator

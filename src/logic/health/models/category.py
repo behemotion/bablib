@@ -28,7 +28,7 @@ class HealthCategory(Enum):
         descriptions = {
             HealthCategory.SYSTEM: "System requirements and environment validation",
             HealthCategory.SERVICES: "External service availability and configuration",
-            HealthCategory.CONFIGURATION: "DocBro configuration file validation",
+            HealthCategory.CONFIGURATION: "Bablib configuration file validation",
             HealthCategory.PROJECTS: "Project-specific health validation"
         }
         return descriptions[self]

@@ -1,4 +1,4 @@
-"""Integration tests for docbro system-check with SQLite-vec."""
+"""Integration tests for bablib system-check with SQLite-vec."""
 
 import pytest
 from pathlib import Path
@@ -9,7 +9,7 @@ from src.cli.main import cli
 
 
 class TestSystemCheckWithSQLiteVec:
-    """Test docbro system-check command with SQLite-vec configuration."""
+    """Test bablib system-check command with SQLite-vec configuration."""
 
     @pytest.fixture
     def runner(self):
@@ -19,7 +19,7 @@ class TestSystemCheckWithSQLiteVec:
     @pytest.fixture
     def sqlite_vec_config(self, tmp_path):
         """Create configuration with SQLite-vec."""
-        config_dir = tmp_path / ".config" / "docbro"
+        config_dir = tmp_path / ".config" / "bablib"
         config_dir.mkdir(parents=True)
 
         config_file = config_dir / "config.yaml"
@@ -125,7 +125,7 @@ class TestSystemCheckWithSQLiteVec:
         work_dir, config_file = sqlite_vec_config
 
         # Create mock project databases
-        projects_dir = work_dir / ".local" / "share" / "docbro" / "projects"
+        projects_dir = work_dir / ".local" / "share" / "bablib" / "projects"
         projects_dir.mkdir(parents=True)
 
         project1 = projects_dir / "python-docs"
@@ -158,7 +158,7 @@ class TestSystemCheckWithSQLiteVec:
 
     def test_system_check_compare_providers(self, runner, tmp_path):
         """Test system-check output differs between Qdrant and SQLite-vec."""
-        config_dir = tmp_path / ".config" / "docbro"
+        config_dir = tmp_path / ".config" / "bablib"
         config_dir.mkdir(parents=True)
         config_file = config_dir / "config.yaml"
 

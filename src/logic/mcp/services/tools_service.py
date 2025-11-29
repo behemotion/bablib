@@ -2,7 +2,7 @@
 MCP Tools Service
 
 Implements tools/list and tools/call endpoints for MCP protocol.
-Maps DocBro CLI commands to MCP tool definitions.
+Maps Bablib CLI commands to MCP tool definitions.
 """
 
 import logging
@@ -19,7 +19,7 @@ class ToolsService:
     """
     Service for MCP tools endpoints.
 
-    Provides DocBro commands as MCP tools that can be discovered and called.
+    Provides Bablib commands as MCP tools that can be discovered and called.
     """
 
     def __init__(self, is_admin: bool = False):
@@ -37,7 +37,7 @@ class ToolsService:
         Get all available tool definitions.
 
         Returns:
-            List of Tool objects representing DocBro commands
+            List of Tool objects representing Bablib commands
         """
         tools = []
 
@@ -60,7 +60,7 @@ class ToolsService:
         """Get shelf management tools."""
         return [
             Tool.create(
-                name="docbro_shelf_list",
+                name="bablib_shelf_list",
                 description="List all documentation shelves",
                 input_schema={
                     "type": "object",
@@ -81,7 +81,7 @@ class ToolsService:
                 },
             ),
             Tool.create(
-                name="docbro_shelf_current",
+                name="bablib_shelf_current",
                 description="Get or set the current shelf",
                 input_schema={
                     "type": "object",
@@ -99,7 +99,7 @@ class ToolsService:
         """Get box management tools."""
         return [
             Tool.create(
-                name="docbro_box_list",
+                name="bablib_box_list",
                 description="List documentation boxes",
                 input_schema={
                     "type": "object",
@@ -125,7 +125,7 @@ class ToolsService:
                 },
             ),
             Tool.create(
-                name="docbro_box_inspect",
+                name="bablib_box_inspect",
                 description="Inspect a documentation box",
                 input_schema={
                     "type": "object",
@@ -144,7 +144,7 @@ class ToolsService:
         """Get search and query tools."""
         return [
             Tool.create(
-                name="docbro_search",
+                name="bablib_search",
                 description="Search documentation content",
                 input_schema={
                     "type": "object",
@@ -175,7 +175,7 @@ class ToolsService:
         """Get admin-only tools."""
         return [
             Tool.create(
-                name="docbro_shelf_create",
+                name="bablib_shelf_create",
                 description="Create a new documentation shelf",
                 input_schema={
                     "type": "object",
@@ -197,7 +197,7 @@ class ToolsService:
                 },
             ),
             Tool.create(
-                name="docbro_box_create",
+                name="bablib_box_create",
                 description="Create a new documentation box",
                 input_schema={
                     "type": "object",
@@ -224,7 +224,7 @@ class ToolsService:
                 },
             ),
             Tool.create(
-                name="docbro_fill",
+                name="bablib_fill",
                 description="Fill a box with content (crawl, upload, or store)",
                 input_schema={
                     "type": "object",
@@ -288,7 +288,7 @@ class ToolsService:
 
         arguments = params.get("arguments", {})
 
-        # Map tool name to DocBro command
+        # Map tool name to Bablib command
         command_parts = self._tool_to_command(tool_name, arguments)
 
         # Execute command
@@ -313,10 +313,10 @@ class ToolsService:
 
     def _tool_to_command(self, tool_name: str, arguments: dict) -> list[str]:
         """
-        Convert MCP tool call to DocBro command.
+        Convert MCP tool call to Bablib command.
 
         Args:
-            tool_name: MCP tool name (e.g., 'docbro_shelf_list')
+            tool_name: MCP tool name (e.g., 'bablib_shelf_list')
             arguments: Tool arguments
 
         Returns:
@@ -325,20 +325,20 @@ class ToolsService:
         Raises:
             ValueError: If tool name is not recognized
         """
-        # Remove 'docbro_' prefix
-        if not tool_name.startswith("docbro_"):
+        # Remove 'bablib_' prefix
+        if not tool_name.startswith("bablib_"):
             raise ValueError(f"Unknown tool: {tool_name}")
 
-        command_name = tool_name[7:]  # Remove 'docbro_'
+        command_name = tool_name[7:]  # Remove 'bablib_'
 
-        # Map to DocBro CLI command
+        # Map to Bablib CLI command
         parts = command_name.split("_")
 
         if len(parts) < 2:
             raise ValueError(f"Invalid tool name format: {tool_name}")
 
-        # Build command: docbro <entity> <action> [args]
-        cmd = ["docbro", parts[0], parts[1]]
+        # Build command: bablib <entity> <action> [args]
+        cmd = ["bablib", parts[0], parts[1]]
 
         # Add arguments based on tool
         cmd.extend(self._format_arguments(parts[0], parts[1], arguments))

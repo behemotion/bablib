@@ -1,9 +1,9 @@
 #!/bin/bash
-# Ollama local installation script for DocBro
+# Ollama local installation script for Bablib
 
 set -e
 
-echo "🤖 Setting up Ollama for DocBro..."
+echo "🤖 Setting up Ollama for Bablib..."
 
 # Check if Ollama is already installed
 if command -v ollama &> /dev/null; then
@@ -48,12 +48,12 @@ ollama pull nomic-embed-text
 # Test installation
 echo "🧪 Testing Ollama installation..."
 if ollama list | grep -E "(mxbai-embed-large|nomic-embed-text)"; then
-    echo "✅ Ollama setup complete! Models ready for DocBro."
+    echo "✅ Ollama setup complete! Models ready for Bablib."
 else
     echo "❌ Model installation failed. Please check Ollama setup."
     exit 1
 fi
 
-echo "🎉 Ollama is ready for DocBro!"
+echo "🎉 Ollama is ready for Bablib!"
 echo "Available models:"
 ollama list

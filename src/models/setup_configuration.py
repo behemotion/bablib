@@ -1,6 +1,6 @@
-"""SetupConfiguration model for DocBro setup logic.
+"""SetupConfiguration model for Bablib setup logic.
 
-This model stores user configuration choices and preferences for the DocBro setup process.
+This model stores user configuration choices and preferences for the Bablib setup process.
 """
 
 from datetime import UTC, datetime
@@ -19,7 +19,7 @@ from .setup_types import (
 
 
 class SetupConfiguration(BaseModel):
-    """Stores user configuration choices and preferences for the DocBro setup process.
+    """Stores user configuration choices and preferences for the Bablib setup process.
 
     This model represents a complete setup configuration including all components
     (vector storage, embedding models, MCP clients) and metadata about when and
@@ -58,7 +58,7 @@ class SetupConfiguration(BaseModel):
         description="Current status of the setup process"
     )
     version: str = Field(
-        description="DocBro version when setup was performed"
+        description="Bablib version when setup was performed"
     )
 
     model_config = ConfigDict(

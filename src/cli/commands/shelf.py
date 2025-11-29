@@ -1,20 +1,21 @@
 """CLI commands for shelf management in the Shelf-Box Rhyme System."""
 
 import asyncio
-import logging
-from typing import Optional
+import json
+from datetime import datetime
+from pathlib import Path
 
 import click
 from rich.console import Console
 from rich.table import Table
-from rich.text import Text
 
-from src.models.shelf import ShelfExistsError, ShelfValidationError, ShelfNotFoundError
-from src.services.shelf_service import ShelfService
+from src.core.lib_logger import get_component_logger
+from src.lib.paths import get_bablib_data_dir
+from src.logic.wizard.orchestrator import WizardOrchestrator
+from src.models.shelf import ShelfExistsError, ShelfNotFoundError, ShelfValidationError
 from src.services.context_service import ContextService
 from src.services.database import DatabaseError
-from src.logic.wizard.orchestrator import WizardOrchestrator
-from src.core.lib_logger import get_component_logger
+from src.services.shelf_service import ShelfService
 
 logger = get_component_logger("shelf_cli")
 console = Console()
@@ -31,7 +32,7 @@ def shelf():
 @click.option('--init', '-i', is_flag=True, help='Launch setup wizard')
 @click.option('--verbose', '-v', is_flag=True, help='Show detailed information')
 @click.option('--create', '-c', is_flag=True, help='Force creation mode')
-def inspect(name: Optional[str] = None, init: bool = False, verbose: bool = False, create: bool = False):
+def inspect(name: str | None = None, init: bool = False, verbose: bool = False, create: bool = False):
     """Display shelf information or prompt creation if not found."""
 
     async def _inspect():
@@ -96,8 +97,8 @@ def inspect(name: Optional[str] = None, init: bool = False, verbose: bool = Fals
                     await _create_shelf_with_wizard(name, init)
                 else:
                     console.print("Available actions:")
-                    console.print("  - List existing shelves: [cyan]docbro shelf[/cyan]")
-                    console.print("  - Create shelf: [cyan]docbro shelf create <name>[/cyan]")
+                    console.print("  - List existing shelves: [cyan]bablib shelf[/cyan]")
+                    console.print("  - Create shelf: [cyan]bablib shelf create <name>[/cyan]")
 
         except Exception as e:
             logger.error(f"Error inspecting shelf: {e}")
@@ -152,7 +153,7 @@ async def _run_shelf_wizard(name: str):
 @click.option('--init', '-i', is_flag=True, help='Launch setup wizard after creation')
 @click.option('--verbose', '-v', is_flag=True, help='Enable verbose output', default=False)
 @click.option('--force', '-F', is_flag=True, help='Force operation without prompts', default=False)
-def create(name: str, shelf_description: Optional[str] = None, set_current: bool = False, init: bool = False, verbose: bool = False, force: bool = False):
+def create(name: str, shelf_description: str | None = None, set_current: bool = False, init: bool = False, verbose: bool = False, force: bool = False):
     """Create a new shelf with optional wizard."""
 
     async def _create():
@@ -167,7 +168,7 @@ def create(name: str, shelf_description: Optional[str] = None, set_current: bool
             console.print(f"[green]Created shelf '{name}'[/green]")
 
             if set_current:
-                console.print(f"[blue]Set as current shelf[/blue]")
+                console.print("[blue]Set as current shelf[/blue]")
 
             # Show created shelf info
             console.print(f"  Auto-created: {name}_box (rag)")
@@ -175,7 +176,7 @@ def create(name: str, shelf_description: Optional[str] = None, set_current: bool
             if init:
                 console.print("Launching setup wizard...")
                 await _run_shelf_wizard(name)
-            console.print(f"  Boxes: 1")
+            console.print("  Boxes: 1")
 
         except ShelfExistsError as e:
             console.print(f"[red]Error: {e}[/red]")
@@ -274,7 +275,7 @@ def list(verbose: bool = False, current_only: bool = False, limit: int = 10):
 
 @shelf.command()
 @click.argument('name', type=str, required=False)
-def current(name: Optional[str] = None):
+def current(name: str | None = None):
     """Get or set current shelf."""
 
     async def _current():
@@ -336,6 +337,63 @@ def rename(old_name: str, new_name: str):
     asyncio.run(_rename())
 
 
+async def _create_shelf_backup(shelf_service: ShelfService, shelf) -> Path:
+    """
+    Create a JSON backup of shelf data before deletion.
+
+    Args:
+        shelf_service: ShelfService instance
+        shelf: Shelf model to backup
+
+    Returns:
+        Path to the created backup file
+    """
+    # Create backup directory
+    backup_dir = get_bablib_data_dir() / "backups" / "shelves"
+    backup_dir.mkdir(parents=True, exist_ok=True)
+
+    # Generate backup filename with timestamp
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_file = backup_dir / f"shelf_{shelf.name}_{timestamp}.json"
+
+    # Get associated boxes using shelf_service's database connection
+    boxes = await shelf_service.db.list_boxes(shelf_id=shelf.id)
+
+    # Build backup data
+    backup_data = {
+        "backup_version": "1.0",
+        "backup_timestamp": datetime.now().isoformat(),
+        "shelf": {
+            "id": shelf.id,
+            "name": shelf.name,
+            "description": getattr(shelf, 'description', None),
+            "is_default": shelf.is_default,
+            "is_deletable": shelf.is_deletable,
+            "created_at": shelf.created_at.isoformat() if shelf.created_at else None,
+            "updated_at": shelf.updated_at.isoformat() if shelf.updated_at else None,
+            "box_count": shelf.box_count,
+        },
+        "boxes": [
+            {
+                "id": box.get('id'),
+                "name": box.get('name'),
+                "type": box.get('type'),
+                "description": box.get('description'),
+                "url": box.get('url'),
+                "created_at": box.get('created_at'),
+            }
+            for box in boxes
+        ]
+    }
+
+    # Write backup file
+    with open(backup_file, 'w', encoding='utf-8') as f:
+        json.dump(backup_data, f, indent=2, ensure_ascii=False)
+
+    logger.info(f"Created shelf backup: {backup_file}")
+    return backup_file
+
+
 @shelf.command()
 @click.argument('name', type=str)
 @click.option('--force', '-F', is_flag=True, help='Skip confirmation')
@@ -354,7 +412,7 @@ def delete(name: str, force: bool = False, no_backup: bool = False):
 
             # Check protection
             if shelf.is_default:
-                console.print(f"[red]Cannot delete: Default shelf is protected[/red]")
+                console.print("[red]Cannot delete: Default shelf is protected[/red]")
                 raise click.Abort()
 
             # Confirmation
@@ -368,7 +426,14 @@ def delete(name: str, force: bool = False, no_backup: bool = False):
                     console.print("[yellow]Cancelled[/yellow]")
                     return
 
-            # TODO: Implement backup if not no_backup
+            # Create backup if requested
+            if not no_backup:
+                try:
+                    backup_path = await _create_shelf_backup(shelf_service, shelf)
+                    console.print(f"[dim]Backup created: {backup_path}[/dim]")
+                except Exception as e:
+                    logger.warning(f"Failed to create backup: {e}")
+                    console.print(f"[yellow]Warning: Could not create backup: {e}[/yellow]")
 
             # Delete shelf
             await shelf_service.delete_shelf(name)

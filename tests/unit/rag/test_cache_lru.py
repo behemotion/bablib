@@ -9,7 +9,7 @@ Tests verify:
 
 import pytest
 from src.services.embeddings import EmbeddingService
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 
 
 class TestCacheLRU:
@@ -18,7 +18,7 @@ class TestCacheLRU:
     @pytest.fixture
     def embedding_service(self):
         """Create embedding service instance."""
-        config = DocBroConfig()
+        config = BablibConfig()
         service = EmbeddingService(config)
         return service
 

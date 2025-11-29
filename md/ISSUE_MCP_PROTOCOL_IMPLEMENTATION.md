@@ -9,7 +9,7 @@
 
 ## Problem Statement
 
-DocBro's MCP servers currently expose REST API endpoints but do not implement the official Model Context Protocol (MCP) specification. This prevents integration with MCP-compliant clients like Claude Code, which expect JSON-RPC style communication and specific protocol endpoints.
+Bablib's MCP servers currently expose REST API endpoints but do not implement the official Model Context Protocol (MCP) specification. This prevents integration with MCP-compliant clients like Claude Code, which expect JSON-RPC style communication and specific protocol endpoints.
 
 ### Current Behavior
 - Servers run successfully on ports 9383 (read-only) and 9384 (admin)
@@ -82,7 +82,7 @@ During initialization, servers must declare their capabilities:
     "logging": {}
   },
   "serverInfo": {
-    "name": "docbro",
+    "name": "bablib",
     "version": "1.0.0"
   }
 }
@@ -156,8 +156,8 @@ src/logic/mcp/
 
 #### Tasks
 1. **Tools Endpoints** ✅
-   - [x] `tools/list` - Map DocBro commands to MCP tools
-   - [x] `tools/call` - Execute DocBro commands as tools
+   - [x] `tools/list` - Map Bablib commands to MCP tools
+   - [x] `tools/call` - Execute Bablib commands as tools
    - [x] Define tool schemas for: shelf, box, fill, search operations
 
 2. **Resources Endpoints** ✅
@@ -183,8 +183,8 @@ src/logic/mcp/
 - ✅ Integration test framework (needs client fix)
 
 #### Acceptance Criteria ✅
-- ✅ `tools/list` returns all available DocBro operations
-- ✅ `tools/call` maps to DocBro CLI commands
+- ✅ `tools/list` returns all available Bablib operations
+- ✅ `tools/call` maps to Bablib CLI commands
 - ✅ `resources/list` returns shelves and boxes as MCP resources
 - ✅ `resources/read` returns shelf/box content as JSON
 - ✅ `resources/templates/list` returns URI templates
@@ -226,7 +226,7 @@ src/logic/mcp/
 
 #### Acceptance Criteria
 - Claude Code shows servers as "connected"
-- Can list, search, and access DocBro resources from Claude Code
+- Can list, search, and access Bablib resources from Claude Code
 - All MCP protocol tests pass
 - Performance overhead <50ms per request
 
@@ -265,7 +265,7 @@ src/logic/mcp/
 ### MCP Tool Schema Example
 ```json
 {
-  "name": "docbro_shelf_list",
+  "name": "bablib_shelf_list",
   "description": "List all documentation shelves",
   "inputSchema": {
     "type": "object",
@@ -286,7 +286,7 @@ src/logic/mcp/
 ### MCP Resource Schema Example
 ```json
 {
-  "uri": "docbro://shelf/common-shelf",
+  "uri": "bablib://shelf/common-shelf",
   "name": "common shelf",
   "description": "Default documentation shelf",
   "mimeType": "application/json"
@@ -387,8 +387,8 @@ class McpErrorCode(int, Enum):
 ## Notes
 
 ### Current Workaround
-Users can still interact with DocBro through:
-1. Direct CLI commands (`docbro shelf list`, etc.)
+Users can still interact with Bablib through:
+1. Direct CLI commands (`bablib shelf list`, etc.)
 2. REST API endpoints (if accessed directly)
 3. Manual documentation management
 

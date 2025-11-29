@@ -1,10 +1,10 @@
-# DocBro MCP Server Configurations
+# Bablib MCP Server Configurations
 
 This directory contains MCP (Model Context Protocol) server configurations for AI assistants.
 
 ## Available Configurations
 
-### docbro.json (Read-Only Server)
+### bablib.json (Read-Only Server)
 - **Port**: 9383
 - **Access**: Read-only operations
 - **Security**: Safe for external access
@@ -14,12 +14,12 @@ This directory contains MCP (Model Context Protocol) server configurations for A
   - Vector search across documentation
   - Health monitoring
 
-### docbro-admin.json (Admin Server)
+### bablib-admin.json (Admin Server)
 - **Port**: 9384
 - **Access**: Full administrative control
 - **Security**: Localhost-only (127.0.0.1) for security
 - **Features**:
-  - Complete DocBro command execution (with security restrictions)
+  - Complete Bablib command execution (with security restrictions)
   - Project creation and management
   - Crawling operations
   - Full file access for storage projects
@@ -34,11 +34,11 @@ This directory contains MCP (Model Context Protocol) server configurations for A
 ```json
 {
   "mcpServers": {
-    "docbro": {
+    "bablib": {
       "command": "uvx",
-      "args": ["docbro", "serve", "--port", "9383", "--foreground"],
+      "args": ["bablib", "serve", "--port", "9383", "--foreground"],
       "env": {
-        "DOCBRO_LOG_LEVEL": "WARNING"
+        "BABLIB_LOG_LEVEL": "WARNING"
       }
     }
   }
@@ -58,8 +58,8 @@ Use the configuration files as templates for your specific MCP client setup.
 
 ## Prerequisites
 
-- DocBro installed via `uv tool install git+https://github.com/behemotion/doc-bro`
-- At least one DocBro project created
+- Bablib installed via `uv tool install git+https://github.com/behemotion/bablib`
+- At least one Bablib project created
 - Ports 9383/9384 available
 
 ## Testing

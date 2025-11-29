@@ -1,4 +1,4 @@
-"""Integration test for DocBro uninstall failure handling."""
+"""Integration test for Bablib uninstall failure handling."""
 
 import pytest
 from pathlib import Path
@@ -20,20 +20,20 @@ class TestUninstallFailures:
         """Create mock components for testing."""
         return {
             'containers': [
-                {'Names': ['/docbro-qdrant'], 'Id': 'container1', 'State': 'running'},
-                {'Names': ['/docbro-redis'], 'Id': 'container2', 'State': 'running'},
-                {'Names': ['/docbro-ollama'], 'Id': 'container3', 'State': 'stopped'}
+                {'Names': ['/bablib-qdrant'], 'Id': 'container1', 'State': 'running'},
+                {'Names': ['/bablib-redis'], 'Id': 'container2', 'State': 'running'},
+                {'Names': ['/bablib-ollama'], 'Id': 'container3', 'State': 'stopped'}
             ],
             'volumes': [
-                {'Name': 'docbro_qdrant_data', 'Driver': 'local'},
-                {'Name': 'docbro_redis_data', 'Driver': 'local'}
+                {'Name': 'bablib_qdrant_data', 'Driver': 'local'},
+                {'Name': 'bablib_redis_data', 'Driver': 'local'}
             ],
             'directories': [
-                Path.home() / '.config/docbro',
-                Path.home() / '.local/share/docbro',
-                Path.home() / '.cache/docbro'
+                Path.home() / '.config/bablib',
+                Path.home() / '.local/share/bablib',
+                Path.home() / '.cache/bablib'
             ],
-            'package': 'docbro'
+            'package': 'bablib'
         }
 
     @pytest.mark.asyncio
@@ -82,8 +82,8 @@ class TestUninstallFailures:
                     'failed': 2,  # 2 components failed
                     'skipped': 0,
                     'errors': [
-                        {'component': 'container:docbro-qdrant', 'error': 'Container is locked'},
-                        {'component': 'volume:docbro_qdrant_data', 'error': 'Volume in use'}
+                        {'component': 'container:bablib-qdrant', 'error': 'Container is locked'},
+                        {'component': 'volume:bablib_qdrant_data', 'error': 'Volume in use'}
                     ]
                 })
 
@@ -104,8 +104,8 @@ class TestUninstallFailures:
             'containers': [],
             'volumes': [],
             'directories': [
-                Path('/etc/docbro'),  # System directory (permission error likely)
-                Path.home() / '.config/docbro'
+                Path('/etc/bablib'),  # System directory (permission error likely)
+                Path.home() / '.config/bablib'
             ],
             'package': None
         }
@@ -118,7 +118,7 @@ class TestUninstallFailures:
                 executor_instance = mock_executor.return_value
                 executor_instance.delete_directory = AsyncMock(
                     side_effect=[
-                        PermissionError("Permission denied: /etc/docbro"),
+                        PermissionError("Permission denied: /etc/bablib"),
                         True
                     ]
                 )
@@ -136,7 +136,7 @@ class TestUninstallFailures:
         components = {
             'containers': [],
             'volumes': [
-                {'Name': 'docbro_internal', 'Driver': 'local', 'External': False},
+                {'Name': 'bablib_internal', 'Driver': 'local', 'External': False},
                 {'Name': 'external_data', 'Driver': 'local', 'External': True},
                 {'Name': 'user_volume', 'Driver': 'local', 'External': True}
             ],
@@ -172,7 +172,7 @@ class TestUninstallFailures:
             'containers': [],
             'volumes': [],
             'directories': [],
-            'package': 'docbro'
+            'package': 'bablib'
         }
 
         with patch('src.services.component_detection.ComponentDetectionService') as mock_detection:
@@ -240,7 +240,7 @@ class TestUninstallFailures:
 
         components = {
             'containers': [
-                {'Names': ['/docbro-qdrant'], 'Id': 'container1', 'State': 'running'}
+                {'Names': ['/bablib-qdrant'], 'Id': 'container1', 'State': 'running'}
             ],
             'volumes': [],
             'directories': [],
@@ -260,9 +260,9 @@ class TestUninstallFailures:
                     'skipped': 0,
                     'errors': [
                         {
-                            'component': 'container:docbro-qdrant',
+                            'component': 'container:bablib-qdrant',
                             'error': 'Container is being used by another process',
-                            'suggestion': 'Try stopping the container manually: docker stop docbro-qdrant'
+                            'suggestion': 'Try stopping the container manually: docker stop bablib-qdrant'
                         }
                     ]
                 })

@@ -1,5 +1,5 @@
 {
-  "// Comment": "DocBro MCP Server Configuration Examples",
+  "// Comment": "Bablib MCP Server Configuration Examples",
   "// Location for Claude Desktop": "~/Library/Application Support/Claude/claude_desktop_config.json",
   "// Location for other MCP clients": "Varies by client",
 
@@ -8,11 +8,11 @@
   "// ============================================": "",
   "example_1_read_only": {
     "mcpServers": {
-      "docbro": {
-        "command": "docbro",
+      "bablib": {
+        "command": "bablib",
         "args": ["serve"],
         "env": {
-          "DOCBRO_VECTOR_STORE": "sqlite_vec"
+          "BABLIB_VECTOR_STORE": "sqlite_vec"
         }
       }
     }
@@ -23,11 +23,11 @@
   "// ============================================": "",
   "example_2_admin": {
     "mcpServers": {
-      "docbro-admin": {
-        "command": "docbro",
+      "bablib-admin": {
+        "command": "bablib",
         "args": ["serve", "--admin"],
         "env": {
-          "DOCBRO_VECTOR_STORE": "sqlite_vec"
+          "BABLIB_VECTOR_STORE": "sqlite_vec"
         }
       }
     }
@@ -38,13 +38,13 @@
   "// ============================================": "",
   "example_3_both_servers": {
     "mcpServers": {
-      "docbro": {
-        "command": "docbro",
+      "bablib": {
+        "command": "bablib",
         "args": ["serve", "--port", "9383"],
         "env": {}
       },
-      "docbro-admin": {
-        "command": "docbro",
+      "bablib-admin": {
+        "command": "bablib",
         "args": ["serve", "--admin", "--port", "9384"],
         "env": {}
       }
@@ -56,12 +56,12 @@
   "// ============================================": "",
   "example_4_qdrant": {
     "mcpServers": {
-      "docbro": {
-        "command": "docbro",
+      "bablib": {
+        "command": "bablib",
         "args": ["serve"],
         "env": {
-          "DOCBRO_VECTOR_STORE": "qdrant",
-          "DOCBRO_QDRANT_URL": "http://localhost:6333"
+          "BABLIB_VECTOR_STORE": "qdrant",
+          "BABLIB_QDRANT_URL": "http://localhost:6333"
         }
       }
     }
@@ -72,8 +72,8 @@
   "// ============================================": "",
   "example_5_custom": {
     "mcpServers": {
-      "docbro": {
-        "command": "docbro",
+      "bablib": {
+        "command": "bablib",
         "args": [
           "serve",
           "--host", "0.0.0.0",
@@ -88,7 +88,7 @@
   "// Manual Connection (Without Auto-Start)": "",
   "// ============================================": "",
   "manual_connection_instructions": {
-    "step_1": "Start server manually: docbro serve",
+    "step_1": "Start server manually: bablib serve",
     "step_2": "Server URL: http://0.0.0.0:9383",
     "step_3_health_check": "curl http://0.0.0.0:9383/mcp/v1/health",
     "step_4_mcp_client": "Use Claude Desktop or implement MCP protocol",
@@ -117,7 +117,7 @@
       "security": "localhost only",
       "operations": [
         "All read-only operations plus:",
-        "execute_command - Run DocBro commands",
+        "execute_command - Run Bablib commands",
         "create_project - Create new projects",
         "crawl - Start crawling operations",
         "batch_process - Batch operations",
@@ -131,7 +131,7 @@
   "// Testing the Connection": "",
   "// ============================================": "",
   "testing": {
-    "start_server": "docbro serve",
+    "start_server": "bablib serve",
     "health_check": "curl http://0.0.0.0:9383/mcp/v1/health",
     "expected_response": {
       "status": "healthy",

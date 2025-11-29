@@ -23,8 +23,6 @@ from src.logic.projects.upload.sources.base_source import BaseUploadSource
 
 logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
-
 
 class LocalSource(BaseUploadSource):
     """Handler for local file system upload sources"""

@@ -36,7 +36,7 @@ class InstallationStartService:
         self.active_installations: dict[str, dict[str, Any]] = {}
 
     async def start_installation(self, request_data: dict[str, Any]) -> dict[str, Any]:
-        """Start a new DocBro installation process.
+        """Start a new Bablib installation process.
 
         Args:
             request_data: Raw request data dictionary

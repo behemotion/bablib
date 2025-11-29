@@ -5,12 +5,12 @@ import asyncio
 import logging
 from src.services.database import DatabaseManager
 from src.logic.crawler.core.crawler import DocumentationCrawler
-from src.lib.config import DocBroConfig
+from src.lib.config import BablibConfig
 
 logging.basicConfig(level=logging.DEBUG)
 
 async def test_worker():
-    config = DocBroConfig()
+    config = BablibConfig()
     config.redis_url = "redis://localhost:6380"
 
     db_manager = DatabaseManager(config)
@@ -20,16 +20,16 @@ async def test_worker():
     await crawler.initialize()
 
     try:
-        # Get test project
-        project = await db_manager.get_project_by_name("test-project")
-        if not project:
-            print("Project not found")
+        # Get test box (box-centric architecture)
+        box = await db_manager.get_box_by_name("test-box")
+        if not box:
+            print("Box not found")
             return
 
-        # Create session manually
+        # Create session manually with box_id
         session = await db_manager.create_crawl_session(
-            project_id=project.id,
-            crawl_depth=project.crawl_depth,
+            box_id=box['id'],
+            crawl_depth=box.get('crawl_depth', 3),
             user_agent="TestBot/1.0",
             rate_limit=1.0
         )
@@ -47,11 +47,13 @@ async def test_worker():
 
         # Create queue and add URL
         crawler._crawl_queue = asyncio.Queue()
-        await crawler._crawl_queue.put((project.source_url, 0, None))
+        await crawler._crawl_queue.put((box.get('url', ''), 0, None))
         print(f"Queue size before worker: {crawler._crawl_queue.qsize()}")
 
-        # Run worker directly
-        await crawler._crawl_worker(project, session, max_pages=1)
+        # Run worker directly with box
+        from src.models.box import Box
+        box_model = Box(id=box['id'], name=box['name'], type=box.get('type', 'drag'))
+        await crawler._crawl_worker(box_model, session, max_pages=1)
 
         print(f"Worker completed")
         print(f"Pages crawled: {session.pages_crawled}")

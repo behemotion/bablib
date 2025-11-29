@@ -29,9 +29,9 @@ class TestUVToolManagementIntegration:
              patch('platformdirs.user_data_dir') as mock_data, \
              patch('platformdirs.user_cache_dir') as mock_cache:
 
-            mock_config.return_value = str(temp_home / ".config" / "docbro")
-            mock_data.return_value = str(temp_home / ".local" / "share" / "docbro")
-            mock_cache.return_value = str(temp_home / ".cache" / "docbro")
+            mock_config.return_value = str(temp_home / ".config" / "bablib")
+            mock_data.return_value = str(temp_home / ".local" / "share" / "bablib")
+            mock_cache.return_value = str(temp_home / ".cache" / "bablib")
             yield
 
     @pytest.fixture
@@ -43,7 +43,7 @@ class TestUVToolManagementIntegration:
             # Mock UV available
             mock_which.side_effect = lambda cmd: {
                 'uv': '/home/user/.local/bin/uv',
-                'docbro': '/home/user/.local/bin/docbro'
+                'bablib': '/home/user/.local/bin/bablib'
             }.get(cmd)
 
             # Store commands to track what was called
@@ -58,54 +58,54 @@ class TestUVToolManagementIntegration:
                 if 'uv tool list' in ' '.join(cmd):
                     return Mock(
                         returncode=0,
-                        stdout="docbro v1.0.0\n  - docbro\n",
+                        stdout="bablib v1.0.0\n  - bablib\n",
                         stderr=""
                     )
 
                 # Mock uv tool update
-                elif 'uv tool update docbro' in ' '.join(cmd):
+                elif 'uv tool update bablib' in ' '.join(cmd):
                     return Mock(
                         returncode=0,
-                        stdout="Updated docbro v1.0.0 -> v1.1.0\n",
+                        stdout="Updated bablib v1.0.0 -> v1.1.0\n",
                         stderr=""
                     )
 
                 # Mock uv tool uninstall
-                elif 'uv tool uninstall docbro' in ' '.join(cmd):
+                elif 'uv tool uninstall bablib' in ' '.join(cmd):
                     return Mock(
                         returncode=0,
-                        stdout="Uninstalled docbro\n",
+                        stdout="Uninstalled bablib\n",
                         stderr=""
                     )
 
-                # Mock docbro --version before update
-                elif 'docbro --version' in ' '.join(cmd) and len(commands_called) <= 2:
+                # Mock bablib --version before update
+                elif 'bablib --version' in ' '.join(cmd) and len(commands_called) <= 2:
                     return Mock(
                         returncode=0,
-                        stdout="docbro 1.0.0 (installed via uvx)\n",
+                        stdout="bablib 1.0.0 (installed via uvx)\n",
                         stderr=""
                     )
 
-                # Mock docbro --version after update
-                elif 'docbro --version' in ' '.join(cmd):
+                # Mock bablib --version after update
+                elif 'bablib --version' in ' '.join(cmd):
                     return Mock(
                         returncode=0,
-                        stdout="docbro 1.1.0 (installed via uvx)\n",
+                        stdout="bablib 1.1.0 (installed via uvx)\n",
                         stderr=""
                     )
 
-                # Mock which docbro after uninstall
-                elif 'which docbro' in ' '.join(cmd):
-                    if 'uv tool uninstall docbro' in '\n'.join(commands_called):
+                # Mock which bablib after uninstall
+                elif 'which bablib' in ' '.join(cmd):
+                    if 'uv tool uninstall bablib' in '\n'.join(commands_called):
                         return Mock(
                             returncode=1,
                             stdout="",
-                            stderr="docbro: command not found"
+                            stderr="bablib: command not found"
                         )
                     else:
                         return Mock(
                             returncode=0,
-                            stdout="/home/user/.local/bin/docbro\n",
+                            stdout="/home/user/.local/bin/bablib\n",
                             stderr=""
                         )
 
@@ -120,8 +120,8 @@ class TestUVToolManagementIntegration:
                 'commands_called': commands_called
             }
 
-    def test_uv_tool_list_shows_docbro(self, mock_platformdirs, temp_home, mock_uv_commands):
-        """Test that 'uv tool list' shows docbro in the list."""
+    def test_uv_tool_list_shows_bablib(self, mock_platformdirs, temp_home, mock_uv_commands):
+        """Test that 'uv tool list' shows bablib in the list."""
         from src.services.uv_tool_management import UVToolManagementService
 
         # This should fail initially since UVToolManagementService doesn't exist yet
@@ -130,90 +130,90 @@ class TestUVToolManagementIntegration:
         # Step 1: List installed tools
         result = service.list_tools()
 
-        # Expected: Shows docbro in list
+        # Expected: Shows bablib in list
         assert result.returncode == 0
-        assert "docbro" in result.stdout
+        assert "bablib" in result.stdout
         assert "uv tool list" in ' '.join(mock_uv_commands['commands_called'])
 
-    def test_uv_tool_update_docbro_works(self, mock_platformdirs, temp_home, mock_uv_commands):
-        """Test that 'uv tool update docbro' updates to latest version."""
+    def test_uv_tool_update_bablib_works(self, mock_platformdirs, temp_home, mock_uv_commands):
+        """Test that 'uv tool update bablib' updates to latest version."""
         from src.services.uv_tool_management import UVToolManagementService
 
         # This should fail initially since UVToolManagementService doesn't exist yet
         service = UVToolManagementService()
 
         # Step 2: Update tool
-        result = service.update_tool("docbro")
+        result = service.update_tool("bablib")
 
         # Expected: Updates to latest version
         assert result.returncode == 0
-        assert "Updated docbro" in result.stdout
-        assert "uv tool update docbro" in ' '.join(mock_uv_commands['commands_called'])
+        assert "Updated bablib" in result.stdout
+        assert "uv tool update bablib" in ' '.join(mock_uv_commands['commands_called'])
 
-    def test_docbro_version_shows_updated_version(self, mock_platformdirs, temp_home, mock_uv_commands):
-        """Test that 'docbro --version' shows updated version after update."""
+    def test_bablib_version_shows_updated_version(self, mock_platformdirs, temp_home, mock_uv_commands):
+        """Test that 'bablib --version' shows updated version after update."""
         from src.services.uv_tool_management import UVToolManagementService
 
         # This should fail initially since UVToolManagementService doesn't exist yet
         service = UVToolManagementService()
 
         # Step 1: Check version before update
-        version_before = service.get_docbro_version()
+        version_before = service.get_bablib_version()
         assert "1.0.0" in version_before.stdout
 
         # Step 2: Update tool
-        update_result = service.update_tool("docbro")
+        update_result = service.update_tool("bablib")
         assert update_result.returncode == 0
 
         # Step 3: Verify update - check version after update
-        version_after = service.get_docbro_version()
+        version_after = service.get_bablib_version()
         assert "1.1.0" in version_after.stdout
 
         # Verify commands were called
         commands = ' '.join(mock_uv_commands['commands_called'])
-        assert "docbro --version" in commands
-        assert "uv tool update docbro" in commands
+        assert "bablib --version" in commands
+        assert "uv tool update bablib" in commands
 
     def test_uv_tool_uninstall_removes_command(self, mock_platformdirs, temp_home, mock_uv_commands):
-        """Test that 'uv tool uninstall docbro' removes docbro command from PATH."""
+        """Test that 'uv tool uninstall bablib' removes bablib command from PATH."""
         from src.services.uv_tool_management import UVToolManagementService
 
         # This should fail initially since UVToolManagementService doesn't exist yet
         service = UVToolManagementService()
 
         # Step 4: Uninstall
-        result = service.uninstall_tool("docbro")
+        result = service.uninstall_tool("bablib")
 
-        # Expected: Removes docbro command from PATH
+        # Expected: Removes bablib command from PATH
         assert result.returncode == 0
-        assert "Uninstalled docbro" in result.stdout
-        assert "uv tool uninstall docbro" in ' '.join(mock_uv_commands['commands_called'])
+        assert "Uninstalled bablib" in result.stdout
+        assert "uv tool uninstall bablib" in ' '.join(mock_uv_commands['commands_called'])
 
-    def test_which_docbro_returns_not_found_after_uninstall(self, mock_platformdirs, temp_home, mock_uv_commands):
-        """Test that 'which docbro' returns command not found after uninstall."""
+    def test_which_bablib_returns_not_found_after_uninstall(self, mock_platformdirs, temp_home, mock_uv_commands):
+        """Test that 'which bablib' returns command not found after uninstall."""
         from src.services.uv_tool_management import UVToolManagementService
 
         # This should fail initially since UVToolManagementService doesn't exist yet
         service = UVToolManagementService()
 
-        # Step 1: Verify docbro is available before uninstall
-        which_before = service.which_docbro()
+        # Step 1: Verify bablib is available before uninstall
+        which_before = service.which_bablib()
         assert which_before.returncode == 0
-        assert "/home/user/.local/bin/docbro" in which_before.stdout
+        assert "/home/user/.local/bin/bablib" in which_before.stdout
 
-        # Step 2: Uninstall docbro
-        uninstall_result = service.uninstall_tool("docbro")
+        # Step 2: Uninstall bablib
+        uninstall_result = service.uninstall_tool("bablib")
         assert uninstall_result.returncode == 0
 
-        # Step 5: Verify removal - which docbro should return command not found
-        which_after = service.which_docbro()
+        # Step 5: Verify removal - which bablib should return command not found
+        which_after = service.which_bablib()
         assert which_after.returncode == 1
         assert "command not found" in which_after.stderr
 
         # Verify commands were called
         commands = ' '.join(mock_uv_commands['commands_called'])
-        assert "which docbro" in commands
-        assert "uv tool uninstall docbro" in commands
+        assert "which bablib" in commands
+        assert "uv tool uninstall bablib" in commands
 
     def test_full_uv_tool_management_workflow(self, mock_platformdirs, temp_home, mock_uv_commands):
         """Test complete UV tool management workflow from quickstart scenario #6."""
@@ -222,38 +222,38 @@ class TestUVToolManagementIntegration:
         # This should fail initially since UVToolManagementService doesn't exist yet
         service = UVToolManagementService()
 
-        # Step 1: List installed tools - should show docbro
+        # Step 1: List installed tools - should show bablib
         list_result = service.list_tools()
         assert list_result.returncode == 0
-        assert "docbro" in list_result.stdout
+        assert "bablib" in list_result.stdout
 
         # Step 2: Update tool - should update to latest version
-        update_result = service.update_tool("docbro")
+        update_result = service.update_tool("bablib")
         assert update_result.returncode == 0
-        assert "Updated docbro" in update_result.stdout
+        assert "Updated bablib" in update_result.stdout
 
         # Step 3: Verify update - should show updated version
-        version_result = service.get_docbro_version()
+        version_result = service.get_bablib_version()
         assert version_result.returncode == 0
         assert "1.1.0" in version_result.stdout  # After update
 
         # Step 4: Uninstall - should remove command from PATH
-        uninstall_result = service.uninstall_tool("docbro")
+        uninstall_result = service.uninstall_tool("bablib")
         assert uninstall_result.returncode == 0
-        assert "Uninstalled docbro" in uninstall_result.stdout
+        assert "Uninstalled bablib" in uninstall_result.stdout
 
         # Step 5: Verify removal - command should not be found
-        which_result = service.which_docbro()
+        which_result = service.which_bablib()
         assert which_result.returncode == 1
         assert "command not found" in which_result.stderr
 
         # Verify all expected commands were called
         all_commands = ' '.join(mock_uv_commands['commands_called'])
         assert "uv tool list" in all_commands
-        assert "uv tool update docbro" in all_commands
-        assert "docbro --version" in all_commands
-        assert "uv tool uninstall docbro" in all_commands
-        assert "which docbro" in all_commands
+        assert "uv tool update bablib" in all_commands
+        assert "bablib --version" in all_commands
+        assert "uv tool uninstall bablib" in all_commands
+        assert "which bablib" in all_commands
 
     def test_uv_tool_integration_with_installation_context(self, mock_platformdirs, temp_home, mock_uv_commands):
         """Test that UV tool management integrates with installation context tracking."""
@@ -272,7 +272,7 @@ class TestUVToolManagementIntegration:
         )
 
         # Perform update via UV tool management
-        update_result = service.update_tool("docbro")
+        update_result = service.update_tool("bablib")
         assert update_result.returncode == 0
 
         # Verify installation context is updated after tool update

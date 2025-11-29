@@ -208,9 +208,9 @@ class TestInstallationServicesEndpoint:
 
         # Mock MCP server to simulate API call
         from src.services.mcp_server import MCPServer
-        from src.core.config import DocBroConfig
+        from src.core.config import BablibConfig
 
-        config = DocBroConfig()
+        config = BablibConfig()
         server = MCPServer(config)
         app = server.get_app()
 

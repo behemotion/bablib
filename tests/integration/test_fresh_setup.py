@@ -21,10 +21,10 @@ class TestFreshSetup:
 
     @pytest.fixture
     def mock_clean_system(self):
-        """Mock a clean system with no existing DocBro components."""
+        """Mock a clean system with no existing Bablib components."""
         with patch('src.services.system_requirements_service.SystemRequirementsService.validate_all_requirements') as mock_validate, \
              patch('src.services.docker_service_manager.DockerServiceManager.validate_docker_availability') as mock_docker, \
-             patch('src.services.docker_service_manager.DockerServiceManager.list_docbro_containers') as mock_containers, \
+             patch('src.services.docker_service_manager.DockerServiceManager.list_bablib_containers') as mock_containers, \
              patch('src.services.qdrant_container_service.QdrantContainerService._find_existing_qdrant_containers') as mock_existing:
 
             # Clean system with all requirements met
@@ -55,20 +55,20 @@ class TestFreshSetup:
 
             mock_install.return_value = {
                 "success": True,
-                "container_name": "docbro-memory-qdrant",
+                "container_name": "bablib-memory-qdrant",
                 "image": "qdrant/qdrant:v1.12.1",
                 "port": 6333,
                 "grpc_port": 6334,
                 "ready": True,
                 "url": "http://localhost:6333",
-                "data_volume": "docbro-qdrant-data"
+                "data_volume": "bablib-qdrant-data"
             }
 
             # Mock running status after installation
             mock_status_obj = MagicMock()
             mock_status_obj.status = ServiceStatus.RUNNING
             mock_status_obj.service_name = "qdrant"
-            mock_status_obj.container_name = "docbro-memory-qdrant"
+            mock_status_obj.container_name = "bablib-memory-qdrant"
             mock_status_obj.port = 6333
             mock_status_obj.health_check_url = "http://localhost:6333/health"
             mock_status.return_value = mock_status_obj
@@ -89,7 +89,7 @@ class TestFreshSetup:
              patch('src.services.mcp_configuration_service.MCPConfigurationService.save_config') as mock_save:
 
             mock_generate.return_value = {
-                "server_name": "docbro",
+                "server_name": "bablib",
                 "server_url": "http://localhost:8765",
                 "api_version": "1.0",
                 "capabilities": ["search", "crawl", "embed", "status"]
@@ -135,7 +135,7 @@ class TestFreshSetup:
             qdrant_service = next((s for s in services if s["service_name"] == "qdrant"), None)
             assert qdrant_service is not None
             assert qdrant_service["status"] == "RUNNING"
-            assert qdrant_service["container_name"] == "docbro-memory-qdrant"
+            assert qdrant_service["container_name"] == "bablib-memory-qdrant"
             assert qdrant_service["port"] == 6333
 
     @pytest.mark.asyncio
@@ -154,7 +154,7 @@ class TestFreshSetup:
                 })
 
                 # Mock other services to avoid actual operations
-                wizard_service.qdrant_service.install_qdrant = AsyncMock(return_value={"success": True, "container_name": "docbro-memory-qdrant"})
+                wizard_service.qdrant_service.install_qdrant = AsyncMock(return_value={"success": True, "container_name": "bablib-memory-qdrant"})
                 wizard_service.qdrant_service.get_qdrant_status = AsyncMock()
                 wizard_service.qdrant_service.get_qdrant_status.return_value.status = ServiceStatus.RUNNING
                 wizard_service.mcp_service.generate_universal_config = MagicMock(return_value={})
@@ -192,7 +192,7 @@ class TestFreshSetup:
             assert result["success"] is True
             services = result["services"]
             qdrant_service = next((s for s in services if s["service_name"] == "qdrant"), None)
-            assert qdrant_service["container_name"] == "docbro-memory-qdrant"
+            assert qdrant_service["container_name"] == "bablib-memory-qdrant"
 
     @pytest.mark.asyncio
     async def test_fresh_setup_mcp_config_generation(self, wizard_service, mock_clean_system, mock_qdrant_installation, mock_mcp_config):
@@ -349,7 +349,7 @@ class TestFreshSetup:
             # Mock service configurations with healthy status
             mock_get_services.return_value = [{
                 "service_name": "qdrant",
-                "container_name": "docbro-memory-qdrant",
+                "container_name": "bablib-memory-qdrant",
                 "status": "RUNNING",
                 "port": 6333
             }]

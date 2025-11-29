@@ -97,7 +97,7 @@ class TestAutoSetupFlow:
         # Mock default configuration choices
         setup_service.get_default_vector_storage_config.return_value = {
             'provider': 'qdrant',
-            'container_name': 'docbro-memory-qdrant',
+            'container_name': 'bablib-memory-qdrant',
             'connection_url': 'http://localhost:6333'
         }
 

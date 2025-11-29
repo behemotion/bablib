@@ -27,8 +27,8 @@ class TestCLIFunctionality:
         """Clean up after each test."""
         cleanup_installation()
 
-    def test_docbro_help_command_works(self):
-        """Test that docbro --help works without import errors."""
+    def test_bablib_help_command_works(self):
+        """Test that bablib --help works without import errors."""
         project_dir = Path(__file__).parent.parent.parent
 
         # Build and install
@@ -39,11 +39,11 @@ class TestCLIFunctionality:
             f"Installation failed: {install_result.stderr}"
 
         # Test help command
-        help_result = test_cli_command(["docbro", "--help"])
+        help_result = test_cli_command(["bablib", "--help"])
 
         # Should execute successfully
         assert help_result.returncode == 0, \
-            f"docbro --help failed. stderr: {help_result.stderr}, stdout: {help_result.stdout}"
+            f"bablib --help failed. stderr: {help_result.stderr}, stdout: {help_result.stdout}"
 
         # Should not have import errors
         assert "ModuleNotFoundError" not in help_result.stderr, \
@@ -56,8 +56,8 @@ class TestCLIFunctionality:
         assert "Usage:" in help_result.stdout or "usage:" in help_result.stdout.lower(), \
             f"Help output doesn't contain usage information: {help_result.stdout}"
 
-    def test_docbro_version_command_works(self):
-        """Test that docbro --version works without import errors."""
+    def test_bablib_version_command_works(self):
+        """Test that bablib --version works without import errors."""
         project_dir = Path(__file__).parent.parent.parent
 
         # Build and install
@@ -68,11 +68,11 @@ class TestCLIFunctionality:
             f"Installation failed: {install_result.stderr}"
 
         # Test version command
-        version_result = test_cli_command(["docbro", "--version"])
+        version_result = test_cli_command(["bablib", "--version"])
 
         # Should execute successfully
         assert version_result.returncode == 0, \
-            f"docbro --version failed. stderr: {version_result.stderr}, stdout: {version_result.stdout}"
+            f"bablib --version failed. stderr: {version_result.stderr}, stdout: {version_result.stdout}"
 
         # Should not have import errors
         assert "ModuleNotFoundError" not in version_result.stderr, \
@@ -96,7 +96,7 @@ class TestCLIFunctionality:
 
         # Test that we can run any command without import errors
         # Use --help as it's the safest command that loads all imports
-        help_result = test_cli_command(["docbro", "--help"])
+        help_result = test_cli_command(["bablib", "--help"])
 
         # Common import error patterns
         error_patterns = [

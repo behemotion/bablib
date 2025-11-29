@@ -11,9 +11,10 @@ import httpx
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.core.lib_logger import get_component_logger
-from src.models import CrawlStatus, PageStatus, Project
+from src.models import CrawlStatus, PageStatus
+from src.models.box import Box
 from src.services.database import DatabaseManager
 
 from ..models.page import Page
@@ -31,11 +32,11 @@ class DocumentationCrawler:
     def __init__(
         self,
         db_manager: DatabaseManager,
-        config: DocBroConfig | None = None
+        config: BablibConfig | None = None
     ):
         """Initialize documentation crawler."""
         self.db_manager = db_manager
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.logger = get_component_logger("crawler")
 
         # HTTP client
@@ -137,28 +138,31 @@ class DocumentationCrawler:
 
     async def start_crawl(
         self,
-        project_id: str,
+        box_id: str,
         user_agent: str | None = None,
         rate_limit: float = 1.0,
         max_pages: int | None = None,
         progress_display: Any | None = None,
         error_reporter: Any | None = None
     ) -> CrawlSession:
-        """Start a new crawl session for a project."""
+        """Start a new crawl session for a box."""
         if self._is_running:
             raise CrawlerError("Crawler is already running")
 
-        # Get project
-        project = await self.db_manager.get_project(project_id)
-        if not project:
-            raise CrawlerError(f"Project {project_id} not found")
+        # Get box
+        box = await self.db_manager.get_box(box_id)
+        if not box:
+            raise CrawlerError(f"Box {box_id} not found")
 
+        # Validate box has URL for crawling
+        if not box.url:
+            raise CrawlerError(f"Box {box_id} has no URL configured for crawling")
 
         # Create crawl session
         session = await self.db_manager.create_crawl_session(
-            project_id=project_id,
-            crawl_depth=project.crawl_depth,
-            user_agent=user_agent or "DocBro/1.0",
+            box_id=box_id,
+            crawl_depth=box.crawl_depth or 3,  # Default to 3 if not set
+            user_agent=user_agent or "Bablib/1.0",
             rate_limit=rate_limit
         )
 
@@ -180,8 +184,8 @@ class DocumentationCrawler:
         self._crawl_queue = asyncio.Queue()
 
         # Add initial URL to queue BEFORE creating the task
-        await self._crawl_queue.put((project.source_url, 0, None))
-        self.logger.debug(f"Added initial URL to queue: {project.source_url}, queue size: {self._crawl_queue.qsize()}")
+        await self._crawl_queue.put((box.url, 0, None))
+        self.logger.debug(f"Added initial URL to queue: {box.url}, queue size: {self._crawl_queue.qsize()}")
 
         # Update session status
         session.start_session()
@@ -189,20 +193,20 @@ class DocumentationCrawler:
 
         # Now start crawl worker task AFTER queue is set up
         self._crawl_task = asyncio.create_task(self._crawl_worker(
-            project, session, max_pages, progress_display, error_reporter
+            box, session, max_pages, progress_display, error_reporter
         ))
 
         self.logger.debug("Crawl started", extra={
-            "project_id": project_id,
+            "box_id": box_id,
             "session_id": session.id,
-            "source_url": project.source_url
+            "source_url": box.url
         })
 
         return session
 
     async def _crawl_worker(
         self,
-        project: Project,
+        box: Box,
         session: CrawlSession,
         max_pages: int | None = None,
         progress_display: Any | None = None,
@@ -213,7 +217,8 @@ class DocumentationCrawler:
             pages_crawled = 0
             pages_errors = 0
             current_depth = 0
-            self.logger.info(f"Starting crawl worker loop, initial queue size: {self._crawl_queue.qsize()}, max_depth: {project.crawl_depth}")
+            max_depth = box.crawl_depth or 3
+            self.logger.info(f"Starting crawl worker loop, initial queue size: {self._crawl_queue.qsize()}, max_depth: {max_depth}")
 
             while not self._stop_requested:
                 if max_pages and pages_crawled >= max_pages:
@@ -225,7 +230,7 @@ class DocumentationCrawler:
                     # Get next URL from queue with timeout
                     # Use a longer timeout to ensure we wait for pages to be processed
                     # This prevents premature stopping when pages are still being fetched
-                    timeout_seconds = 60.0 if current_depth < project.crawl_depth else 30.0
+                    timeout_seconds = 60.0 if current_depth < max_depth else 30.0
 
                     url, depth, parent_url = await asyncio.wait_for(
                         self._crawl_queue.get(),
@@ -256,9 +261,9 @@ class DocumentationCrawler:
                 except TimeoutError:
                     # Check if we should really stop
                     # If we haven't exceeded max depth and we have crawled pages, we might still be processing
-                    if current_depth < project.crawl_depth and pages_crawled > 0:
+                    if current_depth < max_depth and pages_crawled > 0:
                         # Give it more time - pages might still be processing
-                        self.logger.info(f"Queue empty but still at depth {current_depth}/{project.crawl_depth}, waiting for more URLs...")
+                        self.logger.info(f"Queue empty but still at depth {current_depth}/{max_depth}, waiting for more URLs...")
                         await asyncio.sleep(10.0)  # Wait longer for pages to be processed
                         # Check queue again
                         if self._crawl_queue.qsize() > 0:
@@ -275,8 +280,8 @@ class DocumentationCrawler:
                     continue
 
                 # Skip if depth exceeded
-                if depth > project.crawl_depth:
-                    self.logger.info(f"Skipping URL due to depth {depth} > {project.crawl_depth}: {url}")
+                if depth > max_depth:
+                    self.logger.info(f"Skipping URL due to depth {depth} > {max_depth}: {url}")
                     continue
 
                 # Skip asset files - focus on documentation content
@@ -297,7 +302,7 @@ class DocumentationCrawler:
                 await self._apply_rate_limit(url, session.rate_limit)
 
                 # Check if page already exists
-                page = await self.db_manager.get_page_by_url(project.id, url)
+                page = await self.db_manager.get_page_by_url(box.id, url)
                 if page:
                     # Page already exists, skip if it's not in a retryable state
                     if page.status not in [PageStatus.DISCOVERED, PageStatus.FAILED, PageStatus.CRAWLING]:
@@ -308,7 +313,7 @@ class DocumentationCrawler:
                 else:
                     # Create new page record
                     page = await self.db_manager.create_page(
-                        project_id=project.id,
+                        box_id=box.id,
                         session_id=session.id,
                         url=url,
                         crawl_depth=depth,
@@ -345,7 +350,7 @@ class DocumentationCrawler:
                         # Extract and queue links
                         links = crawl_result.get("links", [])
                         page.outbound_links = links
-                        page.categorize_links(urlparse(project.source_url).netloc)
+                        page.categorize_links(urlparse(box.url).netloc)
 
                         # Queue internal links
                         self.logger.info(f"Found {len(page.internal_links)} internal links on {url} (current depth: {depth})")
@@ -358,12 +363,12 @@ class DocumentationCrawler:
                                     continue
 
                                 new_depth = depth + 1
-                                if new_depth <= project.crawl_depth:
+                                if new_depth <= max_depth:
                                     self.logger.debug(f"Queueing link: {link} at depth {new_depth}")
                                     await self._crawl_queue.put((link, new_depth, url))
                                     queued_count += 1
                                 else:
-                                    self.logger.debug(f"Skipping link (would be depth {new_depth} > {project.crawl_depth}): {link}")
+                                    self.logger.debug(f"Skipping link (would be depth {new_depth} > {max_depth}): {link}")
                             else:
                                 self.logger.debug(f"Skipping already visited link: {link}")
 
@@ -641,8 +646,17 @@ class DocumentationCrawler:
             return True
         return False
 
-    async def resume_crawl(self, session_id: str) -> CrawlSession:
+    async def resume_crawl(
+        self,
+        session_id: str,
+        max_pages: int | None = None,
+        progress_display: Any | None = None,
+        error_reporter: Any | None = None
+    ) -> CrawlSession:
         """Resume a paused crawl session."""
+        if self._is_running:
+            raise CrawlerError("Crawler is already running")
+
         session = await self.db_manager.get_crawl_session(session_id)
         if not session:
             raise CrawlerError(f"Session {session_id} not found")
@@ -650,9 +664,84 @@ class DocumentationCrawler:
         if session.status != CrawlStatus.PAUSED:
             raise CrawlerError(f"Session is not paused: {session.status}")
 
-        # TODO: Implement resume logic
-        # This would need to reconstruct the crawl state from the database
-        raise NotImplementedError("Resume crawl not fully implemented yet")
+        # Get the box for this session
+        box = await self.db_manager.get_box(session.box_id)
+        if not box:
+            raise CrawlerError(f"Box {session.box_id} not found")
+
+        # Initialize crawler
+        await self.initialize()
+
+        # Set user agent
+        self._client.headers["User-Agent"] = session.user_agent
+
+        # Clear state and create fresh queue
+        self._visited_urls.clear()
+        self._content_hashes.clear()
+        self._domain_last_access.clear()
+        self._crawl_queue = asyncio.Queue()
+
+        # Rebuild visited set from processed/indexed pages
+        from src.models import PageStatus
+        processed_pages = await self.db_manager.get_box_pages(
+            session.box_id,
+            status=PageStatus.PROCESSED
+        )
+        indexed_pages = await self.db_manager.get_box_pages(
+            session.box_id,
+            status=PageStatus.INDEXED
+        )
+
+        for page in processed_pages + indexed_pages:
+            if page.session_id == session.id:
+                self._visited_urls.add(page.url)
+                if page.content_hash:
+                    self._content_hashes.add(page.content_hash)
+
+        self.logger.info(f"Rebuilt visited set with {len(self._visited_urls)} URLs")
+
+        # Get discovered pages that haven't been processed yet
+        discovered_pages = await self.db_manager.get_box_pages(
+            session.box_id,
+            status=PageStatus.DISCOVERED
+        )
+
+        # Add discovered pages to queue (filter by session)
+        pages_queued = 0
+        for page in discovered_pages:
+            if page.session_id == session.id and page.url not in self._visited_urls:
+                await self._crawl_queue.put((page.url, page.crawl_depth, page.parent_url))
+                pages_queued += 1
+
+        self.logger.info(f"Queued {pages_queued} discovered pages for resume")
+
+        # If no pages in queue, queue the base URL at current depth
+        if self._crawl_queue.empty():
+            self.logger.info("No pending pages found, adding base URL")
+            await self._crawl_queue.put((box.url, session.current_depth, None))
+
+        # Resume session status
+        session.resume_session()
+        await self.db_manager.update_crawl_session(session)
+
+        # Set crawler state
+        self._current_session = session
+        self._is_running = True
+        self._stop_requested = False
+
+        # Start crawl worker task
+        self._crawl_task = asyncio.create_task(self._crawl_worker(
+            box, session, max_pages, progress_display, error_reporter
+        ))
+
+        self.logger.info("Crawl resumed", extra={
+            "box_id": box.id,
+            "session_id": session.id,
+            "pages_queued": pages_queued,
+            "visited_urls": len(self._visited_urls)
+        })
+
+        return session
 
     async def complete_crawl(self, session_id: str) -> CrawlSession:
         """Mark a crawl session as completed."""
@@ -721,6 +810,6 @@ class DocumentationCrawler:
 
         return session
 
-    async def retry_crawl(self, project_id: str) -> CrawlSession:
+    async def retry_crawl(self, box_id: str) -> CrawlSession:
         """Start a new crawl session for retry."""
-        return await self.start_crawl(project_id)
+        return await self.start_crawl(box_id)

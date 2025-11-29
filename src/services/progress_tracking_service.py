@@ -202,7 +202,7 @@ class ProgressTrackingService:
 
         return Panel.fit(
             table,
-            title="DocBro Installation Progress",
+            title="Bablib Installation Progress",
             subtitle=summary_text,
             border_style="blue"
         )

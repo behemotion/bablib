@@ -30,9 +30,9 @@ class TestCriticalDecisionsEndpoints:
             "decision_id": "data_dir_choice",
             "decision_type": "data_directory",
             "title": "Choose Data Directory",
-            "description": "Select where DocBro should store its data files",
+            "description": "Select where Bablib should store its data files",
             "options": [
-                {"id": "default", "label": "Default location (~/.local/share/docbro)"},
+                {"id": "default", "label": "Default location (~/.local/share/bablib)"},
                 {"id": "custom", "label": "Custom location", "allows_custom": True}
             ],
             "default_option": "default",
@@ -276,7 +276,7 @@ class TestCriticalDecisionsEndpoints:
 
         decision_submission = {
             "decision_id": "data_dir_choice",
-            "user_choice": {"id": "custom", "path": "/opt/docbro"}
+            "user_choice": {"id": "custom", "path": "/opt/bablib"}
         }
 
         response = self.client.put(

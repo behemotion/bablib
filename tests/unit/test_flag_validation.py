@@ -163,4 +163,4 @@ class TestFlagErrorMessages:
         assert "--uninstall" in help_text
         assert "--reset" in help_text
         assert "Examples:" in help_text
-        assert "docbro setup --init --auto" in help_text
+        assert "bablib setup --init --auto" in help_text

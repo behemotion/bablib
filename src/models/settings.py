@@ -1,14 +1,14 @@
 """
 Settings models for backward compatibility with test suite.
 
-This module provides compatibility models that wrap the unified DocBroConfig
+This module provides compatibility models that wrap the unified BablibConfig
 from src.core.config to maintain existing test contracts.
 """
 
 from pydantic import BaseModel, Field, field_validator, ValidationInfo
 from typing import List, Dict, Any
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.vector_store_types import VectorStoreProvider
 
 
@@ -34,7 +34,7 @@ class GlobalSettings(BaseModel):
 
     # Vector store configuration
     vector_store_provider: VectorStoreProvider = Field(default=VectorStoreProvider.SQLITE_VEC)
-    vector_storage: str = Field(default="~/.local/share/docbro/vectors")
+    vector_storage: str = Field(default="~/.local/share/bablib/vectors")
 
     # Service URLs
     qdrant_url: str = Field(default="http://localhost:6333")
@@ -178,12 +178,12 @@ class VectorStoreSettings(BaseModel):
         provider = info.data.get("provider") if info.data else None
         if provider == VectorStoreProvider.SQLITE_VEC:
             if not v:
-                return {"database_path": "~/.local/share/docbro/vectors.db"}
+                return {"database_path": "~/.local/share/bablib/vectors.db"}
         return v
 
     @classmethod
-    def from_config(cls, config: DocBroConfig) -> "GlobalSettings":
-        """Create GlobalSettings from DocBroConfig."""
+    def from_config(cls, config: BablibConfig) -> "GlobalSettings":
+        """Create GlobalSettings from BablibConfig."""
         # Create with defaults first, then override with config values
         data = {}
         for field_name in cls.model_fields:

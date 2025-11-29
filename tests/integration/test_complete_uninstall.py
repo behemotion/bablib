@@ -23,39 +23,39 @@ class TestCompleteUninstall:
 
     @pytest.fixture
     def mock_installed_components(self):
-        """Mock a complete DocBro installation with all components."""
+        """Mock a complete Bablib installation with all components."""
         return [
             UninstallComponent(
                 component_type=ComponentType.CONTAINER,
-                name="docbro-memory-qdrant",
+                name="bablib-memory-qdrant",
                 path=None,
                 size_mb=150.0,
                 is_external=False
             ),
             UninstallComponent(
                 component_type=ComponentType.VOLUME,
-                name="docbro-qdrant-data",
+                name="bablib-qdrant-data",
                 path=None,
                 size_mb=500.0,
                 is_external=False
             ),
             UninstallComponent(
                 component_type=ComponentType.DIRECTORY,
-                name="docbro",
-                path="/Users/test/.local/share/docbro",
+                name="bablib",
+                path="/Users/test/.local/share/bablib",
                 size_mb=25.0,
                 is_external=False
             ),
             UninstallComponent(
                 component_type=ComponentType.CONFIG_FILE,
                 name="mcp_config.json",
-                path="/Users/test/.config/docbro/mcp_config.json",
+                path="/Users/test/.config/bablib/mcp_config.json",
                 size_mb=0.1,
                 is_external=False
             ),
             UninstallComponent(
                 component_type=ComponentType.PACKAGE,
-                name="docbro",
+                name="bablib",
                 path=None,
                 size_mb=10.0,
                 is_external=False
@@ -64,8 +64,8 @@ class TestCompleteUninstall:
 
     @pytest.fixture
     def mock_running_services(self):
-        """Mock running DocBro services that need to be stopped."""
-        return ["docbro-memory-qdrant", "docbro-cache-redis"]
+        """Mock running Bablib services that need to be stopped."""
+        return ["bablib-memory-qdrant", "bablib-cache-redis"]
 
     @pytest.mark.asyncio
     async def test_complete_uninstall_workflow(self, uninstall_service, mock_installed_components, mock_running_services):
@@ -111,24 +111,24 @@ class TestCompleteUninstall:
 
     @pytest.mark.asyncio
     async def test_component_scanning_completeness(self, uninstall_service):
-        """Test that component scanning detects all DocBro components."""
+        """Test that component scanning detects all Bablib components."""
         mock_detection_result = {
             'containers': [
-                {'Names': ['/docbro-memory-qdrant'], 'Id': 'container123'},
-                {'Names': ['/docbro-cache-redis'], 'Id': 'container456'}
+                {'Names': ['/bablib-memory-qdrant'], 'Id': 'container123'},
+                {'Names': ['/bablib-cache-redis'], 'Id': 'container456'}
             ],
             'volumes': [
-                {'Name': 'docbro-qdrant-data', 'is_external': False},
-                {'Name': 'docbro-cache-data', 'is_external': True}
+                {'Name': 'bablib-qdrant-data', 'is_external': False},
+                {'Name': 'bablib-cache-data', 'is_external': True}
             ],
             'directories': [
-                MagicMock(component_path=Path('/Users/test/.local/share/docbro')),
-                MagicMock(component_path=Path('/Users/test/.cache/docbro'))
+                MagicMock(component_path=Path('/Users/test/.local/share/bablib')),
+                MagicMock(component_path=Path('/Users/test/.cache/bablib'))
             ],
             'configs': [
-                MagicMock(component_path=Path('/Users/test/.config/docbro/mcp_config.json'))
+                MagicMock(component_path=Path('/Users/test/.config/bablib/mcp_config.json'))
             ],
-            'package': 'docbro'
+            'package': 'bablib'
         }
 
         with patch.object(uninstall_service.detection_service, 'detect_all_components') as mock_detect:
@@ -149,17 +149,17 @@ class TestCompleteUninstall:
 
             # Verify specific components
             container_names = {c.name for c in components if c.component_type == ComponentType.CONTAINER}
-            assert "docbro-memory-qdrant" in container_names
-            assert "docbro-cache-redis" in container_names
+            assert "bablib-memory-qdrant" in container_names
+            assert "bablib-cache-redis" in container_names
 
     @pytest.mark.asyncio
     async def test_running_services_detection(self, uninstall_service):
-        """Test detection of running DocBro services before uninstall."""
+        """Test detection of running Bablib services before uninstall."""
         mock_containers = [
-            MagicMock(name="docbro-memory-qdrant", status="running"),
-            MagicMock(name="docbro-cache-redis", status="running"),
+            MagicMock(name="bablib-memory-qdrant", status="running"),
+            MagicMock(name="bablib-cache-redis", status="running"),
             MagicMock(name="unrelated-service", status="running"),
-            MagicMock(name="docbro-old-container", status="stopped")
+            MagicMock(name="bablib-old-container", status="stopped")
         ]
 
         with patch('docker.from_env') as mock_docker:
@@ -169,11 +169,11 @@ class TestCompleteUninstall:
 
             running_services = await uninstall_service.check_running_services()
 
-            # Should only detect running DocBro-related services
-            assert "docbro-memory-qdrant" in running_services
-            assert "docbro-cache-redis" in running_services
+            # Should only detect running Bablib-related services
+            assert "bablib-memory-qdrant" in running_services
+            assert "bablib-cache-redis" in running_services
             assert "unrelated-service" not in running_services
-            assert "docbro-old-container" not in running_services
+            assert "bablib-old-container" not in running_services
 
     @pytest.mark.asyncio
     async def test_uninstall_warning_generation(self, uninstall_service, mock_installed_components):
@@ -182,7 +182,7 @@ class TestCompleteUninstall:
 
         # Verify warning properties
         assert warning.is_irreversible is True
-        assert "DocBro" in warning.message
+        assert "Bablib" in warning.message
         assert "permanently remove" in warning.message
 
         # Verify data types identification
@@ -197,12 +197,12 @@ class TestCompleteUninstall:
     @pytest.mark.asyncio
     async def test_automatic_service_shutdown(self, uninstall_service):
         """Test automatic shutdown of running services during uninstall."""
-        mock_services = ["docbro-memory-qdrant", "docbro-main", "docbro-cache-redis"]
+        mock_services = ["bablib-memory-qdrant", "bablib-main", "bablib-cache-redis"]
 
         mock_containers = {
-            "docbro-memory-qdrant": MagicMock(status="running"),
-            "docbro-main": MagicMock(status="running"),
-            "docbro-cache-redis": MagicMock(status="stopped")  # Already stopped
+            "bablib-memory-qdrant": MagicMock(status="running"),
+            "bablib-main": MagicMock(status="running"),
+            "bablib-cache-redis": MagicMock(status="stopped")  # Already stopped
         }
 
         with patch('docker.from_env') as mock_docker:
@@ -256,7 +256,7 @@ class TestCompleteUninstall:
         components = [
             UninstallComponent(
                 component_type=ComponentType.VOLUME,
-                name="docbro-qdrant-data",
+                name="bablib-qdrant-data",
                 path=None,
                 size_mb=500.0,
                 is_external=False
@@ -290,7 +290,7 @@ class TestCompleteUninstall:
     @pytest.mark.asyncio
     async def test_rollback_capability(self, uninstall_service):
         """Test uninstall rollback capability when backup is available."""
-        backup_path = "/tmp/docbro-backup-20240101"
+        backup_path = "/tmp/bablib-backup-20240101"
 
         with patch.object(uninstall_service.backup_service, 'restore_backup') as mock_restore:
             mock_restore.return_value = True
@@ -331,7 +331,7 @@ class TestCompleteUninstall:
                 "errors": []
             }
 
-            mock_docker.cleanup_docbro_resources.return_value = {
+            mock_docker.cleanup_bablib_resources.return_value = {
                 "containers": 1,
                 "volumes": 1,
                 "networks": 1
@@ -341,12 +341,12 @@ class TestCompleteUninstall:
             mock_config_path.exists.return_value = True
             mock_mcp.get_default_config_path.return_value = mock_config_path
 
-            result = await wizard_service.uninstall_docbro(remove_data=True)
+            result = await wizard_service.uninstall_bablib(remove_data=True)
 
             # Verify uninstall workflow
             assert result["success"] is True
             mock_qdrant.remove_qdrant.assert_called_once_with(remove_data=True)
-            mock_docker.cleanup_docbro_resources.assert_called_once_with(include_volumes=True)
+            mock_docker.cleanup_bablib_resources.assert_called_once_with(include_volumes=True)
             mock_config_path.unlink.assert_called_once()
 
     @pytest.mark.asyncio
@@ -404,7 +404,7 @@ class TestCompleteUninstall:
         mixed_components = [
             UninstallComponent(
                 component_type=ComponentType.VOLUME,
-                name="docbro-qdrant-data",
+                name="bablib-qdrant-data",
                 path=None,
                 size_mb=500.0,
                 is_external=False  # Internal component

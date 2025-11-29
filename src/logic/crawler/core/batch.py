@@ -144,10 +144,10 @@ class BatchCrawler:
         await self.project_manager.update_project(project)
 
         # Create crawler and error reporter
-        from src.core.config import DocBroConfig
+        from src.core.config import BablibConfig
         from src.services.database import DatabaseManager
 
-        config = DocBroConfig()
+        config = BablibConfig()
         db_manager = DatabaseManager(config)
         await db_manager.initialize()
 
@@ -165,20 +165,22 @@ class BatchCrawler:
                     description=f"Crawling {project.project_name}"
                 )
 
-            # Get or create project in DB
-            db_project = await db_manager.get_project_by_name(project.project_name)
-            if not db_project:
-                # Create project if it doesn't exist
-                db_project = await db_manager.create_project(
+            # Get or create box in DB
+            # TODO: BatchCrawler needs full migration to Box-centric architecture
+            # For now, we create/use boxes for crawl operations
+            db_box = await db_manager.get_box_by_name(project.project_name)
+            if not db_box:
+                # Create box if it doesn't exist
+                db_box = await db_manager.create_box(
                     name=project.project_name,
-                    source_url=project.url or "",
-                    crawl_depth=3,
-                    embedding_model="mxbai-embed-large"
+                    box_type="drag",  # Crawling = drag type
+                    url=project.url or "",
+                    crawl_depth=3
                 )
 
             # Perform crawl
             session = await crawler.start_crawl(
-                project_id=db_project.id,
+                box_id=db_box.id,
                 max_pages=max_pages,
                 rate_limit=rate_limit
             )

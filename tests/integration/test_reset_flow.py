@@ -19,10 +19,10 @@ class TestResetFlow:
         temp_dir = tempfile.mkdtemp()
         home = Path(temp_dir)
 
-        # Create existing DocBro installation
-        config_dir = home / ".config" / "docbro"
-        data_dir = home / ".local" / "share" / "docbro"
-        cache_dir = home / ".cache" / "docbro"
+        # Create existing Bablib installation
+        config_dir = home / ".config" / "bablib"
+        data_dir = home / ".local" / "share" / "bablib"
+        cache_dir = home / ".cache" / "bablib"
 
         config_dir.mkdir(parents=True)
         data_dir.mkdir(parents=True)
@@ -77,7 +77,7 @@ class TestResetFlow:
 
             # Should be cancelled after second confirmation
             assert result.status == "cancelled"
-            assert (temp_home / ".config" / "docbro").exists()  # Still exists
+            assert (temp_home / ".config" / "bablib").exists()  # Still exists
 
     def test_reset_force_flag_skips_confirmations(self, temp_home):
         """Test that --force flag skips all confirmations."""
@@ -91,11 +91,11 @@ class TestResetFlow:
         assert result.status == "completed"
 
         # Old installation should be gone
-        assert not (temp_home / ".cache" / "docbro").exists()
+        assert not (temp_home / ".cache" / "bablib").exists()
 
         # New installation should exist
-        assert (temp_home / ".config" / "docbro").exists()
-        assert (temp_home / ".local" / "share" / "docbro").exists()
+        assert (temp_home / ".config" / "bablib").exists()
+        assert (temp_home / ".local" / "share" / "bablib").exists()
 
     def test_reset_preserves_project_data_option(self, temp_home):
         """Test option to preserve project data during reset."""
@@ -111,12 +111,12 @@ class TestResetFlow:
                 result = handler.execute(preserve_data=True)
 
                 # Config should be reset
-                with open(temp_home / ".config" / "docbro" / "settings.yaml") as f:
+                with open(temp_home / ".config" / "bablib" / "settings.yaml") as f:
                     new_config = yaml.safe_load(f)
                     assert new_config["vector_store_provider"] != "qdrant"  # Reset to default
 
                 # But project data should remain
-                assert (temp_home / ".local" / "share" / "docbro" / "projects" / "test-project").exists()
+                assert (temp_home / ".local" / "share" / "bablib" / "projects" / "test-project").exists()
 
     def test_reset_with_new_configuration(self, temp_home):
         """Test reset with different configuration options."""
@@ -133,7 +133,7 @@ class TestResetFlow:
             )
 
             # New configuration should use sqlite_vec
-            with open(temp_home / ".config" / "docbro" / "settings.yaml") as f:
+            with open(temp_home / ".config" / "bablib" / "settings.yaml") as f:
                 new_config = yaml.safe_load(f)
                 assert new_config["vector_store_provider"] == "sqlite_vec"
 
@@ -153,8 +153,8 @@ class TestResetFlow:
                     handler.execute()
 
                 # Should restore from backup
-                assert (temp_home / ".config" / "docbro").exists()
-                with open(temp_home / ".config" / "docbro" / "settings.yaml") as f:
+                assert (temp_home / ".config" / "bablib").exists()
+                with open(temp_home / ".config" / "bablib" / "settings.yaml") as f:
                     config = yaml.safe_load(f)
                     assert config["vector_store_provider"] == "qdrant"  # Original config
 

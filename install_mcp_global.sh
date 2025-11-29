@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# DocBro MCP Global Installation Script for Claude Desktop
-# This script installs the DocBro MCP server configuration globally
+# Bablib MCP Global Installation Script for Claude Desktop
+# This script installs the Bablib MCP server configuration globally
 
 set -e
 
@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DOCBRO_PATH="${SCRIPT_DIR}/docbro"
+BABLIB_PATH="${SCRIPT_DIR}/bablib"
 CONFIG_SOURCE="${SCRIPT_DIR}/claude_desktop_config.json"
 
 # Claude Desktop config paths for different OS
@@ -34,20 +34,20 @@ else
     exit 1
 fi
 
-echo "DocBro MCP Server Global Installation"
+echo "Bablib MCP Server Global Installation"
 echo "======================================"
 echo ""
 
-# Check if DocBro CLI exists
-if [ ! -f "$DOCBRO_PATH" ]; then
-    echo -e "${RED}Error: DocBro CLI not found at $DOCBRO_PATH${NC}"
-    echo "Please ensure you're running this script from the DocBro repository directory."
+# Check if Bablib CLI exists
+if [ ! -f "$BABLIB_PATH" ]; then
+    echo -e "${RED}Error: Bablib CLI not found at $BABLIB_PATH${NC}"
+    echo "Please ensure you're running this script from the Bablib repository directory."
     exit 1
 fi
 
-# Make DocBro executable
-chmod +x "$DOCBRO_PATH"
-echo -e "${GREEN}✓${NC} DocBro CLI is executable"
+# Make Bablib executable
+chmod +x "$BABLIB_PATH"
+echo -e "${GREEN}✓${NC} Bablib CLI is executable"
 
 # Check if Claude config directory exists
 if [ ! -d "$CLAUDE_CONFIG_DIR" ]; then
@@ -75,7 +75,7 @@ import sys
 with open('$CLAUDE_CONFIG_FILE', 'r') as f:
     existing = json.load(f)
 
-# Read new DocBro config
+# Read new Bablib config
 with open('$CONFIG_SOURCE', 'r') as f:
     new_config = json.load(f)
 
@@ -83,9 +83,9 @@ with open('$CONFIG_SOURCE', 'r') as f:
 if 'mcpServers' not in existing:
     existing['mcpServers'] = {}
 
-# Update DocBro configuration with correct path
-new_config['mcpServers']['docbro']['command'] = '$DOCBRO_PATH'
-existing['mcpServers']['docbro'] = new_config['mcpServers']['docbro']
+# Update Bablib configuration with correct path
+new_config['mcpServers']['bablib']['command'] = '$BABLIB_PATH'
+existing['mcpServers']['bablib'] = new_config['mcpServers']['bablib']
 
 # Write merged config
 with open('$CLAUDE_CONFIG_FILE', 'w') as f:
@@ -103,7 +103,7 @@ with open('$CONFIG_SOURCE', 'r') as f:
     config = json.load(f)
 
 # Update with correct path
-config['mcpServers']['docbro']['command'] = '$DOCBRO_PATH'
+config['mcpServers']['bablib']['command'] = '$BABLIB_PATH'
 
 # Write new config
 with open('$CLAUDE_CONFIG_FILE', 'w') as f:
@@ -115,7 +115,7 @@ EOF
 }
 
 # Merge or create configuration
-echo -e "${YELLOW}Installing DocBro MCP configuration...${NC}"
+echo -e "${YELLOW}Installing Bablib MCP configuration...${NC}"
 if merge_configs; then
     echo -e "${GREEN}✓${NC} Configuration installed successfully"
 else
@@ -167,11 +167,11 @@ fi
 # Test MCP server
 echo ""
 echo "Testing MCP server..."
-if timeout 5 "$DOCBRO_PATH" serve --port 9382 > /dev/null 2>&1 & then
+if timeout 5 "$BABLIB_PATH" serve --port 9382 > /dev/null 2>&1 & then
     sleep 2
     if curl -s http://localhost:9382/health > /dev/null 2>&1; then
         echo -e "${GREEN}✓${NC} MCP server test successful"
-        pkill -f "docbro serve" 2>/dev/null || true
+        pkill -f "bablib serve" 2>/dev/null || true
     else
         echo -e "${YELLOW}!${NC} MCP server started but health check failed"
     fi
@@ -190,8 +190,8 @@ echo "  $CLAUDE_CONFIG_FILE"
 echo ""
 echo "Next steps:"
 echo "1. Restart Claude Desktop completely (Quit and reopen)"
-echo "2. The DocBro MCP server will be available in all conversations"
-echo "3. Test with: 'Can you check DocBro status?'"
+echo "2. The Bablib MCP server will be available in all conversations"
+echo "3. Test with: 'Can you check Bablib status?'"
 echo ""
 echo "To start services manually:"
 echo "  docker-compose -f ${SCRIPT_DIR}/docker/docker-compose.yml up -d"

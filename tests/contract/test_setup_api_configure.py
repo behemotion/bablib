@@ -42,8 +42,8 @@ class TestSetupConfigureApiContract:
             'vector_storage': {
                 'provider': 'qdrant',
                 'connection_url': 'http://localhost:6333',
-                'container_name': 'docbro-memory-qdrant',
-                'data_path': '~/.local/share/docbro/qdrant',
+                'container_name': 'bablib-memory-qdrant',
+                'data_path': '~/.local/share/bablib/qdrant',
                 'configuration': {'collection_config': {'size': 1536}}
             },
             'embedding_model': {
@@ -60,9 +60,9 @@ class TestSetupConfigureApiContract:
                 'executable_path': '/Applications/Claude Code.app',
                 'config_file_path': '~/Library/Application Support/Claude/claude_desktop_config.json',
                 'server_config': {
-                    'command': 'docbro',
+                    'command': 'bablib',
                     'args': ['serve', '--port', '9382'],
-                    'env': {'DOCBRO_LOG_LEVEL': 'INFO'}
+                    'env': {'BABLIB_LOG_LEVEL': 'INFO'}
                 },
                 'enabled': True
             }]
@@ -86,8 +86,8 @@ class TestSetupConfigureApiContract:
         vector_storage_config = {
             'provider': 'qdrant',
             'connection_url': 'http://localhost:6333',
-            'container_name': 'docbro-memory-qdrant',
-            'data_path': '~/.local/share/docbro/qdrant',
+            'container_name': 'bablib-memory-qdrant',
+            'data_path': '~/.local/share/bablib/qdrant',
             'configuration': {}
         }
 
@@ -123,7 +123,7 @@ class TestSetupConfigureApiContract:
             'executable_path': '/Applications/Claude Code.app',
             'config_file_path': '~/Library/Application Support/Claude/claude_desktop_config.json',
             'server_config': {
-                'command': 'docbro',
+                'command': 'bablib',
                 'args': ['serve', '--port', '9382']
             },
             'enabled': True
@@ -142,8 +142,8 @@ class TestSetupConfigureApiContract:
             'vector_storage': {
                 'provider': 'qdrant',
                 'connection_url': 'http://localhost:6333',
-                'container_name': 'docbro-memory-qdrant',
-                'data_path': '~/.local/share/docbro/qdrant',
+                'container_name': 'bablib-memory-qdrant',
+                'data_path': '~/.local/share/bablib/qdrant',
                 'configuration': {}
             }
         }

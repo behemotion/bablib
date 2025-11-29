@@ -56,7 +56,7 @@ def display_global_settings():
 @click.option('--timeout', '-t', type=int, help='Operation timeout in seconds')
 @click.option('--auto', '-a', is_flag=True, help='Auto-configure with defaults', default=False)
 @click.option('--vector-store', '-V', type=click.Choice(['sqlite_vec', 'qdrant']), help='Vector store provider')
-@click.option('--uninstall', '-u', is_flag=True, help='Uninstall DocBro', default=False)
+@click.option('--uninstall', '-u', is_flag=True, help='Uninstall Bablib', default=False)
 @click.option('--reset', '-r', is_flag=True, help='Reset configuration', default=False)
 @click.option('--preserve-data', '-k', is_flag=True, help='Preserve user data during reset', default=False)
 @click.option(
@@ -87,23 +87,23 @@ def setup(
     non_interactive: bool,
     backup: bool
 ):
-    """Unified setup command for DocBro configuration.
+    """Unified setup command for Bablib configuration.
 
-    The one-stop command for all DocBro setup operations. Choose between
+    The one-stop command for all Bablib setup operations. Choose between
     interactive menu (no flags) or specific operations with flags.
 
     \b
     OPERATIONS:
       --init         Initialize configuration and vector store
-      --uninstall    Remove DocBro completely from your system
+      --uninstall    Remove Bablib completely from your system
       --reset        Reset to fresh state (keeps or removes data)
       (no flags)     Interactive menu with guided setup
 
     \b
     QUICK SETUPS:
-      docbro setup                           # Interactive menu with help
-      docbro setup --init --auto             # Quick setup with defaults
-      docbro setup --init --vector-store sqlite_vec  # Choose vector store
+      bablib setup                           # Interactive menu with help
+      bablib setup --init --auto             # Quick setup with defaults
+      bablib setup --init --vector-store sqlite_vec  # Choose vector store
 
     \b
     VECTOR STORE OPTIONS:
@@ -112,10 +112,10 @@ def setup(
 
     \b
     UNINSTALL & RESET:
-      docbro setup --uninstall --force       # Uninstall without confirmation
-      docbro setup --uninstall --backup      # Create backup first
-      docbro setup --reset --preserve-data   # Reset but keep projects
-      docbro setup --uninstall --dry-run     # Preview what would be removed
+      bablib setup --uninstall --force       # Uninstall without confirmation
+      bablib setup --uninstall --backup      # Create backup first
+      bablib setup --reset --preserve-data   # Reset but keep projects
+      bablib setup --uninstall --dry-run     # Preview what would be removed
 
     \b
     FLAGS:
@@ -148,30 +148,30 @@ def setup(
 
         # Execute the operation
         if operation.type == "init":
-            console.print("[cyan]Initializing DocBro...[/cyan]")
+            console.print("[cyan]Initializing Bablib...[/cyan]")
             try:
                 result = orchestrator.initialize(**operation.options)
             except RuntimeError as e:
                 # Check if it's the "already initialized" error
                 if "already initialized" in str(e).lower():
-                    console.print("[yellow]ℹ DocBro is already initialized.[/yellow]")
-                    console.print("[dim]Use 'docbro setup --init --force' to reinitialize.[/dim]")
+                    console.print("[yellow]ℹ Bablib is already initialized.[/yellow]")
+                    console.print("[dim]Use 'bablib setup --init --force' to reinitialize.[/dim]")
                     ctx.exit(0)  # Exit gracefully
                 else:
                     # Re-raise other runtime errors
                     raise
 
         elif operation.type == "uninstall":
-            console.print("[yellow]Preparing to uninstall DocBro...[/yellow]")
+            console.print("[yellow]Preparing to uninstall Bablib...[/yellow]")
             result = orchestrator.uninstall(**operation.options)
 
         elif operation.type == "reset":
-            console.print("[yellow]Resetting DocBro installation...[/yellow]")
+            console.print("[yellow]Resetting Bablib installation...[/yellow]")
             result = orchestrator.reset(**operation.options)
 
         elif operation.type == "menu":
             # Launch interactive menu
-            console.print("[cyan]Welcome to DocBro Setup[/cyan]")
+            console.print("[cyan]Welcome to Bablib Setup[/cyan]")
             result = orchestrator.run_interactive_menu()
 
         else:
@@ -201,7 +201,7 @@ def setup(
     except ValueError as e:
         # Flag validation error
         console.print(f"[red]Error: {e}[/red]")
-        console.print("\n[dim]Run 'docbro setup --help' for usage information[/dim]")
+        console.print("\n[dim]Run 'bablib setup --help' for usage information[/dim]")
         ctx.exit(1)
 
     except click.exceptions.Exit:

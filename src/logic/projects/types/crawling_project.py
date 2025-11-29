@@ -17,7 +17,7 @@ class CrawlingProject(CrawlingProjectContract):
     """
     Handler for crawling projects that specialize in web documentation crawling.
 
-    Integrates with the existing DocBro crawler functionality to provide
+    Integrates with the existing Bablib crawler functionality to provide
     project-specific crawling capabilities.
     """
 
@@ -168,7 +168,7 @@ class CrawlingProject(CrawlingProjectContract):
             allowed_formats=['html', 'pdf', 'txt', 'md', 'rst'],
             crawl_depth=3,
             rate_limit=1.0,
-            user_agent='DocBro/1.0',
+            user_agent='Bablib/1.0',
             follow_redirects=True,
             respect_robots_txt=True,
             concurrent_uploads=3,
@@ -216,7 +216,7 @@ class CrawlingProject(CrawlingProjectContract):
             crawler_config = {
                 'max_depth': depth,
                 'rate_limit': project.settings.get('rate_limit', 1.0),
-                'user_agent': project.settings.get('user_agent', 'DocBro/1.0'),
+                'user_agent': project.settings.get('user_agent', 'Bablib/1.0'),
                 'respect_robots_txt': project.settings.get('respect_robots_txt', True),
                 'follow_redirects': project.settings.get('follow_redirects', True),
                 'output_directory': str(Path(project.get_project_directory()) / "crawl_data")

@@ -27,8 +27,8 @@ class QueryResult(BaseModel):
     context_after: str | None = Field(default=None, description="Content after the match")
 
     # Source metadata
-    project: str = Field(description="Source project name")
-    project_id: str = Field(description="Source project ID")
+    project: str = Field(description="Source project/shelf name")
+    box_id: str = Field(description="Source box ID")
     page_id: str = Field(description="Source page ID")
 
     # Document metadata
@@ -161,7 +161,7 @@ class QueryResult(BaseModel):
             "context_before": self.context_before,
             "context_after": self.context_after,
             "project": self.project,
-            "project_id": self.project_id,
+            "box_id": self.box_id,
             "page_id": self.page_id,
             "language": self.language,
             "mime_type": self.mime_type,

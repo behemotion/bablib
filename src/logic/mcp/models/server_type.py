@@ -7,8 +7,8 @@ class McpServerType(str, Enum):
     """Enumeration defining the type of MCP server to start.
 
     Attributes:
-        READ_ONLY: docbro server with read-only operations
-        ADMIN: docbro-admin server with full command control
+        READ_ONLY: bablib server with read-only operations
+        ADMIN: bablib-admin server with full command control
     """
 
     READ_ONLY = "read-only"

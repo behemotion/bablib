@@ -1,5 +1,5 @@
 #!/bin/bash
-# UV Compliance Validation Script for DocBro
+# UV Compliance Validation Script for Bablib
 # Usage: ./scripts/validate-uv-compliance.sh [--quiet] [--json] [--help]
 
 set -e
@@ -45,7 +45,7 @@ done
 
 # Show help
 if [ "$SHOW_HELP" = true ]; then
-    echo "UV Compliance Validation Script for DocBro"
+    echo "UV Compliance Validation Script for Bablib"
     echo ""
     echo "Usage: $0 [options]"
     echo ""
@@ -64,7 +64,7 @@ fi
 
 # Print header unless quiet
 if [ "$QUIET" = false ]; then
-    echo -e "${BLUE}${BOLD}DocBro UV Compliance Validation${NC}"
+    echo -e "${BLUE}${BOLD}Bablib UV Compliance Validation${NC}"
     echo -e "${BLUE}=================================${NC}"
     echo ""
 fi

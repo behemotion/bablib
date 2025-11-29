@@ -1,4 +1,4 @@
-# DocBro RAG Implementation Analysis & Improvement Strategy
+# Bablib RAG Implementation Analysis & Improvement Strategy
 
 **Report Date:** 2025-09-30
 **Status:** Complete RAG Architecture Analysis
@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-DocBro implements a comprehensive RAG (Retrieval-Augmented Generation) system with dual vector store support (SQLite-vec and Qdrant), advanced search strategies, and performance optimizations. This report analyzes the current implementation, identifies limitations, and provides actionable recommendations for enhancement without sacrificing response time or resource efficiency.
+Bablib implements a comprehensive RAG (Retrieval-Augmented Generation) system with dual vector store support (SQLite-vec and Qdrant), advanced search strategies, and performance optimizations. This report analyzes the current implementation, identifies limitations, and provides actionable recommendations for enhancement without sacrificing response time or resource efficiency.
 
 **Key Findings:**
 - ✅ Solid foundation with factory pattern for vector store abstraction
@@ -30,12 +30,12 @@ DocBro implements a comprehensive RAG (Retrieval-Augmented Generation) system wi
 - **Caching:** SHA256-based embedding cache with hit/miss tracking
 - **Batch Processing:** 10 embeddings per batch with async gathering
 
-**Code Reference:** `/Users/alexandr/Repository/local-doc-bro/src/services/embeddings.py`
+**Code Reference:** `/Users/alexandr/Repository/local-bablib/src/services/embeddings.py`
 
 ```python
 class EmbeddingService:
-    def __init__(self, config: DocBroConfig | None = None):
-        self.config = config or DocBroConfig()
+    def __init__(self, config: BablibConfig | None = None):
+        self.config = config or BablibConfig()
         self._cache: dict[str, list[float]] = {}
         self._cache_hits = 0
         self._cache_misses = 0
@@ -71,7 +71,7 @@ class EmbeddingService:
   - Per-collection database isolation
   - Async connection pooling
 
-**Code Reference:** `/Users/alexandr/Repository/local-doc-bro/src/services/sqlite_vec_service.py`
+**Code Reference:** `/Users/alexandr/Repository/local-bablib/src/services/sqlite_vec_service.py`
 
 ```python
 async def create_collection(self, name: str, vector_size: int = 1024) -> None:
@@ -141,7 +141,7 @@ async def search(
   - Retry logic for large batches (20-document fallback)
   - Payload indexing capabilities
 
-**Code Reference:** `/Users/alexandr/Repository/local-doc-bro/src/services/vector_store.py`
+**Code Reference:** `/Users/alexandr/Repository/local-bablib/src/services/vector_store.py`
 
 ```python
 async def upsert_documents(
@@ -221,7 +221,7 @@ async def search(
 ### 1.2 Search Techniques
 
 #### 1. Semantic Search
-**Implementation:** `/Users/alexandr/Repository/local-doc-bro/src/services/rag.py:131-176`
+**Implementation:** `/Users/alexandr/Repository/local-bablib/src/services/rag.py:131-176`
 
 ```python
 async def _semantic_search(
@@ -273,7 +273,7 @@ async def _semantic_search(
 - Relies solely on embedding quality
 
 #### 2. Hybrid Search
-**Implementation:** `/Users/alexandr/Repository/local-doc-bro/src/services/rag.py:177-206`
+**Implementation:** `/Users/alexandr/Repository/local-bablib/src/services/rag.py:177-206`
 
 ```python
 async def _hybrid_search(
@@ -331,7 +331,7 @@ def _combine_search_results(
 - No BM25 or TF-IDF ranking
 
 #### 3. Advanced Search (Query Decomposition)
-**Implementation:** `/Users/alexandr/Repository/local-doc-bro/src/services/rag.py:207-243`
+**Implementation:** `/Users/alexandr/Repository/local-bablib/src/services/rag.py:207-243`
 
 ```python
 async def _advanced_search(
@@ -388,7 +388,7 @@ async def decompose_query(self, query: str) -> list[str]:
 - No query intent detection
 
 #### 4. Reranking
-**Implementation:** `/Users/alexandr/Repository/local-doc-bro/src/services/rag.py:336-366`
+**Implementation:** `/Users/alexandr/Repository/local-bablib/src/services/rag.py:336-366`
 
 ```python
 async def _rerank_results(
@@ -427,7 +427,7 @@ async def _rerank_results(
 
 ### 1.3 Chunking Strategy
 
-**Implementation:** `/Users/alexandr/Repository/local-doc-bro/src/services/rag.py:587-636`
+**Implementation:** `/Users/alexandr/Repository/local-bablib/src/services/rag.py:587-636`
 
 ```python
 async def chunk_document(
@@ -478,7 +478,7 @@ async def chunk_document(
 **Strengths:**
 - Simple and fast
 - Word boundary awareness
-- Configurable via DocBroConfig
+- Configurable via BablibConfig
 
 **Limitations:**
 - Character-based (not semantic)
@@ -490,13 +490,13 @@ async def chunk_document(
 ### 1.4 Architecture Patterns
 
 #### Factory Pattern for Vector Store Selection
-**Implementation:** `/Users/alexandr/Repository/local-doc-bro/src/services/vector_store_factory.py`
+**Implementation:** `/Users/alexandr/Repository/local-bablib/src/services/vector_store_factory.py`
 
 ```python
 class VectorStoreFactory:
     @staticmethod
     def create_vector_store(
-        config: DocBroConfig = None,
+        config: BablibConfig = None,
         provider: VectorStoreProvider = None
     ) -> VectorStoreService | SQLiteVecService:
         if provider is None:
@@ -511,9 +511,9 @@ class VectorStoreFactory:
             available, message = detect_sqlite_vec()
             if not available:
                 raise VectorStoreError(f"SQLite-vec extension not available: {message}")
-            return SQLiteVecService(config or DocBroConfig())
+            return SQLiteVecService(config or BablibConfig())
         elif provider == VectorStoreProvider.QDRANT:
-            return VectorStoreService(config or DocBroConfig())
+            return VectorStoreService(config or BablibConfig())
 ```
 
 **Benefits:**
@@ -536,11 +536,11 @@ class RAGSearchService:
         self,
         vector_store: VectorStoreService,
         embedding_service: EmbeddingService,
-        config: DocBroConfig | None = None
+        config: BablibConfig | None = None
     ):
         self.vector_store = vector_store
         self.embedding_service = embedding_service
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
 ```
 
 ---
@@ -620,7 +620,7 @@ if not available:
 
 ### Performance Benchmarks
 
-**Test Suite:** `/Users/alexandr/Repository/local-doc-bro/tests/performance/test_sqlite_vec_search_time.py`
+**Test Suite:** `/Users/alexandr/Repository/local-bablib/tests/performance/test_sqlite_vec_search_time.py`
 
 **SQLite-vec Performance:**
 ```
@@ -1384,7 +1384,7 @@ class EnhancedRAGSearchService(RAGSearchService):
             return await super().chunk_document(document, chunk_size, overlap)
 
 # Phase 2: Add CLI flag
-# docbro fill my-box --source url --chunk-strategy semantic
+# bablib fill my-box --source url --chunk-strategy semantic
 ```
 
 **Testing:**
@@ -1592,8 +1592,8 @@ async def _advanced_search(
 from collections import OrderedDict
 
 class EmbeddingService:
-    def __init__(self, config: DocBroConfig | None = None):
-        self.config = config or DocBroConfig()
+    def __init__(self, config: BablibConfig | None = None):
+        self.config = config or BablibConfig()
 
         # ✅ CHANGE: Use LRU cache with size limit
         self.max_cache_size = 10000  # ~80MB (10K × 8KB)
@@ -1675,7 +1675,7 @@ class QueryTransformer:
 
 **Configuration:**
 ```yaml
-# ~/.config/docbro/query_transformations.yaml
+# ~/.config/bablib/query_transformations.yaml
 synonyms:
   docker:
     - container
@@ -1909,7 +1909,7 @@ class AdaptiveBatchProcessor:
 ## 7. Performance Targets & SLAs
 
 ### Current Performance Baseline
-**Measured from:** `/Users/alexandr/Repository/local-doc-bro/tests/performance/test_sqlite_vec_search_time.py`
+**Measured from:** `/Users/alexandr/Repository/local-bablib/tests/performance/test_sqlite_vec_search_time.py`
 
 | Metric | Current | Target (Phase 1) | Target (Phase 2) |
 |--------|---------|------------------|------------------|
@@ -1950,7 +1950,7 @@ class AdaptiveBatchProcessor:
 
 ### 8.1 Performance Testing
 
-**Existing Test Suite:** `/Users/alexandr/Repository/local-doc-bro/tests/performance/test_sqlite_vec_search_time.py`
+**Existing Test Suite:** `/Users/alexandr/Repository/local-bablib/tests/performance/test_sqlite_vec_search_time.py`
 
 **Additional Tests Needed:**
 
@@ -2360,7 +2360,7 @@ logger.info("User interaction", extra={
 
 ### Summary of Key Findings
 
-DocBro implements a solid foundational RAG system with:
+Bablib implements a solid foundational RAG system with:
 - ✅ Dual vector store support (SQLite-vec, Qdrant)
 - ✅ Multiple search strategies (semantic, hybrid, advanced)
 - ✅ Sub-100ms search performance
@@ -2410,7 +2410,7 @@ However, significant improvements are possible:
 
 ### Long-Term Vision
 
-DocBro's RAG system can evolve into a state-of-the-art retrieval system with:
+Bablib's RAG system can evolve into a state-of-the-art retrieval system with:
 - **Hierarchical indexing** when scaling to >100K documents
 - **Cross-encoder reranking** for batch/offline high-quality scenarios
 - **LLM integration** for answer generation (HyDE, Self-RAG)
@@ -2423,16 +2423,16 @@ The current architecture with factory patterns and service abstractions provides
 ## Appendix A: Code References
 
 **Key Files:**
-- `/Users/alexandr/Repository/local-doc-bro/src/services/rag.py` - RAG search service (682 lines)
-- `/Users/alexandr/Repository/local-doc-bro/src/services/embeddings.py` - Embedding service (424 lines)
-- `/Users/alexandr/Repository/local-doc-bro/src/services/vector_store.py` - Qdrant service (635 lines)
-- `/Users/alexandr/Repository/local-doc-bro/src/services/sqlite_vec_service.py` - SQLite-vec service (584 lines)
-- `/Users/alexandr/Repository/local-doc-bro/src/services/vector_store_factory.py` - Factory (84 lines)
-- `/Users/alexandr/Repository/local-doc-bro/src/core/config.py` - Configuration (100+ lines)
-- `/Users/alexandr/Repository/local-doc-bro/tests/performance/test_sqlite_vec_search_time.py` - Performance tests
+- `/Users/alexandr/Repository/local-bablib/src/services/rag.py` - RAG search service (682 lines)
+- `/Users/alexandr/Repository/local-bablib/src/services/embeddings.py` - Embedding service (424 lines)
+- `/Users/alexandr/Repository/local-bablib/src/services/vector_store.py` - Qdrant service (635 lines)
+- `/Users/alexandr/Repository/local-bablib/src/services/sqlite_vec_service.py` - SQLite-vec service (584 lines)
+- `/Users/alexandr/Repository/local-bablib/src/services/vector_store_factory.py` - Factory (84 lines)
+- `/Users/alexandr/Repository/local-bablib/src/core/config.py` - Configuration (100+ lines)
+- `/Users/alexandr/Repository/local-bablib/tests/performance/test_sqlite_vec_search_time.py` - Performance tests
 
 **Configuration:**
-- **Chunk size:** 1000 characters (DocBroConfig)
+- **Chunk size:** 1000 characters (BablibConfig)
 - **Chunk overlap:** 100 characters
 - **Embedding model:** mxbai-embed-large (1024-dim)
 - **Vector distance:** COSINE
@@ -2479,7 +2479,7 @@ Cold vs Warm Cache:
 5. **Iterative:** Feedback Loop, Adaptive Retrieval
 6. **Advanced Architectures:** Graph RAG, RAPTOR, Self-RAG, CRAG
 
-**Recommended for DocBro:**
+**Recommended for Bablib:**
 - ✅ HIGH: Semantic Chunking, Contextual Headers, Fast Reranking, Fusion Retrieval
 - ⚠️ MEDIUM: Query Transformations, Contextual Compression
 - ❌ LOW: HyDE, Graph RAG, Self-RAG (too complex/slow for current requirements)

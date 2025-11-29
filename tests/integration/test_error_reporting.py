@@ -128,7 +128,7 @@ class TestErrorReportingIntegration:
         # Should be in project-specific directory
         assert "test-project" in str(report_dir)
         assert "reports" in str(report_dir)
-        assert str(user_data_dir("docbro")) in str(report_dir)
+        assert str(user_data_dir("bablib")) in str(report_dir)
 
     def test_error_summary_in_output(self):
         """Test that error summary is shown in CLI output."""

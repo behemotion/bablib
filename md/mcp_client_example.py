@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-DocBro MCP Client Example
+Bablib MCP Client Example
 
-This example shows how to connect to the DocBro MCP server.
+This example shows how to connect to the Bablib MCP server.
 
 IMPORTANT: MCP uses a custom protocol, not standard REST/HTTP.
 Standard HTTP clients (requests, curl) will NOT work for MCP endpoints.
@@ -22,9 +22,9 @@ from typing import Dict, Any, Optional
 import httpx
 
 
-class DocBroMCPClient:
+class BablibMCPClient:
     """
-    Basic MCP client for DocBro server.
+    Basic MCP client for Bablib server.
 
     Note: This is a simplified example. Full MCP protocol implementation
     requires handling request/response framing, session management, and
@@ -103,10 +103,10 @@ class DocBroMCPClient:
 
 
 async def main():
-    """Example usage of DocBro MCP client."""
+    """Example usage of Bablib MCP client."""
 
     # Initialize client
-    client = DocBroMCPClient("http://0.0.0.0:9383")
+    client = BablibMCPClient("http://0.0.0.0:9383")
 
     try:
         # 1. Health Check (Works with standard HTTP)
@@ -182,8 +182,8 @@ async def example_with_claude_desktop():
 
     config = {
         "mcpServers": {
-            "docbro": {
-                "command": "docbro",
+            "bablib": {
+                "command": "bablib",
                 "args": ["serve"],
                 "env": {}
             }
@@ -206,7 +206,7 @@ async def example_with_claude_desktop():
 if __name__ == "__main__":
     print("""
 ╔══════════════════════════════════════════════════════════════╗
-║          DocBro MCP Client Connection Example               ║
+║          Bablib MCP Client Connection Example               ║
 ║                                                              ║
 ║  Server: http://0.0.0.0:9383 (Read-Only MCP Server)        ║
 ║  Protocol: MCP (Model Context Protocol)                     ║

@@ -15,7 +15,7 @@ logger = get_logger(__name__)
 
 
 class SetupUninstaller:
-    """Service for uninstalling DocBro."""
+    """Service for uninstalling Bablib."""
 
     def __init__(self, home_dir: Path | None = None):
         """Initialize the uninstaller.
@@ -24,9 +24,9 @@ class SetupUninstaller:
             home_dir: Optional home directory for testing
         """
         self.home_dir = home_dir or Path.home()
-        self.config_dir = self.home_dir / ".config" / "docbro"
-        self.data_dir = self.home_dir / ".local" / "share" / "docbro"
-        self.cache_dir = self.home_dir / ".cache" / "docbro"
+        self.config_dir = self.home_dir / ".config" / "bablib"
+        self.data_dir = self.home_dir / ".local" / "share" / "bablib"
+        self.cache_dir = self.home_dir / ".cache" / "bablib"
 
     def generate_manifest(self, preserve_data: bool = False) -> UninstallManifest:
         """Generate uninstall manifest.
@@ -60,8 +60,8 @@ class SetupUninstaller:
 
         # Add specific files and directories if they exist
         potential_items = [
-            self.home_dir / ".docbro",  # Legacy directory or config file
-            Path("/usr/local/bin/docbro"),  # Symlink if exists
+            self.home_dir / ".bablib",  # Legacy directory or config file
+            Path("/usr/local/bin/bablib"),  # Symlink if exists
         ]
 
         for item_path in potential_items:
@@ -72,8 +72,8 @@ class SetupUninstaller:
                     manifest.add_file(item_path)
 
         # Add config entries to clear
-        manifest.add_config_entry("DOCBRO_HOME")
-        manifest.add_config_entry("DOCBRO_CONFIG")
+        manifest.add_config_entry("BABLIB_HOME")
+        manifest.add_config_entry("BABLIB_CONFIG")
 
         return manifest
 
@@ -87,10 +87,10 @@ class SetupUninstaller:
             Path to backup file
         """
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_dir = self.home_dir / ".local" / "share" / "docbro_backups"
+        backup_dir = self.home_dir / ".local" / "share" / "bablib_backups"
         backup_dir.mkdir(parents=True, exist_ok=True)
 
-        backup_path = backup_dir / f"docbro_backup_{timestamp}.tar.gz"
+        backup_path = backup_dir / f"bablib_backup_{timestamp}.tar.gz"
 
         with tarfile.open(backup_path, "w:gz") as tar:
             for directory in manifest.directories:

@@ -35,7 +35,7 @@ class HealthReporter:
         console = Console(file=None, force_terminal=False)
 
         # Create table
-        table_title = title or "DocBro Health Status"
+        table_title = title or "Bablib Health Status"
         table = Table(title=table_title, show_header=True, header_style="bold cyan")
         table.add_column("Component", style="cyan", no_wrap=True, width=25)
         table.add_column("Status", style="green", width=15)
@@ -120,7 +120,7 @@ class HealthReporter:
 
         with console.capture() as capture:
             # Header
-            console.print("[bold cyan]DocBro Health Report[/bold cyan]")
+            console.print("[bold cyan]Bablib Health Report[/bold cyan]")
             console.print(f"Generated: {report.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
             console.print()
 
@@ -227,7 +227,7 @@ class HealthReporter:
         return False
 
     def display_command_guide(self) -> str:
-        """Display quick start guide with common DocBro commands.
+        """Display quick start guide with common Bablib commands.
 
         Returns:
             Formatted table string with command guide
@@ -243,21 +243,21 @@ class HealthReporter:
         table.add_column("Example", style="dim", width=25)
 
         # Core commands
-        table.add_row("docbro shelf create <name>", "Create a documentation shelf", "docbro shelf create 'my docs'")
-        table.add_row("docbro box create <name> --type <type>", "Create a documentation box", "docbro box create 'python-docs' --type drag")
-        table.add_row("docbro fill <box> --source <url>", "Fill box with content", "docbro fill 'python-docs' --source 'https://docs.python.org'")
-        table.add_row("docbro shelf list", "List all shelves", "docbro shelf list --verbose")
-        table.add_row("docbro box list", "List all boxes", "docbro box list --type drag")
-        table.add_row("docbro serve", "Start MCP server", "docbro serve --port 9382")
+        table.add_row("bablib shelf create <name>", "Create a documentation shelf", "bablib shelf create 'my docs'")
+        table.add_row("bablib box create <name> --type <type>", "Create a documentation box", "bablib box create 'python-docs' --type drag")
+        table.add_row("bablib fill <box> --source <url>", "Fill box with content", "bablib fill 'python-docs' --source 'https://docs.python.org'")
+        table.add_row("bablib shelf list", "List all shelves", "bablib shelf list --verbose")
+        table.add_row("bablib box list", "List all boxes", "bablib box list --type drag")
+        table.add_row("bablib serve", "Start MCP server", "bablib serve --port 9382")
 
         # Setup commands
-        table.add_row("docbro setup --init", "Initialize DocBro", "docbro setup --init --auto")
-        table.add_row("docbro setup --reset", "Reset installation", "docbro setup --reset")
-        table.add_row("docbro health", "Check system health", "docbro health")
+        table.add_row("bablib setup --init", "Initialize Bablib", "bablib setup --init --auto")
+        table.add_row("bablib setup --reset", "Reset installation", "bablib setup --reset")
+        table.add_row("bablib health", "Check system health", "bablib health")
 
         # Advanced usage
-        table.add_row("docbro box delete <name>", "Remove a box", "docbro box delete 'python-docs'")
-        table.add_row("docbro shelf delete <name>", "Remove a shelf", "docbro shelf delete 'my docs'")
+        table.add_row("bablib box delete <name>", "Remove a box", "bablib box delete 'python-docs'")
+        table.add_row("bablib shelf delete <name>", "Remove a shelf", "bablib shelf delete 'my docs'")
 
         with console.capture() as capture:
             console.print(table)

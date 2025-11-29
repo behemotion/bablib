@@ -87,7 +87,7 @@ class TestImportValidation:
         # Test importing config module
         import_test = subprocess.run([
             "python", "-c",
-            "from src.lib.config import DocBroConfig; print('Config import successful')"
+            "from src.lib.config import BablibConfig; print('Config import successful')"
         ], capture_output=True, text=True)
 
         assert import_test.returncode == 0, \

@@ -8,7 +8,7 @@ from src.models.service_configuration import ServiceStatus
 
 
 class TestContainerRenaming:
-    """Test Qdrant container renaming to DocBro standards."""
+    """Test Qdrant container renaming to Bablib standards."""
 
     @pytest.fixture
     def docker_manager(self):
@@ -55,7 +55,7 @@ class TestContainerRenaming:
     @pytest.mark.asyncio
     async def test_detect_existing_qdrant_containers(self, qdrant_service, mock_existing_containers):
         """Test detection of existing Qdrant containers with various naming patterns."""
-        with patch.object(qdrant_service.docker_manager, 'list_docbro_containers') as mock_list:
+        with patch.object(qdrant_service.docker_manager, 'list_bablib_containers') as mock_list:
             mock_list.return_value = mock_existing_containers
 
             existing = await qdrant_service._find_existing_qdrant_containers()
@@ -123,7 +123,7 @@ class TestContainerRenaming:
             mock_remove.return_value = True
 
             existing_containers = [{
-                "name": "docbro-memory-qdrant",
+                "name": "bablib-memory-qdrant",
                 "status": "running"
             }]
 
@@ -143,18 +143,18 @@ class TestContainerRenaming:
             mock_remove.return_value = True
 
             existing_containers = [{
-                "name": "docbro-memory-qdrant",
+                "name": "bablib-memory-qdrant",
                 "status": "stopped"
             }]
 
             result = await qdrant_service._handle_existing_containers(existing_containers)
 
             # Stopped standard container should be removed for recreation
-            mock_remove.assert_called_once_with("docbro-memory-qdrant", force=True)
+            mock_remove.assert_called_once_with("bablib-memory-qdrant", force=True)
 
             assert result["success"] is True
             assert len(result["removed"]) == 1
-            assert "docbro-memory-qdrant" in result["removed"]
+            assert "bablib-memory-qdrant" in result["removed"]
 
     @pytest.mark.asyncio
     async def test_handle_rename_failure_gracefully(self, qdrant_service, docker_manager):
@@ -192,7 +192,7 @@ class TestContainerRenaming:
 
             mock_find.return_value = mock_existing_containers
             mock_handle.return_value = {"success": True, "renamed": ["old-qdrant -> old-qdrant-backup"], "removed": []}
-            mock_create.return_value = (True, "docbro-memory-qdrant")
+            mock_create.return_value = (True, "bablib-memory-qdrant")
             mock_ready.return_value = True
 
             result = await qdrant_service.install_qdrant(force_rename=True)
@@ -208,7 +208,7 @@ class TestContainerRenaming:
             assert create_args.kwargs['force_recreate'] is True
 
             assert result["success"] is True
-            assert result["container_name"] == "docbro-memory-qdrant"
+            assert result["container_name"] == "bablib-memory-qdrant"
 
     @pytest.mark.asyncio
     async def test_install_fails_without_force_rename(self, qdrant_service, mock_existing_containers):
@@ -317,10 +317,10 @@ class TestContainerRenaming:
         """Test that installation enforces standardized naming."""
         standard_name = qdrant_service.standard_name
 
-        # Verify the standard name follows DocBro convention
-        assert standard_name == "docbro-memory-qdrant"
+        # Verify the standard name follows Bablib convention
+        assert standard_name == "bablib-memory-qdrant"
 
         # Verify naming pattern
-        assert standard_name.startswith("docbro-")
+        assert standard_name.startswith("bablib-")
         assert "memory" in standard_name  # Indicates vector database
         assert standard_name.endswith("-qdrant")  # Service type suffix

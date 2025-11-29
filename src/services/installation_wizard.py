@@ -1,4 +1,4 @@
-"""Installation wizard service for managing complete DocBro installation process.
+"""Installation wizard service for managing complete Bablib installation process.
 
 This service coordinates the installation flow from system validation through service setup
 to user interaction and profile persistence. It integrates with Rich UI for progress display
@@ -39,7 +39,7 @@ class InstallationWizardError(Exception):
 
 
 class InstallationWizardService:
-    """Main orchestrator service for DocBro installation process.
+    """Main orchestrator service for Bablib installation process.
 
     This service coordinates system validation, service setup, user decisions,
     and installation state progression. It supports resume/rollback capabilities
@@ -371,7 +371,7 @@ class InstallationWizardService:
                 decision_id=f"data_conflict_{uuid.uuid4().hex[:8]}",
                 decision_type="data_directory",
                 title="Existing Data Directory",
-                description="DocBro data directory already exists with content.",
+                description="Bablib data directory already exists with content.",
                 options=[
                     {"id": "backup", "label": "Backup existing data", "recommended": True},
                     {"id": "merge", "label": "Merge with existing data"},
@@ -386,7 +386,7 @@ class InstallationWizardService:
                 decision_id=f"location_conflict_{uuid.uuid4().hex[:8]}",
                 decision_type="install_location",
                 title="Install Location Conflict",
-                description="Multiple DocBro installations detected.",
+                description="Multiple Bablib installations detected.",
                 options=[
                     {"id": "replace_current", "label": "Replace current installation", "recommended": True},
                     {"id": "install_alongside", "label": "Install alongside existing"},
@@ -431,15 +431,15 @@ class InstallationWizardService:
         """Check for conflicting installation locations.
 
         Returns:
-            True if multiple DocBro installations detected
+            True if multiple Bablib installations detected
         """
         import shutil
 
         # Check common installation paths
         paths_to_check = [
-            "/usr/local/bin/docbro",
-            "~/.local/bin/docbro",
-            "/opt/docbro/bin/docbro"
+            "/usr/local/bin/bablib",
+            "~/.local/bin/bablib",
+            "/opt/bablib/bin/bablib"
         ]
 
         found_paths = []
@@ -449,9 +449,9 @@ class InstallationWizardService:
                 found_paths.append(path)
 
         # Also check PATH
-        path_docbro = shutil.which("docbro")
-        if path_docbro:
-            path_obj = Path(path_docbro)
+        path_bablib = shutil.which("bablib")
+        if path_bablib:
+            path_obj = Path(path_bablib)
             if path_obj not in found_paths:
                 found_paths.append(path_obj)
 
@@ -522,7 +522,7 @@ class InstallationWizardService:
         # Check that executable exists
         if not self.installation_profile.install_path.exists():
             raise InstallationWizardError(
-                f"DocBro executable not found at {self.installation_profile.install_path}"
+                f"Bablib executable not found at {self.installation_profile.install_path}"
             )
 
         # Check that config directory was created
@@ -676,26 +676,26 @@ class InstallationWizardService:
             install_method: Installation method (uvx, uv-tool, development)
 
         Returns:
-            Path where DocBro will be installed
+            Path where Bablib will be installed
         """
         import shutil
 
         if install_method == "development":
-            return Path("./docbro").resolve()
+            return Path("./bablib").resolve()
 
         # Check if already installed
-        existing_path = shutil.which("docbro")
+        existing_path = shutil.which("bablib")
         if existing_path:
             return Path(existing_path)
 
         # Default paths for different methods
         home = Path.home()
         if install_method == "uvx":
-            return home / ".local" / "bin" / "docbro"
+            return home / ".local" / "bin" / "bablib"
         elif install_method == "uv-tool":
-            return home / ".local" / "bin" / "docbro"
+            return home / ".local" / "bin" / "bablib"
         else:
-            return home / ".local" / "bin" / "docbro"
+            return home / ".local" / "bin" / "bablib"
 
     def _get_python_version(self) -> str:
         """Get current Python version.

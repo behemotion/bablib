@@ -34,9 +34,9 @@ class TestInteractiveMenuNavigation:
         calls = mock_console.print.call_args_list
         output = ' '.join(str(call) for call in calls)
 
-        assert "Initialize DocBro" in output
+        assert "Initialize Bablib" in output
         assert "Modify Configuration" in output
-        assert "Uninstall DocBro" in output
+        assert "Uninstall Bablib" in output
         assert "Reset Installation" in output
         assert "Exit" in output
 
@@ -215,9 +215,9 @@ class TestMenuUninstallFlow:
         with patch("src.logic.setup.services.uninstaller.SetupUninstaller") as mock:
             mock.return_value.generate_manifest.return_value = {
                 "directories": [
-                    "~/.config/docbro",
-                    "~/.local/share/docbro",
-                    "~/.cache/docbro"
+                    "~/.config/bablib",
+                    "~/.local/share/bablib",
+                    "~/.cache/bablib"
                 ],
                 "total_size_mb": 150
             }
@@ -236,7 +236,7 @@ class TestMenuUninstallFlow:
         calls = mock_console.print.call_args_list
         output = ' '.join(str(call) for call in calls)
 
-        assert ".config/docbro" in output
+        assert ".config/bablib" in output
         assert "150" in output  # Size
 
     def test_uninstall_requires_confirmation(self, mock_console, mock_uninstaller):

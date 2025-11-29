@@ -422,7 +422,7 @@ async def export_project(
                 "export_type": export_type,
                 "exported_at": export_data.exported_at.isoformat(),
                 "schema_version": export_data.schema_version,
-                "docbro_version": export_data.docbro_version
+                "bablib_version": export_data.bablib_version
             }
         }
 

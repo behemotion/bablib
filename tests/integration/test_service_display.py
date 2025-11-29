@@ -147,9 +147,9 @@ class TestServiceDisplay:
 
             # Check for directory paths
             assert any(path in result.output for path in [
-                ".config/docbro",
-                ".local/share/docbro",
-                ".cache/docbro",
+                ".config/bablib",
+                ".local/share/bablib",
+                ".cache/bablib",
                 "Config",
                 "Data",
                 "Cache"

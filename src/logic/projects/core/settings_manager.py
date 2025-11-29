@@ -7,7 +7,7 @@ from typing import Any
 
 import yaml
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 
 from ..models.config import ProjectConfig
 from ..models.project import ProjectType
@@ -25,9 +25,9 @@ class SettingsManager:
     each project type.
     """
 
-    def __init__(self, config: DocBroConfig | None = None):
+    def __init__(self, config: BablibConfig | None = None):
         """Initialize settings manager with global configuration."""
-        self.global_config = config or DocBroConfig()
+        self.global_config = config or BablibConfig()
         self.project_settings_cache: dict[str, ProjectConfig] = {}
 
     async def get_global_settings(self) -> dict[str, Any]:
@@ -336,8 +336,8 @@ class SettingsManager:
         """Get path to project settings file."""
         import os
         data_dir = os.environ.get(
-            'DOCBRO_DATA_DIR',
-            str(Path.home() / '.local' / 'share' / 'docbro')
+            'BABLIB_DATA_DIR',
+            str(Path.home() / '.local' / 'share' / 'bablib')
         )
         return Path(data_dir) / 'projects' / project_name / 'settings.yaml'
 

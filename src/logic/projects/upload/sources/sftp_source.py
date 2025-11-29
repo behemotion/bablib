@@ -24,8 +24,6 @@ from src.logic.projects.upload.sources.base_source import BaseUploadSource
 
 logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
-
 
 class SFTPSource(BaseUploadSource):
     """Handler for SFTP upload sources"""
@@ -206,7 +204,7 @@ class SFTPSource(BaseUploadSource):
                 # Test if connection is still alive
                 sftp.listdir('.')
                 return sftp
-            except:
+            except (paramiko.SSHException, OSError, IOError):
                 # Connection dead, remove from pool
                 del self._connection_pool[connection_key]
 
@@ -396,7 +394,7 @@ class SFTPSource(BaseUploadSource):
                 # Also close the underlying SSH connection
                 if hasattr(sftp, 'sock') and hasattr(sftp.sock, 'close'):
                     sftp.sock.close()
-            except:
+            except (paramiko.SSHException, OSError, IOError):
                 pass
             finally:
                 del self._connection_pool[connection_key]

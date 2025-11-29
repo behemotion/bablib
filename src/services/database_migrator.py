@@ -1,4 +1,4 @@
-"""Database migration service for DocBro."""
+"""Database migration service for Bablib."""
 
 import sqlite3
 from datetime import datetime, timezone
@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 import json
 import uuid
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.core.lib_logger import get_component_logger
 from src.models.box_type import BoxType
 
@@ -15,9 +15,9 @@ from src.models.box_type import BoxType
 class DatabaseMigrator:
     """Handles database schema migrations."""
 
-    def __init__(self, config: Optional[DocBroConfig] = None):
+    def __init__(self, config: Optional[BablibConfig] = None):
         """Initialize database migrator."""
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.db_path = self.config.database_path
         self.logger = get_component_logger("database_migrator")
 

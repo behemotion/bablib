@@ -20,22 +20,22 @@ class BackupService:
 
     def __init__(self):
         """Initialize the backup service."""
-        self.temp_dir = Path('/tmp/docbro-backup-temp')
+        self.temp_dir = Path('/tmp/bablib-backup-temp')
 
     async def create_backup(
         self,
         components: dict[str, Any],
         path: Path | None = None,
-        docbro_version: str = "1.0.0"
+        bablib_version: str = "1.0.0"
     ) -> dict[str, Any]:
         """Create a backup archive of all components."""
         # Use default path if not specified
         if path is None:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            path = Path.home() / f"docbro-backup-{timestamp}.tar.gz"
+            path = Path.home() / f"bablib-backup-{timestamp}.tar.gz"
 
         # Create manifest
-        manifest = BackupManifest(docbro_version=docbro_version)
+        manifest = BackupManifest(bablib_version=bablib_version)
 
         try:
             # Create temporary directory for backup staging

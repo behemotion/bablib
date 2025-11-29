@@ -32,9 +32,9 @@ class TestServiceSetupFailureScenario:
              patch('platformdirs.user_data_dir') as mock_data, \
              patch('platformdirs.user_cache_dir') as mock_cache:
 
-            mock_config.return_value = str(temp_home / ".config" / "docbro")
-            mock_data.return_value = str(temp_home / ".local" / "share" / "docbro")
-            mock_cache.return_value = str(temp_home / ".cache" / "docbro")
+            mock_config.return_value = str(temp_home / ".config" / "bablib")
+            mock_data.return_value = str(temp_home / ".local" / "share" / "bablib")
+            mock_cache.return_value = str(temp_home / ".cache" / "bablib")
             yield
 
     @pytest.mark.asyncio

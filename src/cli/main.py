@@ -1,4 +1,4 @@
-"""Main CLI entry point for DocBro - Simplified version with commands in separate modules."""
+"""Main CLI entry point for Bablib - Simplified version with commands in separate modules."""
 
 import asyncio
 import sys
@@ -14,7 +14,7 @@ try:
 except ImportError:
     UVLOOP_AVAILABLE = False
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.core.lib_logger import get_component_logger, setup_logging
 from src.logic.crawler.core.crawler import DocumentationCrawler
 from src.services.database import DatabaseManager
@@ -24,12 +24,12 @@ from src.services.vector_store import VectorStoreService
 from src.version import __version__
 
 
-class DocBroApp:
-    """Main DocBro application."""
+class BablibApp:
+    """Main Bablib application."""
 
-    def __init__(self, config: DocBroConfig | None = None):
-        """Initialize DocBro application."""
-        self.config = config or DocBroConfig()
+    def __init__(self, config: BablibConfig | None = None):
+        """Initialize Bablib application."""
+        self.config = config or BablibConfig()
         self.console = Console()
         self.logger = None
 
@@ -89,10 +89,10 @@ class DocBroApp:
             await self.crawler.initialize()
 
             self._initialized = True
-            self.logger.info("DocBro application initialized")
+            self.logger.info("Bablib application initialized")
 
         except Exception as e:
-            self.console.print(f"[red]Failed to initialize DocBro: {e}[/red]")
+            self.console.print(f"[red]Failed to initialize Bablib: {e}[/red]")
             if self.logger:
                 self.logger.error("Initialization failed", extra={"error": str(e)})
             raise
@@ -110,18 +110,18 @@ class DocBroApp:
 
         self._initialized = False
         if self.logger:
-            self.logger.info("DocBro application cleaned up")
+            self.logger.info("Bablib application cleaned up")
 
 
 # Global app instance for CLI
-app: DocBroApp | None = None
+app: BablibApp | None = None
 
 
-def get_app() -> DocBroApp:
+def get_app() -> BablibApp:
     """Get or create global app instance."""
     global app
     if app is None:
-        app = DocBroApp()
+        app = BablibApp()
     return app
 
 
@@ -174,12 +174,12 @@ def _detect_uv_installation() -> bool:
     if "uv" in str(current_executable).lower():
         return True
 
-    # Check if docbro is in a UV-managed location
+    # Check if bablib is in a UV-managed location
     try:
         import shutil
-        docbro_path = shutil.which("docbro")
-        if docbro_path:
-            path_str = str(Path(docbro_path))
+        bablib_path = shutil.which("bablib")
+        if bablib_path:
+            path_str = str(Path(bablib_path))
             if ".local" in path_str and "uv" in path_str.lower():
                 return True
     except Exception:
@@ -192,7 +192,7 @@ def _should_run_auto_setup() -> bool:
     """Determine if auto-setup should run."""
     import os
     # Check if explicitly disabled
-    if os.environ.get("DOCBRO_SKIP_AUTO_SETUP", "").lower() in ["1", "true"]:
+    if os.environ.get("BABLIB_SKIP_AUTO_SETUP", "").lower() in ["1", "true"]:
         return False
 
     return _is_first_time_installation() and _detect_uv_installation()
@@ -210,9 +210,9 @@ def _should_run_auto_setup() -> bool:
 @click.pass_context
 def main(ctx: click.Context, config_file: str | None, debug: bool, quiet: bool,
          json: bool, no_color: bool, no_progress: bool, skip_auto_setup: bool):
-    """DocBro - Local documentation crawler and search tool with RAG capabilities.
+    """Bablib - Local documentation crawler and search tool with RAG capabilities.
 
-    DocBro crawls documentation websites, stores them locally, and provides
+    Bablib crawls documentation websites, stores them locally, and provides
     semantic search through an MCP server for AI assistants like Claude.
 
     \b
@@ -221,20 +221,20 @@ def main(ctx: click.Context, config_file: str | None, debug: bool, quiet: bool,
 
     \b
     QUICK START:
-      docbro setup                                  # Interactive setup wizard
-      docbro shelf create 'my docs'                 # Create shelf (collection)
-      docbro box create 'python-docs' --type drag  # Create box (documentation unit)
-      docbro fill 'python-docs' --source 'https://docs.python.org'  # Fill box with content
-      docbro serve                                  # Start MCP server for AI assistants
+      bablib setup                                  # Interactive setup wizard
+      bablib shelf create 'my docs'                 # Create shelf (collection)
+      bablib box create 'python-docs' --type drag  # Create box (documentation unit)
+      bablib fill 'python-docs' --source 'https://docs.python.org'  # Fill box with content
+      bablib serve                                  # Start MCP server for AI assistants
 
     \b
     SHELF-BOX SYSTEM:
-      docbro shelf create <name>                    # Create documentation shelf
-      docbro shelf list                             # List all shelves
-      docbro box create <name> --type <type>        # Create box (drag/rag/bag)
-      docbro box list                               # List all boxes
-      docbro fill <box> --source <url/path>        # Fill box with content
-      docbro health                                 # Check system health
+      bablib shelf create <name>                    # Create documentation shelf
+      bablib shelf list                             # List all shelves
+      bablib box create <name> --type <type>        # Create box (drag/rag/bag)
+      bablib box list                               # List all boxes
+      bablib fill <box> --source <url/path>        # Fill box with content
+      bablib health                                 # Check system health
 
     \b
     VECTOR STORE OPTIONS:
@@ -243,7 +243,7 @@ def main(ctx: click.Context, config_file: str | None, debug: bool, quiet: bool,
 
     \b
     AI ASSISTANT INTEGRATION:
-      Once the MCP server is running (docbro serve), AI assistants like Claude
+      Once the MCP server is running (bablib serve), AI assistants like Claude
       can access your documentation for context-aware responses.
     """
     # Store context for commands
@@ -256,7 +256,7 @@ def main(ctx: click.Context, config_file: str | None, debug: bool, quiet: bool,
 
     # Initialize app with config
     global app
-    config = DocBroConfig()
+    config = BablibConfig()
     if config_file:
         # Load config from file if needed
         pass
@@ -266,7 +266,7 @@ def main(ctx: click.Context, config_file: str | None, debug: bool, quiet: bool,
         config.debug = True
         config.log_level = "DEBUG"
 
-    app = DocBroApp(config)
+    app = BablibApp(config)
 
     # If no command specified, show help or run auto-setup
     if ctx.invoked_subcommand is None:
@@ -274,8 +274,8 @@ def main(ctx: click.Context, config_file: str | None, debug: bool, quiet: bool,
 
         # Check for auto-setup on first installation
         if not skip_auto_setup and _should_run_auto_setup():
-            console.print("🚀 [bold cyan]Welcome to DocBro![/bold cyan]")
-            console.print("This appears to be your first time running DocBro.")
+            console.print("🚀 [bold cyan]Welcome to Bablib![/bold cyan]")
+            console.print("This appears to be your first time running Bablib.")
             console.print("Starting automatic setup...\n")
 
             async def run_auto_setup():
@@ -293,33 +293,33 @@ def main(ctx: click.Context, config_file: str | None, debug: bool, quiet: bool,
                     if result.success:
                         console.print("\n✅ [bold green]Setup completed successfully![/bold green]")
                         console.print("\n[cyan]Quick start with shelf-box system:[/cyan]")
-                        console.print("  1. Create shelf:  [cyan]docbro shelf create 'my docs'[/cyan]")
-                        console.print("  2. Create box:    [cyan]docbro box create 'python-docs' --type drag[/cyan]")
-                        console.print("  3. Fill box:      [cyan]docbro fill 'python-docs' --source 'https://docs.python.org'[/cyan]")
-                        console.print("  4. Start server:  [cyan]docbro serve[/cyan]")
-                        console.print("\n[dim]For more options: docbro --help[/dim]")
+                        console.print("  1. Create shelf:  [cyan]bablib shelf create 'my docs'[/cyan]")
+                        console.print("  2. Create box:    [cyan]bablib box create 'python-docs' --type drag[/cyan]")
+                        console.print("  3. Fill box:      [cyan]bablib fill 'python-docs' --source 'https://docs.python.org'[/cyan]")
+                        console.print("  4. Start server:  [cyan]bablib serve[/cyan]")
+                        console.print("\n[dim]For more options: bablib --help[/dim]")
                     else:
                         console.print(f"\n❌ Setup failed: {result.error}")
-                        console.print("💡 Try running: [cyan]docbro setup[/cyan] for manual setup")
+                        console.print("💡 Try running: [cyan]bablib setup[/cyan] for manual setup")
                 except Exception as e:
                     console.print(f"\n❌ Setup error: {e}")
-                    console.print("💡 Try running: [cyan]docbro setup[/cyan] for manual setup")
+                    console.print("💡 Try running: [cyan]bablib setup[/cyan] for manual setup")
 
             run_async(run_auto_setup())
             ctx.exit(0)
 
         # Show concise help
-        console.print(f"DocBro v{__version__} - Documentation Crawler & Search Tool\n")
+        console.print(f"Bablib v{__version__} - Documentation Crawler & Search Tool\n")
         console.print("[cyan]Shelf-Box Commands:[/cyan]")
-        console.print("  docbro shelf create <name>    Create documentation shelf")
-        console.print("  docbro shelf list             List shelves")
-        console.print("  docbro box create <name> --type <type>  Create box (drag/rag/bag)")
-        console.print("  docbro fill <box> --source <url>        Fill box with content")
+        console.print("  bablib shelf create <name>    Create documentation shelf")
+        console.print("  bablib shelf list             List shelves")
+        console.print("  bablib box create <name> --type <type>  Create box (drag/rag/bag)")
+        console.print("  bablib fill <box> --source <url>        Fill box with content")
         console.print("\n[cyan]System Commands:[/cyan]")
-        console.print("  docbro setup                  Interactive setup wizard")
-        console.print("  docbro serve                  Start MCP server")
-        console.print("  docbro health                 Check service health")
-        console.print("  docbro --help                 Show all commands")
+        console.print("  bablib setup                  Interactive setup wizard")
+        console.print("  bablib serve                  Start MCP server")
+        console.print("  bablib health                 Check service health")
+        console.print("  bablib --help                 Show all commands")
         ctx.exit(0)
 
 

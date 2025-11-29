@@ -26,7 +26,7 @@ class ResourcesService:
     """
     Service for MCP resources endpoints.
 
-    Exposes DocBro shelves and boxes as MCP resources that can be
+    Exposes Bablib shelves and boxes as MCP resources that can be
     discovered and read by MCP clients.
     """
 
@@ -56,7 +56,7 @@ class ResourcesService:
         for shelf in shelves:
             resources.append(
                 Resource.create(
-                    uri=f"docbro://shelf/{shelf.name}",
+                    uri=f"bablib://shelf/{shelf.name}",
                     name=f"Shelf: {shelf.name}",
                     description=f"Documentation shelf with {shelf.box_count} boxes",
                     mime_type="application/json",
@@ -72,7 +72,7 @@ class ResourcesService:
             box_type = box.box_type if hasattr(box, 'box_type') else "unknown"
             resources.append(
                 Resource.create(
-                    uri=f"docbro://box/{box.name}",
+                    uri=f"bablib://box/{box.name}",
                     name=f"Box: {box.name}",
                     description=f"Documentation box ({box_type} type)",
                     mime_type="application/json",
@@ -102,11 +102,11 @@ class ResourcesService:
             raise ValueError("Resource URI is required")
 
         # Parse URI
-        if not uri.startswith("docbro://"):
-            raise ValueError(f"Invalid DocBro resource URI: {uri}")
+        if not uri.startswith("bablib://"):
+            raise ValueError(f"Invalid Bablib resource URI: {uri}")
 
         # Remove scheme
-        path = uri[10:]  # Remove 'docbro://'
+        path = uri[10:]  # Remove 'bablib://'
 
         # Parse resource type and name
         parts = path.split("/", 1)
@@ -144,13 +144,13 @@ class ResourcesService:
         """
         templates = [
             ResourceTemplate(
-                uri_template="docbro://shelf/{name}",
+                uri_template="bablib://shelf/{name}",
                 name="Shelf by name",
                 description="Access any shelf by its name",
                 mime_type="application/json",
             ),
             ResourceTemplate(
-                uri_template="docbro://box/{name}",
+                uri_template="bablib://box/{name}",
                 name="Box by name",
                 description="Access any box by its name",
                 mime_type="application/json",

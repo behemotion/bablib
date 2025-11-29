@@ -356,7 +356,7 @@ class SystemRequirementsService:
 
             if not validation_results.get("architecture", True):
                 recommendations.append(
-                    "DocBro requires x86_64/amd64 or arm64/aarch64 architecture"
+                    "Bablib requires x86_64/amd64 or arm64/aarch64 architecture"
                 )
 
             return recommendations

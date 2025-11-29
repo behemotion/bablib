@@ -8,7 +8,7 @@ from typing import Any
 
 import httpx
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.core.lib_logger import get_component_logger
 
 
@@ -20,9 +20,9 @@ class EmbeddingError(Exception):
 class EmbeddingService:
     """Manages text embedding operations using Ollama."""
 
-    def __init__(self, config: DocBroConfig | None = None):
+    def __init__(self, config: BablibConfig | None = None):
         """Initialize embedding service."""
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.logger = get_component_logger("embeddings")
 
         # HTTP client for Ollama API

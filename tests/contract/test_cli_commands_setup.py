@@ -116,7 +116,7 @@ class TestLegacyCommandAliases:
 
 
     def test_uninstall_command_alias(self, runner, mock_setup_command):
-        """Test that 'docbro uninstall' maps to 'docbro setup --uninstall'."""
+        """Test that 'bablib uninstall' maps to 'bablib setup --uninstall'."""
         from src.cli.main import uninstall
 
         result = runner.invoke(uninstall, [])
@@ -126,7 +126,7 @@ class TestLegacyCommandAliases:
         mock_setup_command.assert_called_once()
 
     def test_uninstall_command_with_force(self, runner, mock_setup_command):
-        """Test 'docbro uninstall --force'."""
+        """Test 'bablib uninstall --force'."""
         from src.cli.main import uninstall
 
         result = runner.invoke(uninstall, ["--force"])

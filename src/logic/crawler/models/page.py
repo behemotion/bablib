@@ -23,7 +23,7 @@ class Page(BaseModel):
     """Page model representing a crawled documentation page."""
 
     id: str = Field(description="Unique page identifier")
-    project_id: str = Field(description="Associated project ID")
+    box_id: str = Field(description="Associated box ID")
     session_id: str = Field(description="Associated crawl session ID")
     url: str = Field(description="Page URL")
     status: PageStatus = Field(default=PageStatus.DISCOVERED, description="Current page status")
@@ -180,7 +180,7 @@ class Page(BaseModel):
         try:
             link_domain = urlparse(link_url).netloc
             return link_domain == base_domain or link_domain == ""
-        except:
+        except (ValueError, AttributeError):
             return False
 
     def categorize_links(self, base_domain: str) -> None:
@@ -215,7 +215,7 @@ class Page(BaseModel):
         """Convert to dictionary representation."""
         return {
             "id": self.id,
-            "project_id": self.project_id,
+            "box_id": self.box_id,
             "session_id": self.session_id,
             "url": self.url,
             "status": self.status.value,

@@ -9,7 +9,7 @@ from src.models.installation_profile import InstallationState
 
 
 class TestUpgradeSetup:
-    """Test upgrade scenarios over existing DocBro installations."""
+    """Test upgrade scenarios over existing Bablib installations."""
 
     @pytest.fixture
     def wizard_service(self):
@@ -18,7 +18,7 @@ class TestUpgradeSetup:
 
     @pytest.fixture
     def mock_existing_installation(self):
-        """Mock existing DocBro installation with some components."""
+        """Mock existing Bablib installation with some components."""
         return {
             'status': 'PARTIAL',
             'services': [
@@ -41,7 +41,7 @@ class TestUpgradeSetup:
             'services': [
                 {
                     'service_name': 'qdrant',
-                    'container_name': 'docbro-memory-qdrant',
+                    'container_name': 'bablib-memory-qdrant',
                     'status': 'STOPPED',  # Service stopped
                     'port': 6333
                 }
@@ -68,7 +68,7 @@ class TestUpgradeSetup:
             # Mock successful upgrade with container renaming
             mock_install.return_value = {
                 "success": True,
-                "container_name": "docbro-memory-qdrant",
+                "container_name": "bablib-memory-qdrant",
                 "image": "qdrant/qdrant:v1.12.1",
                 "port": 6333,
                 "ready": True
@@ -77,10 +77,10 @@ class TestUpgradeSetup:
             mock_status_obj = MagicMock()
             mock_status_obj.status = ServiceStatus.RUNNING
             mock_status_obj.service_name = "qdrant"
-            mock_status_obj.container_name = "docbro-memory-qdrant"
+            mock_status_obj.container_name = "bablib-memory-qdrant"
             mock_get_status.return_value = mock_status_obj
 
-            mock_generate.return_value = {"server_name": "docbro", "server_url": "http://localhost:8765"}
+            mock_generate.return_value = {"server_name": "bablib", "server_url": "http://localhost:8765"}
 
             Path("/tmp/mcp.json").touch()  # Create mock file
 
@@ -131,9 +131,9 @@ class TestUpgradeSetup:
     async def test_upgrade_preserves_user_data(self, wizard_service):
         """Test that upgrade preserves existing user data and configurations."""
         existing_data_paths = [
-            Path("/tmp/docbro/user_docs"),
-            Path("/tmp/docbro/custom_config.json"),
-            Path("/tmp/docbro/vector_data")
+            Path("/tmp/bablib/user_docs"),
+            Path("/tmp/bablib/custom_config.json"),
+            Path("/tmp/bablib/vector_data")
         ]
 
         # Create mock existing data
@@ -147,7 +147,7 @@ class TestUpgradeSetup:
 
             mock_status.return_value = {'status': 'PARTIAL', 'services': [], 'mcp_config_exists': False}
 
-            mock_install.return_value = {"success": True, "container_name": "docbro-memory-qdrant"}
+            mock_install.return_value = {"success": True, "container_name": "bablib-memory-qdrant"}
 
             # Run upgrade
             await wizard_service.start_installation(force_reinstall=True)
@@ -180,7 +180,7 @@ class TestUpgradeSetup:
 
             mock_install.return_value = {
                 "success": True,
-                "container_name": "docbro-memory-qdrant",
+                "container_name": "bablib-memory-qdrant",
                 "image": "qdrant/qdrant:v1.12.1"  # Newer version
             }
 
@@ -211,7 +211,7 @@ class TestUpgradeSetup:
                 'mcp_config_exists': False
             }
 
-            mock_generate.return_value = {"server_name": "docbro"}
+            mock_generate.return_value = {"server_name": "bablib"}
             mock_validate.return_value = True
             mock_save.return_value = True
             mock_get_path.return_value = Path("/tmp/new_mcp.json")
@@ -252,7 +252,7 @@ class TestUpgradeSetup:
             # Simulate port conflict resolution
             mock_install.return_value = {
                 "success": True,
-                "container_name": "docbro-memory-qdrant",
+                "container_name": "bablib-memory-qdrant",
                 "port": 6334,  # Different port due to conflict resolution
                 "original_port": 6333
             }
@@ -313,7 +313,7 @@ class TestUpgradeSetup:
 
             # Mock new universal config with additional capabilities
             mock_generate.return_value = {
-                "server_name": "docbro",
+                "server_name": "bablib",
                 "server_url": "http://localhost:8765",
                 "capabilities": ["search", "crawl", "embed", "status"]  # Added "status"
             }

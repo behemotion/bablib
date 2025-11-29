@@ -8,7 +8,7 @@ import tempfile
 from unittest.mock import patch
 
 from src.services.database_migrator import DatabaseMigrator
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 
 
 class TestDatabaseMigration:
@@ -21,8 +21,8 @@ class TestDatabaseMigration:
         self.db_path = Path(self.temp_db.name)
 
         # Create migrator with mocked config
-        with patch.object(DocBroConfig, 'database_path', self.db_path):
-            self.config = DocBroConfig()
+        with patch.object(BablibConfig, 'database_path', self.db_path):
+            self.config = BablibConfig()
             self.migrator = DatabaseMigrator(self.config)
 
     def teardown_method(self):

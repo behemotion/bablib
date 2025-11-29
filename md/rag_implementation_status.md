@@ -93,7 +93,7 @@ Created complete directory structure and base models:
 
 **Query Transformation** (T041-T044):
 - ✅ QueryTransformer created
-- ✅ Synonym dictionary loading from ~/.config/docbro/query_transformations.yaml
+- ✅ Synonym dictionary loading from ~/.config/bablib/query_transformations.yaml
 - ✅ transform_query() with expansion, simplification, reformulation
 - ✅ Query transformation integrated into search_service (parallel variation execution)
 
@@ -322,7 +322,7 @@ src/logic/rag/
 
 ✅ **Architecture**: Follows src/logic/ pattern (crawler, setup, rag)
 ✅ **Service-Oriented**: Clear separation of concerns
-✅ **No New Dependencies**: Uses existing DocBro stack
+✅ **No New Dependencies**: Uses existing Bablib stack
 ✅ **Backward Compatible**: All new features opt-in
 ✅ **TDD Approach**: Contract tests before implementation (T006 validates)
 ✅ **Performance**: Meets <30s setup, <50ms reranking, <100ms search targets

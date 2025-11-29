@@ -21,8 +21,6 @@ from src.logic.projects.upload.sources.base_source import BaseUploadSource
 
 logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
-
 try:
     import smbprotocol.exceptions
     from smbprotocol.connection import Connection
@@ -266,7 +264,7 @@ class SMBSource(BaseUploadSource):
                 # Test if connection is still alive
                 tree.session.connection.send(b'\x00' * 4)  # Simple ping
                 return tree
-            except:
+            except (smbprotocol.exceptions.SMBException, OSError, ConnectionError):
                 # Connection dead, remove from pool
                 del self._connection_pool[connection_key]
 
@@ -427,7 +425,7 @@ class SMBSource(BaseUploadSource):
                 tree.tree_disconnect()
                 tree.session.logoff()
                 tree.session.connection.disconnect()
-            except:
+            except (smbprotocol.exceptions.SMBException, OSError, ConnectionError):
                 pass
             finally:
                 del self._connection_pool[connection_key]

@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 from pathlib import Path
 
 from src.services.sqlite_vec_service import detect_sqlite_vec, SQLiteVecService
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.vector_store_types import VectorStoreProvider
 
 
@@ -59,7 +59,7 @@ class TestSQLiteVecDetection:
     def test_sqlite_version_check(self):
         """Test checking SQLite version compatibility."""
         service = SQLiteVecService(
-            DocBroConfig(
+            BablibConfig(
                 database_path="/tmp/test.db",
                 vector_store_provider=VectorStoreProvider.SQLITE_VEC,
             )
@@ -79,7 +79,7 @@ class TestSQLiteVecDetection:
     def test_extension_availability_check(self):
         """Test checking if extension is available at runtime."""
         service = SQLiteVecService(
-            DocBroConfig(
+            BablibConfig(
                 database_path="/tmp/test.db",
                 vector_store_provider=VectorStoreProvider.SQLITE_VEC,
             )
@@ -99,7 +99,7 @@ class TestSQLiteVecDetection:
     async def test_initialize_with_missing_extension(self):
         """Test initialization fails gracefully when extension is missing."""
         service = SQLiteVecService(
-            DocBroConfig(
+            BablibConfig(
                 database_path="/tmp/test.db",
                 vector_store_provider=VectorStoreProvider.SQLITE_VEC,
             )
@@ -116,7 +116,7 @@ class TestSQLiteVecDetection:
     def test_suggest_installation_command(self):
         """Test generating installation suggestion for missing extension."""
         service = SQLiteVecService(
-            DocBroConfig(
+            BablibConfig(
                 database_path="/tmp/test.db",
                 vector_store_provider=VectorStoreProvider.SQLITE_VEC,
             )
@@ -125,7 +125,7 @@ class TestSQLiteVecDetection:
         suggestion = service.get_installation_suggestion()
 
         assert "pip install sqlite-vec" in suggestion
-        assert "docbro services setup --service sqlite-vec" in suggestion
+        assert "bablib services setup --service sqlite-vec" in suggestion
 
     @pytest.mark.asyncio
     async def test_auto_detect_in_setup(self):
@@ -133,7 +133,7 @@ class TestSQLiteVecDetection:
         from src.services.service_configuration import ServiceConfigurationService
 
         service_config = ServiceConfigurationService(
-            config=DocBroConfig(
+            config=BablibConfig(
                 database_path="/tmp/test.db",
                 vector_store_provider=VectorStoreProvider.SQLITE_VEC,
             )
@@ -158,7 +158,7 @@ class TestSQLiteVecDetection:
         ]
 
         service = SQLiteVecService(
-            DocBroConfig(
+            BablibConfig(
                 database_path="/tmp/test.db",
                 vector_store_provider=VectorStoreProvider.SQLITE_VEC,
             )

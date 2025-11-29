@@ -19,7 +19,7 @@ class TestSettingsValidation:
             "crawl_depth": 5,
             "chunk_size": 2000,
             "rag_temperature": 0.7,
-            "vector_storage": "~/.local/share/docbro/vectors",
+            "vector_storage": "~/.local/share/bablib/vectors",
             "qdrant_url": "http://localhost:6333",
             "ollama_url": "http://localhost:11434",
             "rag_top_k": 5,

@@ -17,8 +17,8 @@ class BackupManifest(BaseModel):
         default_factory=datetime.now,
         description="When backup was created"
     )
-    docbro_version: str = Field(
-        description="Version of DocBro being uninstalled"
+    bablib_version: str = Field(
+        description="Version of Bablib being uninstalled"
     )
     components_included: list[str] = Field(
         default_factory=list,
@@ -111,7 +111,7 @@ class BackupManifest(BaseModel):
             "backup_id": self.backup_id,
             "created_at": self.created_at.isoformat(),
             "age_days": f"{self.backup_age_days:.1f}",
-            "docbro_version": self.docbro_version,
+            "bablib_version": self.bablib_version,
             "components": {
                 "containers": self.container_count,
                 "volumes": self.volume_count,

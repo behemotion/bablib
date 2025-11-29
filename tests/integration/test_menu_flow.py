@@ -31,7 +31,7 @@ class TestMenuFlow:
                 input='\x1b[B\x1b[B\n'  # Down, Down, Enter
             )
             # Menu should have been shown
-            assert "DOCBRO" in result.output  # ASCII art
+            assert "BABLIB" in result.output  # ASCII art
             assert "Initialize" in result.output
             assert "Configure" in result.output
 
@@ -92,7 +92,7 @@ class TestMenuFlow:
                 input='\x1b'  # Escape to exit
             )
             # Check for system info sections
-            assert "DOCBRO" in result.output  # ASCII art should appear
+            assert "BABLIB" in result.output  # ASCII art should appear
             # System info might be in a panel or table
 
     def test_menu_visual_feedback(self):

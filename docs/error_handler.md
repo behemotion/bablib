@@ -1,6 +1,6 @@
 # Error Handler Service
 
-The `ErrorHandlerService` provides comprehensive error handling and rollback capabilities for DocBro installations. It includes error categorization, user-friendly messages, rollback functionality, and integration with the installation wizard.
+The `ErrorHandlerService` provides comprehensive error handling and rollback capabilities for Bablib installations. It includes error categorization, user-friendly messages, rollback functionality, and integration with the installation wizard.
 
 ## Features
 
@@ -194,7 +194,7 @@ from services.error_handler import (
 
 # Example usage
 if python_version < "3.13":
-    raise SystemRequirementsError("Python 3.13+ required for DocBro installation")
+    raise SystemRequirementsError("Python 3.13+ required for Bablib installation")
 
 if not can_connect_to_service():
     raise ServiceUnavailableError("Docker service is not running")
@@ -202,7 +202,7 @@ if not can_connect_to_service():
 
 ## Configuration
 
-The error handler uses the same configuration as other DocBro services through `ConfigService`. It automatically:
+The error handler uses the same configuration as other Bablib services through `ConfigService`. It automatically:
 
 - Creates snapshot directories in the cache directory
 - Logs errors to structured log files

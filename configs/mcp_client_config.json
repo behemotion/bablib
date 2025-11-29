@@ -1,13 +1,13 @@
 {
   "mcpServers": {
-    "docbro": {
+    "bablib": {
       "command": "node",
       "args": [
         "/Users/alexandr/Repository/local-doc-bro/mcp_client.js"
       ],
       "env": {
-        "DOCBRO_URL": "http://localhost:9382",
-        "DOCBRO_API_KEY": ""
+        "BABLIB_URL": "http://localhost:9382",
+        "BABLIB_API_KEY": ""
       }
     }
   }

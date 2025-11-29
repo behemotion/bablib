@@ -74,7 +74,7 @@ class VectorStorageConfig(BaseModel):
 
     provider: str = Field(default="qdrant", description="Vector storage provider")
     connection_url: str = Field(description="Connection URL (e.g., 'http://localhost:6333')")
-    container_name: str = Field(default="docbro-memory-qdrant", description="Docker container name")
+    container_name: str = Field(default="bablib-memory-qdrant", description="Docker container name")
     data_path: Path = Field(description="Local data storage path")
     configuration: dict[str, Any] = Field(default_factory=dict, description="Provider-specific configuration")
 

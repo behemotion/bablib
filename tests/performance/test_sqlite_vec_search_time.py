@@ -7,7 +7,7 @@ import random
 from typing import List
 
 from src.services.sqlite_vec_service import SQLiteVecService
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.vector_store_types import VectorStoreProvider
 
 
@@ -17,8 +17,8 @@ class TestSQLiteVecSearchPerformance:
     @pytest.fixture
     async def populated_service(self, tmp_path):
         """Create service with populated test data."""
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )
@@ -125,8 +125,8 @@ class TestSQLiteVecSearchPerformance:
     @pytest.mark.asyncio
     async def test_search_scaling_with_collection_size(self, tmp_path):
         """Test how search performance scales with collection size."""
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )
@@ -229,8 +229,8 @@ class TestSQLiteVecSearchPerformance:
     @pytest.mark.asyncio
     async def test_first_search_performance(self, tmp_path):
         """Test performance of first search (cold cache)."""
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )

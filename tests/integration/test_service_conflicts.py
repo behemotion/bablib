@@ -27,7 +27,7 @@ class TestServiceConflicts:
 
     @pytest.fixture
     def mock_port_conflicts(self):
-        """Mock port conflicts on standard DocBro ports."""
+        """Mock port conflicts on standard Bablib ports."""
         return {
             6333: "existing-qdrant-service",  # Qdrant HTTP port conflict
             6334: "another-grpc-service",    # Qdrant gRPC port conflict
@@ -50,10 +50,10 @@ class TestServiceConflicts:
             mock_client.containers.list.return_value = mock_containers
             mock_docker.return_value = mock_client
 
-            # Check for conflicts on DocBro ports
-            containers = await docker_manager.list_docbro_containers()
+            # Check for conflicts on Bablib ports
+            containers = await docker_manager.list_bablib_containers()
 
-            # Should detect existing services using DocBro ports
+            # Should detect existing services using Bablib ports
             used_ports = set()
             for container in mock_containers:
                 for port_spec, bindings in container.ports.items():
@@ -75,7 +75,7 @@ class TestServiceConflicts:
             # Mock port conflict on default port 6333
             mock_create.side_effect = [
                 (False, "Port 6333 already in use"),  # First attempt fails
-                (True, "docbro-memory-qdrant")        # Second attempt succeeds
+                (True, "bablib-memory-qdrant")        # Second attempt succeeds
             ]
 
             # Install with automatic port conflict resolution
@@ -123,7 +123,7 @@ class TestServiceConflicts:
 
             # Mock existing container with same name
             mock_find.return_value = [{
-                "name": "docbro-memory-qdrant",
+                "name": "bablib-memory-qdrant",
                 "status": "running",
                 "id": "existing123"
             }]
@@ -131,11 +131,11 @@ class TestServiceConflicts:
             # Mock successful container handling (rename to backup)
             mock_handle.return_value = {
                 "success": True,
-                "renamed": ["docbro-memory-qdrant -> docbro-memory-qdrant-backup-123456"],
+                "renamed": ["bablib-memory-qdrant -> bablib-memory-qdrant-backup-123456"],
                 "removed": []
             }
 
-            mock_create.return_value = (True, "docbro-memory-qdrant")
+            mock_create.return_value = (True, "bablib-memory-qdrant")
 
             result = await qdrant_service.install_qdrant(force_rename=True)
 
@@ -151,7 +151,7 @@ class TestServiceConflicts:
 
             # Mock network creation conflict
             def create_network_side_effect(name, **kwargs):
-                if name == "docbro-network":
+                if name == "bablib-network":
                     raise Exception("Network already exists")
                 return MagicMock()
 
@@ -174,14 +174,14 @@ class TestServiceConflicts:
 
             # Mock existing volume with same name
             existing_volume = MagicMock()
-            existing_volume.name = "docbro-qdrant-data"
+            existing_volume.name = "bablib-qdrant-data"
             mock_client.volumes.list.return_value = [existing_volume]
             mock_docker.return_value = mock_client
 
             # Should detect existing volume
             volumes = mock_client.volumes.list()
             volume_names = [v.name for v in volumes]
-            assert "docbro-qdrant-data" in volume_names
+            assert "bablib-qdrant-data" in volume_names
 
     @pytest.mark.asyncio
     async def test_service_conflict_during_installation(self, wizard_service):
@@ -196,13 +196,13 @@ class TestServiceConflicts:
             # Mock port conflict during Qdrant installation
             mock_install.side_effect = [
                 {"success": False, "error": "Port 6333 already in use"},  # First attempt
-                {"success": True, "container_name": "docbro-memory-qdrant", "port": 6335}  # Retry with different port
+                {"success": True, "container_name": "bablib-memory-qdrant", "port": 6335}  # Retry with different port
             ]
 
             # Mock retry service to handle the conflict
             with patch.object(wizard_service.retry_service, 'retry_docker_operation') as mock_retry:
                 async def retry_with_port_change():
-                    return {"success": True, "container_name": "docbro-memory-qdrant", "port": 6335}
+                    return {"success": True, "container_name": "bablib-memory-qdrant", "port": 6335}
 
                 mock_retry.return_value = retry_with_port_change()
 
@@ -215,8 +215,8 @@ class TestServiceConflicts:
         """Test handling of multiple simultaneous conflicts."""
         conflicts = {
             "port": 6333,
-            "container_name": "docbro-memory-qdrant",
-            "volume": "docbro-qdrant-data"
+            "container_name": "bablib-memory-qdrant",
+            "volume": "bablib-qdrant-data"
         }
 
         with patch.object(qdrant_service, '_find_existing_qdrant_containers') as mock_find, \
@@ -225,18 +225,18 @@ class TestServiceConflicts:
 
             # Mock existing conflicts
             mock_find.return_value = [{
-                "name": "docbro-memory-qdrant",
+                "name": "bablib-memory-qdrant",
                 "status": "stopped"
             }]
 
             mock_handle.return_value = {
                 "success": True,
-                "removed": ["docbro-memory-qdrant"],
+                "removed": ["bablib-memory-qdrant"],
                 "renamed": []
             }
 
             # Mock successful creation after conflict resolution
-            mock_create.return_value = (True, "docbro-memory-qdrant")
+            mock_create.return_value = (True, "bablib-memory-qdrant")
 
             result = await qdrant_service.install_qdrant(
                 force_rename=True,
@@ -311,7 +311,7 @@ class TestServiceConflicts:
             mock_docker.return_value = mock_client
 
             start_time = time.time()
-            containers = await docker_manager.list_docbro_containers()
+            containers = await docker_manager.list_bablib_containers()
             end_time = time.time()
 
             detection_time = end_time - start_time
@@ -332,7 +332,7 @@ class TestServiceConflicts:
                 "renamed": ["old-qdrant -> old-qdrant-backup-123456"],
                 "removed": []
             }
-            mock_create.return_value = (True, "docbro-memory-qdrant")
+            mock_create.return_value = (True, "bablib-memory-qdrant")
 
             result = await qdrant_service.install_qdrant(force_rename=True)
 
@@ -350,14 +350,14 @@ class TestServiceConflicts:
         def is_port_critical(port):
             return port in critical_ports
 
-        # Verify DocBro doesn't use critical system ports
-        docbro_ports = [6333, 6334, 8765]  # Standard DocBro ports
-        for port in docbro_ports:
-            assert not is_port_critical(port), f"DocBro port {port} conflicts with critical system service"
+        # Verify Bablib doesn't use critical system ports
+        bablib_ports = [6333, 6334, 8765]  # Standard Bablib ports
+        for port in bablib_ports:
+            assert not is_port_critical(port), f"Bablib port {port} conflicts with critical system service"
 
     @pytest.mark.asyncio
     async def test_concurrent_installation_conflict_handling(self, wizard_service):
-        """Test handling of conflicts when multiple DocBro installations run concurrently."""
+        """Test handling of conflicts when multiple Bablib installations run concurrently."""
         # This would be important for multi-user systems or CI environments
         with patch.object(wizard_service.progress_service, 'start_live_display'), \
              patch.object(wizard_service.qdrant_service, 'install_qdrant') as mock_install:

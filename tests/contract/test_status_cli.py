@@ -1,7 +1,7 @@
-"""Contract tests for DocBro setup status CLI command.
+"""Contract tests for Bablib setup status CLI command.
 
 Tests CLI status command interface according to cli-commands.yml specification:
-- `docbro setup --status`
+- `bablib setup --status`
 - Shows configuration state and component health
 - Returns JSON format with --json flag
 """
@@ -65,7 +65,7 @@ class TestStatusCliContract:
                     'error_message': None
                 }]
             },
-            'configuration_file': '~/.config/docbro/setup-config.json',
+            'configuration_file': '~/.config/bablib/setup-config.json',
             'warnings': []
         }
 

@@ -52,7 +52,7 @@ class TestComponentStatus:
         """Test component status creation."""
         component = ComponentStatus(
             component_type=ComponentType.CONTAINER,
-            component_name="docbro-qdrant"
+            component_name="bablib-qdrant"
         )
         assert component.status == RemovalStatus.PENDING
         assert component.error_message is None
@@ -62,7 +62,7 @@ class TestComponentStatus:
         """Test valid state transitions."""
         component = ComponentStatus(
             component_type=ComponentType.VOLUME,
-            component_name="docbro_data"
+            component_name="bablib_data"
         )
 
         # Valid transition: pending -> removing
@@ -158,7 +158,7 @@ class TestRemovalOperation:
 
     def test_operation_creation(self):
         """Test creation of removal operations."""
-        op = RemovalOperation.create_stop_container("container123", "docbro-qdrant")
+        op = RemovalOperation.create_stop_container("container123", "bablib-qdrant")
         assert op.operation_type == OperationType.STOP_CONTAINER
         assert op.target == "container123"
         assert op.priority == 10
@@ -167,7 +167,7 @@ class TestRemovalOperation:
     def test_operation_priorities(self):
         """Test operation priority ordering."""
         ops = [
-            RemovalOperation.create_uninstall_package("docbro"),
+            RemovalOperation.create_uninstall_package("bablib"),
             RemovalOperation.create_stop_container("c1", "container1"),
             RemovalOperation.create_remove_volume("volume1"),
             RemovalOperation.create_delete_directory("/path/to/dir"),
@@ -211,15 +211,15 @@ class TestBackupManifest:
 
     def test_manifest_creation(self):
         """Test backup manifest creation."""
-        manifest = BackupManifest(docbro_version="1.0.0")
-        assert manifest.docbro_version == "1.0.0"
+        manifest = BackupManifest(bablib_version="1.0.0")
+        assert manifest.bablib_version == "1.0.0"
         assert manifest.total_size_bytes == 0
         assert manifest.compression_ratio == 1.0
         assert manifest.backup_age_days >= 0
 
     def test_component_tracking(self):
         """Test adding components to manifest."""
-        manifest = BackupManifest(docbro_version="1.0.0")
+        manifest = BackupManifest(bablib_version="1.0.0")
 
         manifest.add_component("containers", 3)
         manifest.add_component("volumes", 2)
@@ -232,7 +232,7 @@ class TestBackupManifest:
 
     def test_compression_stats(self):
         """Test compression statistics."""
-        manifest = BackupManifest(docbro_version="1.0.0")
+        manifest = BackupManifest(bablib_version="1.0.0")
 
         manifest.set_compression_stats(
             original_size=1024 * 1024,  # 1MB
@@ -247,26 +247,26 @@ class TestBackupManifest:
     def test_manifest_serialization(self):
         """Test manifest JSON serialization."""
         manifest = BackupManifest(
-            docbro_version="1.0.0",
+            bablib_version="1.0.0",
             file_count=100,
             total_size_bytes=1024000
         )
 
         # Serialize to JSON
         json_str = manifest.to_json_string()
-        assert "docbro_version" in json_str
+        assert "bablib_version" in json_str
         assert "1.0.0" in json_str
 
         # Deserialize from JSON
         restored = BackupManifest.from_json_string(json_str)
-        assert restored.docbro_version == manifest.docbro_version
+        assert restored.bablib_version == manifest.bablib_version
         assert restored.file_count == manifest.file_count
 
     def test_restore_validation(self):
         """Test backup restore validation."""
         # Fresh backup
         manifest = BackupManifest(
-            docbro_version="1.0.0",
+            bablib_version="1.0.0",
             file_count=10,
             container_count=2
         )
@@ -281,7 +281,7 @@ class TestBackupManifest:
         assert "over 1 year old" in message
 
         # Empty backup
-        manifest = BackupManifest(docbro_version="1.0.0")
+        manifest = BackupManifest(bablib_version="1.0.0")
         valid, message = manifest.validate_restore()
         assert valid is False
         assert "empty" in message

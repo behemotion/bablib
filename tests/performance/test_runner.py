@@ -35,7 +35,7 @@ class SimpleBenchmark:
         for _ in range(warmup_rounds):
             try:
                 func()
-            except:
+            except Exception:
                 pass
 
         # Actual timing
@@ -71,7 +71,7 @@ def test_installation_context_creation_performance():
             version="1.0.0",
             python_version="3.13.1",
             uv_version="0.4.0",
-            install_path=Path("/tmp/docbro"),
+            install_path=Path("/tmp/bablib"),
             is_global=True,
             user_data_dir=Path("/tmp/data"),
             config_dir=Path("/tmp/config"),
@@ -208,7 +208,7 @@ async def test_mock_installation_workflow():
                 version="1.0.0",
                 python_version="3.13.1",
                 uv_version="0.4.0",
-                install_path=Path("/tmp/docbro"),
+                install_path=Path("/tmp/bablib"),
                 is_global=True,
                 user_data_dir=Path("/tmp/data"),
                 config_dir=Path("/tmp/config"),
@@ -239,7 +239,7 @@ async def test_mock_installation_workflow():
 async def main():
     """Run all performance tests."""
     print("=" * 60)
-    print("DocBro Performance Test Suite")
+    print("Bablib Performance Test Suite")
     print("=" * 60)
 
     try:

@@ -6,8 +6,9 @@ import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
-from src.lib.paths import get_docbro_cache_dir, get_docbro_config_dir, get_docbro_data_dir
+from src.lib.paths import get_bablib_cache_dir, get_bablib_config_dir, get_bablib_data_dir
 from src.models.installation import InstallationContext, PackageMetadata, ServiceStatus
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,7 @@ class ConfigService:
 
     def __init__(self):
         """Initialize configuration service."""
-        self.app_name = "docbro"
+        self.app_name = "bablib"
         self._config_dir: Path | None = None
         self._data_dir: Path | None = None
         self._cache_dir: Path | None = None
@@ -42,21 +43,21 @@ class ConfigService:
     def config_dir(self) -> Path:
         """Get XDG-compliant configuration directory."""
         if self._config_dir is None:
-            self._config_dir = get_docbro_config_dir()
+            self._config_dir = get_bablib_config_dir()
         return self._config_dir
 
     @property
     def data_dir(self) -> Path:
         """Get XDG-compliant data directory."""
         if self._data_dir is None:
-            self._data_dir = get_docbro_data_dir()
+            self._data_dir = get_bablib_data_dir()
         return self._data_dir
 
     @property
     def cache_dir(self) -> Path:
         """Get XDG-compliant cache directory."""
         if self._cache_dir is None:
-            self._cache_dir = get_docbro_cache_dir()
+            self._cache_dir = get_bablib_cache_dir()
         return self._cache_dir
 
     @property
@@ -93,11 +94,11 @@ class ConfigService:
         """Create and save installation context."""
         if install_path is None:
             # Try to detect install path
-            install_path = shutil.which("docbro")
+            install_path = shutil.which("bablib")
             if install_path:
                 install_path = Path(install_path)
             else:
-                install_path = Path("/usr/local/bin/docbro")
+                install_path = Path("/usr/local/bin/bablib")
 
         # Auto-detect installation method if not provided
         if install_method is None:
@@ -274,13 +275,13 @@ class ConfigService:
             "services_config": self.services_config_path
         }
 
-    def detect_existing_installation(self) -> dict[str, any] | None:
+    def detect_existing_installation(self) -> dict[str, Any] | None:
         """Detect existing manual installation that could be migrated."""
         possible_paths = [
-            Path.home() / ".docbro",
-            Path.home() / ".local" / "share" / "docbro",
-            Path("/opt/docbro"),
-            Path("/usr/local/share/docbro")
+            Path.home() / ".bablib",
+            Path.home() / ".local" / "share" / "bablib",
+            Path("/opt/bablib"),
+            Path("/usr/local/share/bablib")
         ]
 
         for path in possible_paths:
@@ -386,10 +387,10 @@ class ConfigService:
         scripts = project.get("scripts", {})
         entry_points = {}
         if scripts:
-            entry_points["console_scripts"] = f"docbro = {scripts.get('docbro', 'src.cli.main:cli')}"
+            entry_points["console_scripts"] = f"bablib = {scripts.get('bablib', 'src.cli.main:cli')}"
 
         return PackageMetadata(
-            name=project.get("name", "docbro"),
+            name=project.get("name", "bablib"),
             version=project.get("version", "1.0.0"),
             description=project.get("description", ""),
             homepage=homepage,

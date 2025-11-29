@@ -1,4 +1,4 @@
-"""FastAPI application for DocBro unified project API."""
+"""FastAPI application for Bablib unified project API."""
 
 import logging
 from contextlib import asynccontextmanager
@@ -17,15 +17,15 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifespan manager."""
     # Startup
-    logger.info("Starting DocBro API server")
+    logger.info("Starting Bablib API server")
     yield
     # Shutdown
-    logger.info("Shutting down DocBro API server")
+    logger.info("Shutting down Bablib API server")
 
 
 app = FastAPI(
-    title="DocBro API",
-    description="Unified API for DocBro project management with compatibility tracking",
+    title="Bablib API",
+    description="Unified API for Bablib project management with compatibility tracking",
     version="3.0.0",
     lifespan=lifespan
 )
@@ -53,7 +53,7 @@ async def health_check():
 async def root():
     """Root endpoint."""
     return {
-        "message": "DocBro API v3.0.0",
+        "message": "Bablib API v3.0.0",
         "docs": "/docs",
         "openapi": "/openapi.json",
         "health": "/health"

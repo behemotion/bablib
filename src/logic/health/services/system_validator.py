@@ -65,7 +65,7 @@ class SystemValidator:
                 status = HealthStatus.ERROR
                 message = f"Python {version} is too old"
                 details = f"Current: {version}, Required: 3.13+"
-                resolution = "Upgrade to Python 3.13+ and reinstall DocBro with UV"
+                resolution = "Upgrade to Python 3.13+ and reinstall Bablib with UV"
 
             execution_time = self._get_current_time() - execution_start
 
@@ -114,7 +114,7 @@ class SystemValidator:
                 status = HealthStatus.ERROR
                 message = f"Insufficient memory: {memory_gb:.1f}GB"
                 details = f"Available: {memory_gb:.1f}GB, Minimum: 0.5GB"
-                resolution = "Free up memory or add more RAM before using DocBro"
+                resolution = "Free up memory or add more RAM before using Bablib"
 
             execution_time = self._get_current_time() - execution_start
 
@@ -163,7 +163,7 @@ class SystemValidator:
                 status = HealthStatus.ERROR
                 message = f"Insufficient disk space: {disk_gb:.1f}GB"
                 details = f"Available: {disk_gb:.1f}GB, Minimum: 0.5GB"
-                resolution = "Free up disk space before using DocBro"
+                resolution = "Free up disk space before using Bablib"
 
             execution_time = self._get_current_time() - execution_start
 

@@ -123,8 +123,8 @@ def inspect(name: Optional[str] = None, shelf: Optional[str] = None, init: bool 
                     await _create_box_with_wizard(name, box_type, shelf, init)
                 else:
                     console.print("Available actions:")
-                    console.print("  - List existing boxes: [cyan]docbro box[/cyan]")
-                    console.print("  - Create box: [cyan]docbro box create <name> --type <type>[/cyan]")
+                    console.print("  - List existing boxes: [cyan]bablib box[/cyan]")
+                    console.print("  - Create box: [cyan]bablib box create <name> --type <type>[/cyan]")
 
         except Exception as e:
             logger.error(f"Error inspecting box: {e}")
@@ -151,7 +151,7 @@ async def _create_box_with_wizard(name: str, box_type: str, shelf: Optional[str]
                 console.print("[red]No current shelf set.[/red]")
                 console.print("Either:")
                 console.print("  1. Specify a shelf: [cyan]--shelf <shelf>[/cyan]")
-                console.print("  2. Set current shelf: [cyan]docbro shelf current <shelf>[/cyan]")
+                console.print("  2. Set current shelf: [cyan]bablib shelf current <shelf>[/cyan]")
                 return
 
         box = await box_service.create_box(
@@ -210,8 +210,8 @@ def create(name: str, box_type: str, shelf: Optional[str] = None, description: O
                 else:
                     console.print("[red]No current shelf set.[/red]")
                     console.print("Either:")
-                    console.print("  1. Specify a shelf: [cyan]docbro box create <name> --type <type> --shelf <shelf>[/cyan]")
-                    console.print("  2. Set current shelf: [cyan]docbro shelf current <shelf>[/cyan]")
+                    console.print("  1. Specify a shelf: [cyan]bablib box create <name> --type <type> --shelf <shelf>[/cyan]")
+                    console.print("  2. Set current shelf: [cyan]bablib shelf current <shelf>[/cyan]")
                     raise click.Abort()
 
             # Create the box

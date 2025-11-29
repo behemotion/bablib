@@ -70,8 +70,8 @@ class TestWheelContents:
         wheel_path = build_wheel(project_dir)
 
         # Check wheel filename pattern
-        assert wheel_path.name.startswith("docbro-"), \
-            f"Wheel filename doesn't start with 'docbro-': {wheel_path.name}"
+        assert wheel_path.name.startswith("bablib-"), \
+            f"Wheel filename doesn't start with 'bablib-': {wheel_path.name}"
 
         assert wheel_path.name.endswith(".whl"), \
             f"Wheel file doesn't have .whl extension: {wheel_path.name}"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# DocBro MCP Server Connection Test Script
+# Bablib MCP Server Connection Test Script
 #
-# This script tests the connection to DocBro MCP servers
+# This script tests the connection to Bablib MCP servers
 # and provides helpful debugging information.
 #
 # Usage:
@@ -23,7 +23,7 @@ READ_ONLY_URL="http://0.0.0.0:9383"
 ADMIN_URL="http://127.0.0.1:9384"
 
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║          DocBro MCP Server Connection Test                  ║"
+echo "║          Bablib MCP Server Connection Test                  ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -58,17 +58,17 @@ test_endpoint() {
 
 # Function to check if server is running
 check_server_process() {
-    echo -e "${BLUE}Checking if DocBro server is running...${NC}"
+    echo -e "${BLUE}Checking if Bablib server is running...${NC}"
 
-    if pgrep -f "docbro serve" > /dev/null; then
-        echo -e "${GREEN}✓ DocBro server process found${NC}"
+    if pgrep -f "bablib serve" > /dev/null; then
+        echo -e "${GREEN}✓ Bablib server process found${NC}"
         echo "Process details:"
-        ps aux | grep "docbro serve" | grep -v grep
+        ps aux | grep "bablib serve" | grep -v grep
         echo ""
         return 0
     else
-        echo -e "${YELLOW}⚠ No DocBro server process found${NC}"
-        echo "Server may not be running. Start with: docbro serve"
+        echo -e "${YELLOW}⚠ No Bablib server process found${NC}"
+        echo "Server may not be running. Start with: bablib serve"
         echo ""
         return 1
     fi
@@ -113,12 +113,12 @@ if ! command_exists curl; then
 fi
 echo -e "${GREEN}✓ curl is available${NC}"
 
-if ! command_exists docbro; then
-    echo -e "${RED}✗ docbro is not installed${NC}"
+if ! command_exists bablib; then
+    echo -e "${RED}✗ bablib is not installed${NC}"
     echo "Install with: uv tool install git+https://github.com/behemotion/doc-bro"
     exit 1
 fi
-echo -e "${GREEN}✓ docbro is available${NC}"
+echo -e "${GREEN}✓ bablib is available${NC}"
 echo ""
 
 echo "═══════════════════════════════════════════════════════════════"
@@ -197,18 +197,18 @@ elif [ $read_only_ok -eq 1 ] || [ $admin_ok -eq 1 ]; then
     [ $admin_ok -eq 1 ] && echo -e "${GREEN}✓ Admin Server: OK${NC}" || echo -e "${RED}✗ Admin Server: NOT REACHABLE${NC}"
     echo ""
     echo "Troubleshooting:"
-    [ $read_only_ok -eq 0 ] && echo "  • Start read-only: docbro serve"
-    [ $admin_ok -eq 0 ] && echo "  • Start admin: docbro serve --admin"
+    [ $read_only_ok -eq 0 ] && echo "  • Start read-only: bablib serve"
+    [ $admin_ok -eq 0 ] && echo "  • Start admin: bablib serve --admin"
 else
     echo -e "${RED}❌ TESTS FAILED${NC}"
     echo ""
     echo -e "${RED}✗ Neither server is reachable${NC}"
     echo ""
     echo "Troubleshooting steps:"
-    echo "  1. Start the server: docbro serve"
-    echo "  2. Check for errors: docbro serve --foreground"
-    echo "  3. Verify installation: docbro --version"
-    echo "  4. Check system health: docbro health --system"
+    echo "  1. Start the server: bablib serve"
+    echo "  2. Check for errors: bablib serve --foreground"
+    echo "  3. Verify installation: bablib --version"
+    echo "  4. Check system health: bablib health --system"
     echo ""
     [ $server_running -eq 0 ] && echo "  ⚠ Server process not found - server may not be running"
 fi

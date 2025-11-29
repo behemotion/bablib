@@ -50,9 +50,9 @@ class TestCrossPlatformInstallation:
             "system_name": "macOS",
             "uses_homebrew": True,
             "path_separator": "/",
-            "config_subdir": ".config/docbro",
-            "data_subdir": ".local/share/docbro",
-            "cache_subdir": ".cache/docbro",
+            "config_subdir": ".config/bablib",
+            "data_subdir": ".local/share/bablib",
+            "cache_subdir": ".cache/bablib",
             "package_manager": "homebrew",
             "service_manager": "launchd"
         }),
@@ -60,9 +60,9 @@ class TestCrossPlatformInstallation:
             "system_name": "Linux",
             "uses_homebrew": False,
             "path_separator": "/",
-            "config_subdir": ".config/docbro",
-            "data_subdir": ".local/share/docbro",
-            "cache_subdir": ".cache/docbro",
+            "config_subdir": ".config/bablib",
+            "data_subdir": ".local/share/bablib",
+            "cache_subdir": ".cache/bablib",
             "package_manager": "apt/yum/pacman",
             "service_manager": "systemd"
         }),
@@ -70,9 +70,9 @@ class TestCrossPlatformInstallation:
             "system_name": "Windows",
             "uses_homebrew": False,
             "path_separator": "\\",
-            "config_subdir": "AppData\\Roaming\\docbro",
-            "data_subdir": "AppData\\Local\\docbro",
-            "cache_subdir": "AppData\\Local\\docbro\\cache",
+            "config_subdir": "AppData\\Roaming\\bablib",
+            "data_subdir": "AppData\\Local\\bablib",
+            "cache_subdir": "AppData\\Local\\bablib\\cache",
             "package_manager": "winget/chocolatey",
             "service_manager": "windows_services"
         })
@@ -100,19 +100,19 @@ class TestCrossPlatformInstallation:
 
     @pytest.mark.parametrize("platform_system,expected_paths", [
         ("Darwin", {
-            "config_path": ".config/docbro",
-            "data_path": ".local/share/docbro",
-            "cache_path": ".cache/docbro"
+            "config_path": ".config/bablib",
+            "data_path": ".local/share/bablib",
+            "cache_path": ".cache/bablib"
         }),
         ("Linux", {
-            "config_path": ".config/docbro",
-            "data_path": ".local/share/docbro",
-            "cache_path": ".cache/docbro"
+            "config_path": ".config/bablib",
+            "data_path": ".local/share/bablib",
+            "cache_path": ".cache/bablib"
         }),
         ("Windows", {
-            "config_path": "AppData/Roaming/docbro",
-            "data_path": "AppData/Local/docbro",
-            "cache_path": "AppData/Local/docbro/cache"
+            "config_path": "AppData/Roaming/bablib",
+            "data_path": "AppData/Local/bablib",
+            "cache_path": "AppData/Local/bablib/cache"
         })
     ])
     def test_xdg_directory_handling_per_platform(self, platform_system, expected_paths, temp_home):
@@ -125,13 +125,13 @@ class TestCrossPlatformInstallation:
 
                 # Set platform-appropriate paths
                 if platform_system == "Windows":
-                    mock_config.return_value = str(temp_home / "AppData" / "Roaming" / "docbro")
-                    mock_data.return_value = str(temp_home / "AppData" / "Local" / "docbro")
-                    mock_cache.return_value = str(temp_home / "AppData" / "Local" / "docbro" / "cache")
+                    mock_config.return_value = str(temp_home / "AppData" / "Roaming" / "bablib")
+                    mock_data.return_value = str(temp_home / "AppData" / "Local" / "bablib")
+                    mock_cache.return_value = str(temp_home / "AppData" / "Local" / "bablib" / "cache")
                 else:  # Darwin/Linux use XDG
-                    mock_config.return_value = str(temp_home / ".config" / "docbro")
-                    mock_data.return_value = str(temp_home / ".local" / "share" / "docbro")
-                    mock_cache.return_value = str(temp_home / ".cache" / "docbro")
+                    mock_config.return_value = str(temp_home / ".config" / "bablib")
+                    mock_data.return_value = str(temp_home / ".local" / "share" / "bablib")
+                    mock_cache.return_value = str(temp_home / ".cache" / "bablib")
 
                 config_service = ConfigService()
                 config_service.ensure_directories()
@@ -212,9 +212,9 @@ class TestCrossPlatformInstallation:
 
     def test_installation_context_platform_metadata(self, temp_home):
         """Test that installation context includes platform-specific metadata."""
-        with patch('platformdirs.user_config_dir', return_value=str(temp_home / ".config" / "docbro")), \
-             patch('platformdirs.user_data_dir', return_value=str(temp_home / ".local" / "share" / "docbro")), \
-             patch('platformdirs.user_cache_dir', return_value=str(temp_home / ".cache" / "docbro")):
+        with patch('platformdirs.user_config_dir', return_value=str(temp_home / ".config" / "bablib")), \
+             patch('platformdirs.user_data_dir', return_value=str(temp_home / ".local" / "share" / "bablib")), \
+             patch('platformdirs.user_cache_dir', return_value=str(temp_home / ".cache" / "bablib")):
 
             config_service = ConfigService()
 
@@ -275,7 +275,7 @@ class TestCrossPlatformInstallation:
     @pytest.mark.asyncio
     async def test_setup_wizard_platform_adaptation(self, temp_home):
         """Test setup wizard adapts prompts and instructions per platform."""
-        with patch('platformdirs.user_config_dir', return_value=str(temp_home / ".config" / "docbro")):
+        with patch('platformdirs.user_config_dir', return_value=str(temp_home / ".config" / "bablib")):
             wizard = SetupWizardService()
 
             current_platform = platform.system()
@@ -301,7 +301,7 @@ class TestCrossPlatformInstallation:
 
     def test_error_handling_platform_differences(self, temp_home):
         """Test error handling accounts for platform-specific differences."""
-        with patch('platformdirs.user_config_dir', return_value=str(temp_home / ".config" / "docbro")):
+        with patch('platformdirs.user_config_dir', return_value=str(temp_home / ".config" / "bablib")):
             config_service = ConfigService()
 
             current_platform = platform.system()
@@ -339,13 +339,13 @@ class TestCrossPlatformInstallation:
         for test_platform in platforms_to_test:
             with patch('platform.system', return_value=test_platform):
                 if test_platform == "Windows":
-                    config_dir = temp_home / "AppData" / "Roaming" / "docbro"
-                    data_dir = temp_home / "AppData" / "Local" / "docbro"
-                    cache_dir = temp_home / "AppData" / "Local" / "docbro" / "cache"
+                    config_dir = temp_home / "AppData" / "Roaming" / "bablib"
+                    data_dir = temp_home / "AppData" / "Local" / "bablib"
+                    cache_dir = temp_home / "AppData" / "Local" / "bablib" / "cache"
                 else:
-                    config_dir = temp_home / ".config" / "docbro"
-                    data_dir = temp_home / ".local" / "share" / "docbro"
-                    cache_dir = temp_home / ".cache" / "docbro"
+                    config_dir = temp_home / ".config" / "bablib"
+                    data_dir = temp_home / ".local" / "share" / "bablib"
+                    cache_dir = temp_home / ".cache" / "bablib"
 
                 with patch('platformdirs.user_config_dir', return_value=str(config_dir)), \
                      patch('platformdirs.user_data_dir', return_value=str(data_dir)), \

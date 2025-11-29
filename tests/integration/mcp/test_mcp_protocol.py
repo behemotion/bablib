@@ -49,7 +49,7 @@ class TestMcpProtocolInitialize:
             result = data["result"]
             assert result["protocolVersion"] == "2024-11-05"
             assert "capabilities" in result
-            assert result["serverInfo"]["name"] == "docbro"
+            assert result["serverInfo"]["name"] == "bablib"
             assert result["serverInfo"]["version"] == "1.0.0"
 
     @pytest.mark.asyncio
@@ -77,7 +77,7 @@ class TestMcpProtocolInitialize:
 
             assert data["jsonrpc"] == "2.0"
             result = data["result"]
-            assert result["serverInfo"]["name"] == "docbro-admin"
+            assert result["serverInfo"]["name"] == "bablib-admin"
 
 
 class TestMcpProtocolPing:
@@ -128,7 +128,7 @@ class TestMcpToolsEndpoints:
 
     @pytest.mark.asyncio
     async def test_tools_list_after_initialization(self):
-        """Test tools/list returns DocBro commands."""
+        """Test tools/list returns Bablib commands."""
         async with AsyncClient(app=read_only_app, base_url="http://test") as client:
             # First, initialize
             init_request = {
@@ -166,9 +166,9 @@ class TestMcpToolsEndpoints:
 
             # Should have shelf, box, and search tools
             tool_names = [tool["name"] for tool in tools]
-            assert "docbro_shelf_list" in tool_names
-            assert "docbro_box_list" in tool_names
-            assert "docbro_search" in tool_names
+            assert "bablib_shelf_list" in tool_names
+            assert "bablib_box_list" in tool_names
+            assert "bablib_search" in tool_names
 
     @pytest.mark.asyncio
     async def test_admin_server_has_more_tools(self):
@@ -201,9 +201,9 @@ class TestMcpToolsEndpoints:
             tool_names = [tool["name"] for tool in tools]
 
             # Admin server should have create/modify tools
-            assert "docbro_shelf_create" in tool_names
-            assert "docbro_box_create" in tool_names
-            assert "docbro_fill" in tool_names
+            assert "bablib_shelf_create" in tool_names
+            assert "bablib_box_create" in tool_names
+            assert "bablib_fill" in tool_names
 
 
 class TestMcpResourcesEndpoints:
@@ -261,8 +261,8 @@ class TestMcpResourcesEndpoints:
 
             # Should have shelf and box templates
             template_uris = [t["uriTemplate"] for t in templates]
-            assert "docbro://shelf/{name}" in template_uris
-            assert "docbro://box/{name}" in template_uris
+            assert "bablib://shelf/{name}" in template_uris
+            assert "bablib://box/{name}" in template_uris
 
 
 class TestMcpErrorHandling:

@@ -4,6 +4,7 @@ import asyncio
 import logging
 import subprocess
 from datetime import datetime
+from typing import Any
 
 import httpx
 
@@ -165,7 +166,7 @@ class ServiceDetectionService:
                     try:
                         health_data = response.json()
                         version = health_data.get("version", "unknown")
-                    except:
+                    except (ValueError, KeyError, TypeError):
                         version = "unknown"
 
                     return ServiceStatus(
@@ -272,7 +273,7 @@ class ServiceDetectionService:
 
         return results
 
-    def get_service_summary(self, statuses: dict[str, ServiceStatus]) -> dict[str, any]:
+    def get_service_summary(self, statuses: dict[str, ServiceStatus]) -> dict[str, Any]:
         """Get a summary of service statuses for display."""
         summary = {
             "total_services": len(statuses),

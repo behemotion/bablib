@@ -1,4 +1,4 @@
-"""MCP (Model Context Protocol) functionality for DocBro.
+"""MCP (Model Context Protocol) functionality for Bablib.
 
 This module provides dual MCP server architecture:
 - Read-only server for documentation access

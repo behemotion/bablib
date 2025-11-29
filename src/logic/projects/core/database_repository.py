@@ -34,8 +34,8 @@ class ProjectDatabaseRepository:
         """Get default data directory using XDG specification."""
         import os
         return os.environ.get(
-            'DOCBRO_DATA_DIR',
-            str(Path.home() / '.local' / 'share' / 'docbro')
+            'BABLIB_DATA_DIR',
+            str(Path.home() / '.local' / 'share' / 'bablib')
         )
 
     async def initialize(self) -> None:

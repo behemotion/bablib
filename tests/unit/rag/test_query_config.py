@@ -176,9 +176,9 @@ class TestQueryTransformConfig:
 
         # Home directory path
         config3 = QueryTransformConfig(
-            synonym_dict_path="~/.config/docbro/synonyms.yaml"
+            synonym_dict_path="~/.config/bablib/synonyms.yaml"
         )
-        assert config3.synonym_dict_path == "~/.config/docbro/synonyms.yaml"
+        assert config3.synonym_dict_path == "~/.config/bablib/synonyms.yaml"
 
     def test_config_immutability_after_creation(self):
         """Test that config can be modified after creation."""

@@ -141,24 +141,24 @@ class StatusDisplayService:
             actions.append({
                 "action": "create",
                 "description": f"Create {entity_type} '{entity_name}'",
-                "command": f"docbro {entity_type} create {entity_name}"
+                "command": f"bablib {entity_type} create {entity_name}"
             })
             actions.append({
                 "action": "create_with_wizard",
                 "description": f"Create {entity_type} '{entity_name}' with setup wizard",
-                "command": f"docbro {entity_type} create {entity_name} --init"
+                "command": f"bablib {entity_type} create {entity_name} --init"
             })
 
         elif status == EntityStatus.UNCONFIGURED:
             actions.append({
                 "action": "configure",
                 "description": f"Run setup wizard for '{entity_name}'",
-                "command": f"docbro {entity_type} {entity_name} --init"
+                "command": f"bablib {entity_type} {entity_name} --init"
             })
             actions.append({
                 "action": "view",
                 "description": f"View current {entity_type} details",
-                "command": f"docbro {entity_type} {entity_name} --verbose"
+                "command": f"bablib {entity_type} {entity_name} --verbose"
             })
 
         elif status == EntityStatus.EMPTY:
@@ -166,7 +166,7 @@ class StatusDisplayService:
                 actions.append({
                     "action": "create_boxes",
                     "description": "Create boxes in this shelf",
-                    "command": f"docbro box create <name> --shelf {entity_name}"
+                    "command": f"bablib box create <name> --shelf {entity_name}"
                 })
             elif entity_type == "box":
                 # Box-type specific suggestions would be added here
@@ -174,38 +174,38 @@ class StatusDisplayService:
                 actions.append({
                     "action": "fill",
                     "description": f"Fill {entity_type} with content",
-                    "command": f"docbro fill {entity_name} --source <source>"
+                    "command": f"bablib fill {entity_name} --source <source>"
                 })
 
             actions.append({
                 "action": "reconfigure",
                 "description": f"Reconfigure {entity_type} settings",
-                "command": f"docbro {entity_type} {entity_name} --init"
+                "command": f"bablib {entity_type} {entity_name} --init"
             })
 
         elif status == EntityStatus.CONFIGURED:
             actions.append({
                 "action": "view",
                 "description": f"View {entity_type} contents",
-                "command": f"docbro {entity_type} {entity_name} --verbose"
+                "command": f"bablib {entity_type} {entity_name} --verbose"
             })
             if entity_type == "box":
                 actions.append({
                     "action": "add_content",
                     "description": "Add more content",
-                    "command": f"docbro fill {entity_name} --source <source>"
+                    "command": f"bablib fill {entity_name} --source <source>"
                 })
 
         elif status == EntityStatus.NEEDS_MIGRATION:
             actions.append({
                 "action": "migrate",
                 "description": f"Migrate {entity_type} configuration",
-                "command": f"docbro {entity_type} {entity_name} --migrate"
+                "command": f"bablib {entity_type} {entity_name} --migrate"
             })
             actions.append({
                 "action": "backup_and_recreate",
                 "description": f"Backup and recreate {entity_type}",
-                "command": f"docbro {entity_type} {entity_name} --backup --recreate"
+                "command": f"bablib {entity_type} {entity_name} --backup --recreate"
             })
 
         return actions
@@ -231,12 +231,12 @@ class StatusDisplayService:
                 {
                     "action": "crawl_website",
                     "description": "Crawl a website",
-                    "command": f"docbro fill {entity_name} --source https://example.com"
+                    "command": f"bablib fill {entity_name} --source https://example.com"
                 },
                 {
                     "action": "crawl_with_options",
                     "description": "Crawl with specific options",
-                    "command": f"docbro fill {entity_name} --source https://example.com --depth 3 --max-pages 100"
+                    "command": f"bablib fill {entity_name} --source https://example.com --depth 3 --max-pages 100"
                 }
             ])
 
@@ -245,12 +245,12 @@ class StatusDisplayService:
                 {
                     "action": "upload_documents",
                     "description": "Upload document files",
-                    "command": f"docbro fill {entity_name} --source /path/to/documents"
+                    "command": f"bablib fill {entity_name} --source /path/to/documents"
                 },
                 {
                     "action": "upload_with_chunking",
                     "description": "Upload with custom chunk settings",
-                    "command": f"docbro fill {entity_name} --source /path/to/docs --chunk-size 1000 --overlap 100"
+                    "command": f"bablib fill {entity_name} --source /path/to/docs --chunk-size 1000 --overlap 100"
                 }
             ])
 
@@ -259,12 +259,12 @@ class StatusDisplayService:
                 {
                     "action": "store_data",
                     "description": "Store raw data",
-                    "command": f"docbro fill {entity_name} --source /path/to/data"
+                    "command": f"bablib fill {entity_name} --source /path/to/data"
                 },
                 {
                     "action": "store_recursive",
                     "description": "Store data recursively",
-                    "command": f"docbro fill {entity_name} --source /path/to/data --recursive"
+                    "command": f"bablib fill {entity_name} --source /path/to/data --recursive"
                 }
             ])
 

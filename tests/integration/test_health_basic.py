@@ -16,7 +16,7 @@ class TestHealthBasicIntegration:
     def test_basic_health_check_scenario(self):
         """
         Quickstart Scenario 1: Basic Health Check
-        Goal: Verify overall DocBro installation health
+        Goal: Verify overall Bablib installation health
         """
         # This test should FAIL until implementation is complete
         result = self.runner.invoke(main, ["health"])
@@ -26,7 +26,7 @@ class TestHealthBasicIntegration:
 
         # TODO: After implementation, validate:
         # assert result.exit_code == 0
-        # assert "DocBro Health Status" in result.output
+        # assert "Bablib Health Status" in result.output
         # assert "Overall Status:" in result.output
         # assert "Execution Time:" in result.output
 

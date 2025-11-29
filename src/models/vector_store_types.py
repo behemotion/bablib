@@ -1,4 +1,4 @@
-"""Vector store type definitions for DocBro."""
+"""Vector store type definitions for Bablib."""
 
 from enum import Enum
 

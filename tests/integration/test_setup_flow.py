@@ -39,9 +39,9 @@ class TestFullSetupFlow:
         result = orchestrator.initialize(auto=True, vector_store="sqlite_vec")
 
         # Verify directories created
-        assert (temp_home / ".config" / "docbro").exists()
-        assert (temp_home / ".local" / "share" / "docbro").exists()
-        assert (temp_home / ".cache" / "docbro").exists()
+        assert (temp_home / ".config" / "bablib").exists()
+        assert (temp_home / ".local" / "share" / "bablib").exists()
+        assert (temp_home / ".cache" / "bablib").exists()
 
     def test_setup_writes_configuration(self, temp_home, mock_services):
         """Test that setup writes configuration files."""
@@ -54,7 +54,7 @@ class TestFullSetupFlow:
         )
 
         # Verify config file created
-        config_file = temp_home / ".config" / "docbro" / "settings.yaml"
+        config_file = temp_home / ".config" / "bablib" / "settings.yaml"
         assert config_file.exists()
 
         # Verify config content
@@ -113,7 +113,7 @@ class TestFullSetupFlow:
         from src.logic.setup.core.orchestrator import SetupOrchestrator
 
         # Create existing config
-        config_dir = temp_home / ".config" / "docbro"
+        config_dir = temp_home / ".config" / "bablib"
         config_dir.mkdir(parents=True)
         config_file = config_dir / "settings.yaml"
         config_file.write_text("vector_store_provider: qdrant\n")

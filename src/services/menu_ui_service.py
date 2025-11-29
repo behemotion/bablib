@@ -9,7 +9,7 @@ from rich.live import Live
 from rich.prompt import Confirm, Prompt
 from rich.table import Table
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.ui import MenuConfig, MenuState, SettingsMenuItem
 
 
@@ -20,9 +20,9 @@ class MenuUIService:
         """Initialize menu UI service."""
         self.console = console or Console()
         self.state = MenuState()
-        self.config = MenuConfig(title="DocBro Settings")
+        self.config = MenuConfig(title="Bablib Settings")
 
-    def create_menu_items(self, settings: DocBroConfig) -> list[SettingsMenuItem]:
+    def create_menu_items(self, settings: BablibConfig) -> list[SettingsMenuItem]:
         """Create menu items from settings."""
         items = []
 

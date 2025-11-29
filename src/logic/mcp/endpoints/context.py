@@ -172,32 +172,32 @@ async def get_box_context(
                 suggested_actions.append({
                     "action": "fill",
                     "description": "Crawl a website to fill this drag box",
-                    "command": f"docbro fill {name} --source <website_url>"
+                    "command": f"bablib fill {name} --source <website_url>"
                 })
             elif box.box_type == "rag":
                 suggested_actions.append({
                     "action": "fill",
                     "description": "Upload documents to fill this rag box",
-                    "command": f"docbro fill {name} --source <file_path>"
+                    "command": f"bablib fill {name} --source <file_path>"
                 })
             elif box.box_type == "bag":
                 suggested_actions.append({
                     "action": "fill",
                     "description": "Add files to fill this bag box",
-                    "command": f"docbro fill {name} --source <content_path>"
+                    "command": f"bablib fill {name} --source <content_path>"
                 })
 
         if not context.configuration_state.is_configured:
             suggested_actions.append({
                 "action": "configure",
                 "description": "Run box setup wizard",
-                "command": f"docbro box {name} --init"
+                "command": f"bablib box {name} --init"
             })
 
         suggested_actions.append({
             "action": "view",
             "description": "View box details and content",
-            "command": f"docbro box {name} --verbose"
+            "command": f"bablib box {name} --verbose"
         })
 
         response = {

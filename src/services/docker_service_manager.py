@@ -17,11 +17,11 @@ class DockerServiceManager:
         """Initialize Docker service manager."""
         self.client = None
         self.standard_naming = {
-            "qdrant": "docbro-memory-qdrant",
-            "redis": "docbro-cache-redis",
-            "docbro": "docbro-main"
+            "qdrant": "bablib-memory-qdrant",
+            "redis": "bablib-cache-redis",
+            "bablib": "bablib-main"
         }
-        self.network_name = "docbro-network"
+        self.network_name = "bablib-network"
 
     def _get_client(self) -> docker.DockerClient:
         """Get or create Docker client."""
@@ -62,7 +62,7 @@ class DockerServiceManager:
             client = self._get_client()
 
             # Get standardized container name
-            container_name = self.standard_naming.get(service_type, f"docbro-{service_type}")
+            container_name = self.standard_naming.get(service_type, f"bablib-{service_type}")
 
             # Check if container already exists
             existing_container = self._get_container_by_name(container_name)
@@ -192,16 +192,16 @@ class DockerServiceManager:
             logger.error(f"Failed to get container status {container_name}: {e}")
             return ServiceStatus.ERROR
 
-    async def list_docbro_containers(self) -> list[dict[str, Any]]:
-        """List all DocBro-related containers."""
+    async def list_bablib_containers(self) -> list[dict[str, Any]]:
+        """List all Bablib-related containers."""
         try:
             client = self._get_client()
             containers = client.containers.list(all=True)
 
-            docbro_containers = []
+            bablib_containers = []
             for container in containers:
-                if any(keyword in container.name.lower() for keyword in ["docbro", "qdrant", "redis"]):
-                    docbro_containers.append({
+                if any(keyword in container.name.lower() for keyword in ["bablib", "qdrant", "redis"]):
+                    bablib_containers.append({
                         "name": container.name,
                         "id": container.id[:12],
                         "status": container.status,
@@ -210,10 +210,10 @@ class DockerServiceManager:
                         "created": container.attrs["Created"]
                     })
 
-            return docbro_containers
+            return bablib_containers
 
         except Exception as e:
-            logger.error(f"Failed to list DocBro containers: {e}")
+            logger.error(f"Failed to list Bablib containers: {e}")
             return []
 
     def _format_ports(self, ports_dict: dict) -> str:
@@ -242,7 +242,7 @@ class DockerServiceManager:
             return None
 
     async def _ensure_network_exists(self) -> None:
-        """Ensure DocBro network exists."""
+        """Ensure Bablib network exists."""
         try:
             client = self._get_client()
 
@@ -269,13 +269,13 @@ class DockerServiceManager:
         new_name: str | None = None,
         service_type: str | None = None
     ) -> bool:
-        """Rename container to follow DocBro naming standards."""
+        """Rename container to follow Bablib naming standards."""
         try:
             client = self._get_client()
 
             # Get new name from service type if not provided
             if not new_name and service_type:
-                new_name = self.standard_naming.get(service_type, f"docbro-{service_type}")
+                new_name = self.standard_naming.get(service_type, f"bablib-{service_type}")
 
             if not new_name:
                 logger.error("No new name provided for container rename")
@@ -316,15 +316,15 @@ class DockerServiceManager:
             logger.error(f"Failed to get logs for {container_name}: {e}")
             return f"Error getting logs: {e}"
 
-    async def cleanup_docbro_resources(self, include_volumes: bool = False) -> dict[str, int]:
-        """Clean up all DocBro-related Docker resources."""
+    async def cleanup_bablib_resources(self, include_volumes: bool = False) -> dict[str, int]:
+        """Clean up all Bablib-related Docker resources."""
         results = {"containers": 0, "volumes": 0, "networks": 0}
 
         try:
             client = self._get_client()
 
             # Remove containers
-            containers = await self.list_docbro_containers()
+            containers = await self.list_bablib_containers()
             for container_info in containers:
                 if await self.remove_container(container_info["name"], force=True):
                     results["containers"] += 1
@@ -333,7 +333,7 @@ class DockerServiceManager:
             if include_volumes:
                 volumes = client.volumes.list()
                 for volume in volumes:
-                    if "docbro" in volume.name.lower():
+                    if "bablib" in volume.name.lower():
                         try:
                             volume.remove()
                             results["volumes"] += 1

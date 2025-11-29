@@ -380,7 +380,7 @@ class HealthOrchestrator:
             import os
             from pathlib import Path
 
-            data_dir = Path(os.environ.get('XDG_DATA_HOME', Path.home() / '.local' / 'share')) / 'docbro'
+            data_dir = Path(os.environ.get('XDG_DATA_HOME', Path.home() / '.local' / 'share')) / 'bablib'
             projects_dir = data_dir / 'projects'
 
             if projects_dir.exists():
@@ -471,7 +471,7 @@ class HealthOrchestrator:
                 status = HealthStatus.UNAVAILABLE
                 message = f"Read-only MCP server not running"
                 details = f"No service listening on {host}:{port}"
-                resolution = "Start server with: docbro serve"
+                resolution = "Start server with: bablib serve"
 
             execution_time = time.time() - execution_start
 
@@ -552,7 +552,7 @@ class HealthOrchestrator:
                 status = HealthStatus.UNAVAILABLE
                 message = f"Admin MCP server not running"
                 details = f"No service listening on {host}:{port}"
-                resolution = "Start admin server with: docbro serve --admin"
+                resolution = "Start admin server with: bablib serve --admin"
 
             execution_time = time.time() - execution_start
 

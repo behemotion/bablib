@@ -11,7 +11,7 @@ class TestStatusEndpoint:
     @pytest.mark.asyncio
     async def test_status_response_excludes_redis(self):
         """Verify status endpoint response doesn't include Redis."""
-        from src.cli.main import DocBroApp
+        from src.cli.main import BablibApp
 
         # Mock the services
         with patch('src.cli.main.DatabaseManager') as mock_db, \
@@ -28,7 +28,7 @@ class TestStatusEndpoint:
             mock_embed.return_value = mock_embed_instance
 
             # Create app
-            app = DocBroApp()
+            app = BablibApp()
             await app.initialize()
 
             # Get status (mocked)
@@ -71,7 +71,7 @@ class TestStatusEndpoint:
 
     def test_status_cli_output_format(self):
         """Verify CLI status output doesn't show Redis."""
-        from src.cli.main import DocBroApp
+        from src.cli.main import BablibApp
 
         # Mock status data
         status_data = {

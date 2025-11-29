@@ -9,7 +9,7 @@ from typing import Any
 
 import aiosqlite
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.core.lib_logger import get_component_logger
 from src.models import (
     CrawlSession,
@@ -29,14 +29,14 @@ class DatabaseError(Exception):
 
 
 class DatabaseManager:
-    """Manages SQLite database operations for DocBro."""
+    """Manages SQLite database operations for Bablib."""
 
     # Class-level cache to avoid repeated migration checks
     _migrations_checked: dict[str, bool] = {}
 
-    def __init__(self, config: DocBroConfig | None = None):
+    def __init__(self, config: BablibConfig | None = None):
         """Initialize database manager."""
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.db_path = self.config.database_path
         self.logger = get_component_logger("database")
 
@@ -216,30 +216,37 @@ class DatabaseManager:
             cursor = await self._connection.execute("SELECT version FROM schema_version ORDER BY version DESC LIMIT 1")
             row = await cursor.fetchone()
             return row[0] if row else 0
-        except:
+        except (aiosqlite.Error, ValueError, TypeError):
             return 0
 
     def _get_project_db_path(self, project_name: str) -> Path:
         """Get database path for a specific project."""
-        projects_dir = Path.home() / ".local" / "share" / "docbro" / "projects"
+        projects_dir = Path.home() / ".local" / "share" / "bablib" / "projects"
         projects_dir.mkdir(parents=True, exist_ok=True)
         return projects_dir / f"{project_name}.db"
 
-    async def _get_project_connection(self, project_name: str) -> aiosqlite.Connection:
-        """Get or create database connection for a specific project."""
-        if project_name in self._project_connections:
-            return self._project_connections[project_name]
+    def _get_box_db_path(self, box_name: str) -> Path:
+        """Get database path for a specific box."""
+        boxes_dir = Path.home() / ".local" / "share" / "bablib" / "boxes"
+        boxes_dir.mkdir(parents=True, exist_ok=True)
+        return boxes_dir / f"{box_name}.db"
 
-        # Create project database path
-        project_db_path = self._get_project_db_path(project_name)
+    async def _get_box_connection(self, box_name: str) -> aiosqlite.Connection:
+        """Get or create database connection for a specific box."""
+        cache_key = f"box_{box_name}"
+        if cache_key in self._project_connections:
+            return self._project_connections[cache_key]
+
+        # Create box database path
+        box_db_path = self._get_box_db_path(box_name)
 
         # Create connection
-        conn = await aiosqlite.connect(str(project_db_path))
+        conn = await aiosqlite.connect(str(box_db_path))
         await conn.execute("PRAGMA foreign_keys = ON")
         await conn.execute("PRAGMA journal_mode = WAL")
 
-        # Create project-specific schema (only sessions and pages)
-        project_schema_sql = """
+        # Create box-specific schema (sessions and pages)
+        box_schema_sql = """
         -- Schema version tracking
         CREATE TABLE IF NOT EXISTS schema_version (
             version INTEGER PRIMARY KEY,
@@ -249,12 +256,12 @@ class DatabaseManager:
         -- Crawl sessions table
         CREATE TABLE IF NOT EXISTS crawl_sessions (
             id TEXT PRIMARY KEY,
-            project_id TEXT NOT NULL,
+            box_id TEXT NOT NULL,
             status TEXT NOT NULL DEFAULT 'created',
             crawl_depth INTEGER NOT NULL,
             current_depth INTEGER NOT NULL DEFAULT 0,
             current_url TEXT,
-            user_agent TEXT NOT NULL DEFAULT 'DocBro/1.0',
+            user_agent TEXT NOT NULL DEFAULT 'Bablib/1.0',
             rate_limit REAL NOT NULL DEFAULT 1.0,
             timeout INTEGER NOT NULL DEFAULT 30,
             created_at TIMESTAMP NOT NULL,
@@ -277,7 +284,7 @@ class DatabaseManager:
         -- Pages table
         CREATE TABLE IF NOT EXISTS pages (
             id TEXT PRIMARY KEY,
-            project_id TEXT NOT NULL,
+            box_id TEXT NOT NULL,
             session_id TEXT NOT NULL,
             url TEXT NOT NULL,
             status TEXT NOT NULL DEFAULT 'discovered',
@@ -308,16 +315,124 @@ class DatabaseManager:
         );
 
         -- Indexes for performance
-        CREATE INDEX IF NOT EXISTS idx_sessions_project_id ON crawl_sessions (project_id);
+        CREATE INDEX IF NOT EXISTS idx_sessions_box_id ON crawl_sessions (box_id);
         CREATE INDEX IF NOT EXISTS idx_sessions_status ON crawl_sessions (status);
-        CREATE INDEX IF NOT EXISTS idx_pages_project_id ON pages (project_id);
+        CREATE INDEX IF NOT EXISTS idx_pages_box_id ON pages (box_id);
         CREATE INDEX IF NOT EXISTS idx_pages_session_id ON pages (session_id);
         CREATE INDEX IF NOT EXISTS idx_pages_url ON pages (url);
         CREATE INDEX IF NOT EXISTS idx_pages_status ON pages (status);
         CREATE INDEX IF NOT EXISTS idx_pages_content_hash ON pages (content_hash);
 
         -- Insert current schema version
-        INSERT OR REPLACE INTO schema_version (version) VALUES (2);
+        INSERT OR REPLACE INTO schema_version (version) VALUES (1);
+        """
+
+        await conn.executescript(box_schema_sql)
+        await conn.commit()
+
+        # Cache the connection
+        self._project_connections[cache_key] = conn
+
+        self.logger.info("Box database initialized", extra={
+            "box_name": box_name,
+            "db_path": str(box_db_path)
+        })
+
+        return conn
+
+    async def _get_project_connection(self, project_name: str) -> aiosqlite.Connection:
+        """Get or create database connection for a specific project."""
+        if project_name in self._project_connections:
+            return self._project_connections[project_name]
+
+        # Create project database path
+        project_db_path = self._get_project_db_path(project_name)
+
+        # Create connection
+        conn = await aiosqlite.connect(str(project_db_path))
+        await conn.execute("PRAGMA foreign_keys = ON")
+        await conn.execute("PRAGMA journal_mode = WAL")
+
+        # Create project-specific schema (only sessions and pages)
+        project_schema_sql = """
+        -- Schema version tracking
+        CREATE TABLE IF NOT EXISTS schema_version (
+            version INTEGER PRIMARY KEY,
+            applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        -- Crawl sessions table
+        CREATE TABLE IF NOT EXISTS crawl_sessions (
+            id TEXT PRIMARY KEY,
+            box_id TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'created',
+            crawl_depth INTEGER NOT NULL,
+            current_depth INTEGER NOT NULL DEFAULT 0,
+            current_url TEXT,
+            user_agent TEXT NOT NULL DEFAULT 'Bablib/1.0',
+            rate_limit REAL NOT NULL DEFAULT 1.0,
+            timeout INTEGER NOT NULL DEFAULT 30,
+            created_at TIMESTAMP NOT NULL,
+            started_at TIMESTAMP,
+            completed_at TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL,
+            pages_discovered INTEGER NOT NULL DEFAULT 0,
+            pages_crawled INTEGER NOT NULL DEFAULT 0,
+            pages_failed INTEGER NOT NULL DEFAULT 0,
+            pages_skipped INTEGER NOT NULL DEFAULT 0,
+            total_size_bytes INTEGER NOT NULL DEFAULT 0,
+            queue_size INTEGER NOT NULL DEFAULT 0,
+            error_message TEXT,
+            error_count INTEGER NOT NULL DEFAULT 0,
+            max_errors INTEGER NOT NULL DEFAULT 50,
+            metadata TEXT,
+            archived INTEGER NOT NULL DEFAULT 0
+        );
+
+        -- Pages table
+        CREATE TABLE IF NOT EXISTS pages (
+            id TEXT PRIMARY KEY,
+            box_id TEXT NOT NULL,
+            session_id TEXT NOT NULL,
+            url TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'discovered',
+            title TEXT,
+            content_html TEXT,
+            content_text TEXT,
+            content_hash TEXT,
+            mime_type TEXT NOT NULL DEFAULT 'text/html',
+            charset TEXT NOT NULL DEFAULT 'utf-8',
+            language TEXT,
+            size_bytes INTEGER NOT NULL DEFAULT 0,
+            crawl_depth INTEGER NOT NULL,
+            parent_url TEXT,
+            response_code INTEGER,
+            response_time_ms INTEGER,
+            discovered_at TIMESTAMP NOT NULL,
+            crawled_at TIMESTAMP,
+            processed_at TIMESTAMP,
+            indexed_at TIMESTAMP,
+            error_message TEXT,
+            retry_count INTEGER NOT NULL DEFAULT 0,
+            max_retries INTEGER NOT NULL DEFAULT 3,
+            outbound_links TEXT,
+            internal_links TEXT,
+            external_links TEXT,
+            metadata TEXT,
+            FOREIGN KEY (session_id) REFERENCES crawl_sessions (id) ON DELETE CASCADE
+        );
+
+        -- Indexes for performance
+        CREATE INDEX IF NOT EXISTS idx_sessions_box_id ON crawl_sessions (box_id);
+        CREATE INDEX IF NOT EXISTS idx_sessions_status ON crawl_sessions (status);
+        CREATE INDEX IF NOT EXISTS idx_pages_box_id ON pages (box_id);
+        CREATE INDEX IF NOT EXISTS idx_pages_session_id ON pages (session_id);
+        CREATE INDEX IF NOT EXISTS idx_pages_url ON pages (url);
+        CREATE INDEX IF NOT EXISTS idx_pages_status ON pages (status);
+        CREATE INDEX IF NOT EXISTS idx_pages_content_hash ON pages (content_hash);
+
+        -- Insert current schema version
+        INSERT OR REPLACE INTO schema_version (version) VALUES (3);
         """
 
         await conn.executescript(project_schema_sql)
@@ -625,27 +740,27 @@ class DatabaseManager:
 
     async def create_crawl_session(
         self,
-        project_id: str,
+        box_id: str,
         crawl_depth: int,
-        user_agent: str = "DocBro/1.0",
+        user_agent: str = "Bablib/1.0",
         rate_limit: float = 1.0,
         timeout: int = 30,
         max_errors: int = 50
     ) -> CrawlSession:
-        """Create a new crawl session."""
+        """Create a new crawl session for a box."""
         self._ensure_initialized()
 
-        # Get project to find project name
-        project = await self.get_project(project_id)
-        if not project:
-            raise DatabaseError(f"Project {project_id} not found")
+        # Get box to find box name
+        box = await self.get_box(box_id=box_id)
+        if not box:
+            raise DatabaseError(f"Box {box_id} not found")
 
         session_id = str(uuid.uuid4())
         now = datetime.now(timezone.utc)
 
         session = CrawlSession(
             id=session_id,
-            project_id=project_id,
+            box_id=box_id,
             crawl_depth=crawl_depth,
             user_agent=user_agent,
             rate_limit=rate_limit,
@@ -655,29 +770,29 @@ class DatabaseManager:
             updated_at=now
         )
 
-        # Use project-specific database connection
-        project_conn = await self._get_project_connection(project.name)
-        await project_conn.execute("""
+        # Use box-specific database connection
+        box_conn = await self._get_box_connection(box['name'])
+        await box_conn.execute("""
             INSERT INTO crawl_sessions (
-                id, project_id, status, crawl_depth, current_depth, user_agent, rate_limit,
+                id, box_id, status, crawl_depth, current_depth, user_agent, rate_limit,
                 timeout, created_at, updated_at, pages_discovered, pages_crawled,
                 pages_failed, pages_skipped, total_size_bytes, queue_size, error_count,
                 max_errors, archived
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            session.id, session.project_id, session.status.value, session.crawl_depth,
+            session.id, session.box_id, session.status.value, session.crawl_depth,
             session.current_depth, session.user_agent, session.rate_limit, session.timeout,
             session.created_at.isoformat(), session.updated_at.isoformat(),
             session.pages_discovered, session.pages_crawled, session.pages_failed,
             session.pages_skipped, session.total_size_bytes, session.queue_size, session.error_count,
             session.max_errors, session.archived
         ))
-        await project_conn.commit()
+        await box_conn.commit()
 
         self.logger.info("Crawl session created", extra={
             "session_id": session.id,
-            "project_id": project_id,
-            "project_name": project.name
+            "box_id": box_id,
+            "box_name": box['name']
         })
 
         return session
@@ -754,7 +869,7 @@ class DatabaseManager:
 
     def _session_from_row(self, row: tuple) -> CrawlSession:
         """Create CrawlSession from database row."""
-        (id, project_id, status, crawl_depth, current_depth, current_url, user_agent, rate_limit,
+        (id, box_id, status, crawl_depth, current_depth, current_url, user_agent, rate_limit,
          timeout, created_at, started_at, completed_at, updated_at,
          pages_discovered, pages_crawled, pages_failed, pages_skipped,
          total_size_bytes, queue_size, error_message, error_count, max_errors,
@@ -762,7 +877,7 @@ class DatabaseManager:
 
         return CrawlSession(
             id=id,
-            project_id=project_id,
+            box_id=box_id,
             status=CrawlStatus(status),
             crawl_depth=crawl_depth,
             current_depth=current_depth,
@@ -791,14 +906,14 @@ class DatabaseManager:
         """Update crawl session."""
         self._ensure_initialized()
 
-        # Get project to find project name
-        project = await self.get_project(session.project_id)
-        if not project:
-            raise DatabaseError(f"Project {session.project_id} not found")
+        # Get box to find box name
+        box = await self.get_box(box_id=session.box_id)
+        if not box:
+            raise DatabaseError(f"Box {session.box_id} not found")
 
-        # Use project-specific database connection
-        project_conn = await self._get_project_connection(project.name)
-        await project_conn.execute("""
+        # Use box-specific database connection
+        box_conn = await self._get_box_connection(box['name'])
+        await box_conn.execute("""
             UPDATE crawl_sessions SET
                 status = ?, current_depth = ?, current_url = ?, started_at = ?, completed_at = ?, updated_at = ?,
                 pages_discovered = ?, pages_crawled = ?, pages_failed = ?,
@@ -814,7 +929,7 @@ class DatabaseManager:
             session.pages_skipped, session.total_size_bytes, session.queue_size, session.error_message,
             session.error_count, json.dumps(session.metadata), session.id
         ))
-        await project_conn.commit()
+        await box_conn.commit()
 
         return session
 
@@ -926,26 +1041,26 @@ class DatabaseManager:
 
     async def create_page(
         self,
-        project_id: str,
+        box_id: str,
         session_id: str,
         url: str,
         crawl_depth: int,
         parent_url: str | None = None
     ) -> Page:
-        """Create a new page record."""
+        """Create a new page record for a box."""
         self._ensure_initialized()
 
-        # Get project to find project name
-        project = await self.get_project(project_id)
-        if not project:
-            raise DatabaseError(f"Project {project_id} not found")
+        # Get box to find box name
+        box = await self.get_box(box_id=box_id)
+        if not box:
+            raise DatabaseError(f"Box {box_id} not found")
 
         page_id = str(uuid.uuid4())
         now = datetime.now(timezone.utc)
 
         page = Page(
             id=page_id,
-            project_id=project_id,
+            box_id=box_id,
             session_id=session_id,
             url=url,
             crawl_depth=crawl_depth,
@@ -953,19 +1068,19 @@ class DatabaseManager:
             discovered_at=now
         )
 
-        # Use project-specific database connection
-        project_conn = await self._get_project_connection(project.name)
-        await project_conn.execute("""
+        # Use box-specific database connection
+        box_conn = await self._get_box_connection(box['name'])
+        await box_conn.execute("""
             INSERT INTO pages (
-                id, project_id, session_id, url, status, crawl_depth,
+                id, box_id, session_id, url, status, crawl_depth,
                 parent_url, discovered_at, retry_count, max_retries
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            page.id, page.project_id, page.session_id, page.url,
+            page.id, page.box_id, page.session_id, page.url,
             page.status.value, page.crawl_depth, page.parent_url,
             page.discovered_at.isoformat(), page.retry_count, page.max_retries
         ))
-        await project_conn.commit()
+        await box_conn.commit()
 
         return page
 
@@ -1016,14 +1131,14 @@ class DatabaseManager:
         """Update page record."""
         self._ensure_initialized()
 
-        # Get project to find project name
-        project = await self.get_project(page.project_id)
-        if not project:
-            raise DatabaseError(f"Project {page.project_id} not found")
+        # Get box to find box name
+        box = await self.get_box(box_id=page.box_id)
+        if not box:
+            raise DatabaseError(f"Box {page.box_id} not found")
 
-        # Use project-specific database connection
-        project_conn = await self._get_project_connection(project.name)
-        await project_conn.execute("""
+        # Use box-specific database connection
+        box_conn = await self._get_box_connection(box['name'])
+        await box_conn.execute("""
             UPDATE pages SET
                 status = ?, title = ?, content_html = ?, content_text = ?,
                 content_hash = ?, mime_type = ?, charset = ?, language = ?,
@@ -1046,30 +1161,30 @@ class DatabaseManager:
             json.dumps(page.metadata),
             page.id
         ))
-        await project_conn.commit()
+        await box_conn.commit()
 
         return page
 
-    async def get_page_by_url(self, project_id: str, url: str) -> Page | None:
-        """Get page by URL for a specific project."""
+    async def get_page_by_url(self, box_id: str, url: str) -> Page | None:
+        """Get page by URL for a specific box."""
         self._ensure_initialized()
 
-        # Get project to find project name
-        project = await self.get_project(project_id)
-        if not project:
-            raise DatabaseError(f"Project {project_id} not found")
+        # Get box to find box name
+        box = await self.get_box(box_id=box_id)
+        if not box:
+            raise DatabaseError(f"Box {box_id} not found")
 
-        # Use project-specific database connection
-        project_conn = await self._get_project_connection(project.name)
-        cursor = await project_conn.execute("""
-            SELECT id, project_id, session_id, url, status, title, content_html,
+        # Use box-specific database connection
+        box_conn = await self._get_box_connection(box['name'])
+        cursor = await box_conn.execute("""
+            SELECT id, box_id, session_id, url, status, title, content_html,
                    content_text, content_hash, mime_type, charset, language,
                    size_bytes, crawl_depth, parent_url, response_code,
                    response_time_ms, discovered_at, crawled_at, processed_at,
                    indexed_at, error_message, retry_count, max_retries,
                    outbound_links, internal_links, external_links, metadata
-            FROM pages WHERE project_id = ? AND url = ?
-        """, (project_id, url))
+            FROM pages WHERE box_id = ? AND url = ?
+        """, (box_id, url))
 
         row = await cursor.fetchone()
         if not row:
@@ -1120,6 +1235,49 @@ class DatabaseManager:
 
         return [self._page_from_row(row) for row in rows]
 
+    async def get_box_pages(
+        self,
+        box_id: str,
+        status: PageStatus | None = None,
+        limit: int | None = None
+    ) -> list[Page]:
+        """Get pages for a box."""
+        self._ensure_initialized()
+
+        # Get box to find box name
+        box = await self.get_box(box_id=box_id)
+        if not box:
+            raise DatabaseError(f"Box {box_id} not found")
+
+        # Use box-specific database connection
+        box_conn = await self._get_box_connection(box['name'])
+
+        sql = """
+            SELECT id, box_id, session_id, url, status, title, content_html,
+                   content_text, content_hash, mime_type, charset, language,
+                   size_bytes, crawl_depth, parent_url, response_code,
+                   response_time_ms, discovered_at, crawled_at, processed_at,
+                   indexed_at, error_message, retry_count, max_retries,
+                   outbound_links, internal_links, external_links, metadata
+            FROM pages WHERE box_id = ?
+        """
+        params = [box_id]
+
+        if status:
+            sql += " AND status = ?"
+            params.append(status.value)
+
+        sql += " ORDER BY discovered_at"
+
+        if limit:
+            sql += " LIMIT ?"
+            params.append(limit)
+
+        cursor = await box_conn.execute(sql, params)
+        rows = await cursor.fetchall()
+
+        return [self._page_from_row(row) for row in rows]
+
     async def get_pages_by_hash(self, content_hash: str) -> list[Page]:
         """Get pages with matching content hash."""
         self._ensure_initialized()
@@ -1139,7 +1297,7 @@ class DatabaseManager:
 
     def _page_from_row(self, row: tuple) -> Page:
         """Create Page from database row."""
-        (id, project_id, session_id, url, status, title, content_html,
+        (id, box_id, session_id, url, status, title, content_html,
          content_text, content_hash, mime_type, charset, language,
          size_bytes, crawl_depth, parent_url, response_code,
          response_time_ms, discovered_at, crawled_at, processed_at,
@@ -1148,7 +1306,7 @@ class DatabaseManager:
 
         return Page(
             id=id,
-            project_id=project_id,
+            box_id=box_id,
             session_id=session_id,
             url=url,
             status=PageStatus(status),
@@ -1451,6 +1609,10 @@ class DatabaseManager:
         if row:
             return dict(zip([col[0] for col in cursor.description], row))
         return None
+
+    async def get_box_by_name(self, name: str) -> dict | None:
+        """Get box by name (convenience wrapper)."""
+        return await self.get_box(name=name)
 
     async def list_boxes(self, shelf_id: str = None, box_type: str = None) -> list[dict]:
         """List boxes, optionally filtered by shelf or type."""

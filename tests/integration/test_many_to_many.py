@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 
 from src.services.database import DatabaseManager
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 
 
 class TestManyToManyIntegration:
@@ -18,7 +18,7 @@ class TestManyToManyIntegration:
         self.db_path = Path(self.temp_db.name)
 
         # Create config with test database path
-        self.config = DocBroConfig()
+        self.config = BablibConfig()
         self.config.database_path = self.db_path
 
     def teardown_method(self):

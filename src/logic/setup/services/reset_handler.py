@@ -167,9 +167,9 @@ class ResetHandler:
             # Move restored files back
             # This is simplified - in production would need more careful handling
             for item in temp_dir.iterdir():
-                if item.name == "docbro":
+                if item.name == "bablib":
                     # Move config back
-                    target = self.home_dir / ".config" / "docbro"
+                    target = self.home_dir / ".config" / "bablib"
                     if item.is_dir():
                         import shutil
                         shutil.move(str(item), str(target))

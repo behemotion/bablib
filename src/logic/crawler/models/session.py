@@ -21,14 +21,14 @@ class CrawlSession(BaseModel):
     """Crawl session model representing a single crawling operation."""
 
     id: str = Field(description="Unique session identifier")
-    project_id: str = Field(description="Associated project ID")
+    box_id: str = Field(description="Associated box ID")
     status: CrawlStatus = Field(default=CrawlStatus.CREATED, description="Current session status")
 
     # Session configuration
     crawl_depth: int = Field(description="Maximum depth for this session")
     current_depth: int = Field(default=0, ge=0, description="Current crawling depth")
     current_url: str | None = Field(default=None, description="Currently processing URL")
-    user_agent: str = Field(default="DocBro/1.0", description="User agent for requests")
+    user_agent: str = Field(default="Bablib/1.0", description="User agent for requests")
     rate_limit: float = Field(default=1.0, ge=0.1, le=10.0, description="Requests per second")
     timeout: int = Field(default=30, ge=5, le=300, description="Request timeout in seconds")
 
@@ -190,7 +190,7 @@ class CrawlSession(BaseModel):
         """Convert to dictionary representation."""
         return {
             "id": self.id,
-            "project_id": self.project_id,
+            "box_id": self.box_id,
             "status": self.status.value,
             "crawl_depth": self.crawl_depth,
             "current_depth": self.current_depth,

@@ -1,6 +1,6 @@
-"""Performance tests for DocBro installation and setup speed requirements.
+"""Performance tests for Bablib installation and setup speed requirements.
 
-This module validates that DocBro installation meets the <30s requirement from quickstart.md.
+This module validates that Bablib installation meets the <30s requirement from quickstart.md.
 Tests cover end-to-end installation timing, system validation performance, service detection
 speed, and critical decision handling performance.
 
@@ -58,7 +58,7 @@ class TestInstallationPerformance:
                     version="1.0.0",
                     python_version="3.13.1",
                     uv_version="0.4.0",
-                    install_path=Path("/home/user/.local/bin/docbro"),
+                    install_path=Path("/home/user/.local/bin/bablib"),
                     is_global=True,
                     user_data_dir=mock_temp_directories["data_dir"],
                     config_dir=mock_temp_directories["config_dir"],
@@ -112,7 +112,7 @@ class TestInstallationPerformance:
                     version="1.0.0",
                     python_version="3.13.1",
                     uv_version="0.4.0",
-                    install_path=Path("/home/user/.local/bin/docbro"),
+                    install_path=Path("/home/user/.local/bin/bablib"),
                     is_global=True,
                     user_data_dir=mock_temp_directories["data_dir"],
                     config_dir=mock_temp_directories["config_dir"],
@@ -413,7 +413,7 @@ class TestInstallationRegressionDetection:
                 version="1.0.0",
                 python_version="3.13.1",
                 uv_version="0.4.0",
-                install_path=Path("/tmp/docbro"),
+                install_path=Path("/tmp/bablib"),
                 is_global=True,
                 user_data_dir=Path("/tmp/data"),
                 config_dir=Path("/tmp/config"),
@@ -466,7 +466,7 @@ class TestInstallationRegressionDetection:
                     version="1.0.0",
                     python_version="3.13.1",
                     uv_version="0.4.0",
-                    install_path=Path(f"/tmp/docbro_{i}"),
+                    install_path=Path(f"/tmp/bablib_{i}"),
                     is_global=True,
                     user_data_dir=Path(f"/tmp/data_{i}"),
                     config_dir=Path(f"/tmp/config_{i}"),
@@ -519,7 +519,7 @@ class TestRealisticSystemConditions:
                         version="1.0.0",
                         python_version="3.13.1",
                         uv_version="0.4.0",
-                        install_path=Path("/home/user/.local/bin/docbro"),
+                        install_path=Path("/home/user/.local/bin/bablib"),
                         is_global=True,
                         user_data_dir=mock_temp_directories["data_dir"],
                         config_dir=mock_temp_directories["config_dir"],
@@ -647,7 +647,7 @@ class TestEndToEndPerformance:
                     version="1.0.0",
                     python_version="3.13.1",
                     uv_version=None,  # Development mode may not have UV
-                    install_path=Path("./docbro"),
+                    install_path=Path("./bablib"),
                     is_global=False,
                     user_data_dir=mock_temp_directories["data_dir"],
                     config_dir=mock_temp_directories["config_dir"],
@@ -742,7 +742,7 @@ class TestDetailedTimingBreakdown:
                 version="1.0.0",
                 python_version="3.13.1",
                 uv_version="0.4.0",
-                install_path=Path("/home/user/.local/bin/docbro"),
+                install_path=Path("/home/user/.local/bin/bablib"),
                 is_global=True,
                 user_data_dir=mock_temp_directories["data_dir"],
                 config_dir=mock_temp_directories["config_dir"],
@@ -775,11 +775,11 @@ def configure_performance_tests():
     """Configure performance test environment."""
     # Set environment variables for performance testing
     import os
-    os.environ["DOCBRO_PERFORMANCE_MODE"] = "true"
-    os.environ["DOCBRO_TEST_TIMEOUT"] = "1"  # Reduced timeout for tests
+    os.environ["BABLIB_PERFORMANCE_MODE"] = "true"
+    os.environ["BABLIB_TEST_TIMEOUT"] = "1"  # Reduced timeout for tests
 
     yield
 
     # Cleanup
-    os.environ.pop("DOCBRO_PERFORMANCE_MODE", None)
-    os.environ.pop("DOCBRO_TEST_TIMEOUT", None)
+    os.environ.pop("BABLIB_PERFORMANCE_MODE", None)
+    os.environ.pop("BABLIB_TEST_TIMEOUT", None)

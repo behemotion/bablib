@@ -1,4 +1,4 @@
-"""Contract tests for docbro uninstall command."""
+"""Contract tests for bablib uninstall command."""
 
 import pytest
 from unittest.mock import Mock, patch, MagicMock
@@ -20,10 +20,10 @@ class TestUninstallCommandContract:
     def mock_components(self):
         """Mock detected components."""
         return {
-            'containers': ['docbro-qdrant', 'docbro-redis'],
-            'volumes': ['docbro_qdrant_data', 'docbro_redis_data'],
-            'directories': [Path.home() / '.config/docbro', Path.home() / '.local/share/docbro'],
-            'package': 'docbro'
+            'containers': ['bablib-qdrant', 'bablib-redis'],
+            'volumes': ['bablib_qdrant_data', 'bablib_redis_data'],
+            'directories': [Path.home() / '.config/bablib', Path.home() / '.local/share/bablib'],
+            'package': 'bablib'
         }
 
     def test_uninstall_command_exists(self, cli_runner):
@@ -32,7 +32,7 @@ class TestUninstallCommandContract:
         result = cli_runner.invoke(cli, ['uninstall', '--help'])
         assert result.exit_code == 0
         assert 'uninstall' in result.output.lower()
-        assert 'remove docbro' in result.output.lower()
+        assert 'remove bablib' in result.output.lower()
 
     def test_uninstall_requires_confirmation_by_default(self, cli_runner, mock_components):
         """Test that uninstall asks for confirmation without --force."""
@@ -78,8 +78,8 @@ class TestUninstallCommandContract:
             result = cli_runner.invoke(cli, ['uninstall', '--dry-run'])
 
             assert 'would be removed' in result.output.lower()
-            assert 'docbro-qdrant' in result.output
-            assert 'docbro-redis' in result.output
+            assert 'bablib-qdrant' in result.output
+            assert 'bablib-redis' in result.output
             assert result.exit_code == 0
 
     def test_uninstall_handles_partial_installation(self, cli_runner):
@@ -88,9 +88,9 @@ class TestUninstallCommandContract:
 
         partial_components = {
             'containers': [],
-            'volumes': ['docbro_data'],
-            'directories': [Path.home() / '.config/docbro'],
-            'package': 'docbro'
+            'volumes': ['bablib_data'],
+            'directories': [Path.home() / '.config/bablib'],
+            'package': 'bablib'
         }
 
         with patch('src.cli.uninstall.detect_components', return_value=partial_components):
@@ -125,10 +125,10 @@ class TestUninstallCommandContract:
         from src.cli.main import cli
 
         components = {
-            'containers': ['docbro-qdrant'],
-            'volumes': ['docbro_data', 'external_volume'],
+            'containers': ['bablib-qdrant'],
+            'volumes': ['bablib_data', 'external_volume'],
             'directories': [],
-            'package': 'docbro'
+            'package': 'bablib'
         }
 
         with patch('src.cli.uninstall.detect_components', return_value=components):
@@ -155,7 +155,7 @@ class TestUninstallCommandContract:
         from src.cli.main import cli
 
         # Test: Not installed
-        with patch('src.cli.uninstall.is_docbro_installed', return_value=False):
+        with patch('src.cli.uninstall.is_bablib_installed', return_value=False):
             result = cli_runner.invoke(cli, ['uninstall', '--force'])
             assert result.exit_code == 4
 

@@ -9,7 +9,7 @@ class TestCliHelp:
     """Test CLI help system improvements."""
 
     def test_bare_command_shows_help_suggestion(self):
-        """Test that running docbro without arguments shows help suggestion."""
+        """Test that running bablib without arguments shows help suggestion."""
         runner = CliRunner()
         result = runner.invoke(main, [])
 

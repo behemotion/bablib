@@ -38,8 +38,8 @@ class ProjectRepository:
         if db_path is None:
             from pathlib import Path
             import os
-            data_dir = os.environ.get('DOCBRO_DATA_DIR',
-                                      str(Path.home() / '.local' / 'share' / 'docbro'))
+            data_dir = os.environ.get('BABLIB_DATA_DIR',
+                                      str(Path.home() / '.local' / 'share' / 'bablib'))
             self.db_path = Path(data_dir) / 'project_registry.db'
         else:
             self.db_path = db_path

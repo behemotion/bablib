@@ -1,4 +1,4 @@
-"""Health check command for DocBro CLI - Unified Implementation."""
+"""Health check command for Bablib CLI - Unified Implementation."""
 
 import asyncio
 import sys
@@ -43,9 +43,9 @@ def run_async(coro):
 @click.pass_context
 def health(ctx: click.Context, system: bool, services: bool, config: bool, projects: bool,
            format_type: str, json: bool, verbose: bool, quiet: bool, timeout: int, parallel: int):
-    """Check health status of DocBro components with comprehensive validation.
+    """Check health status of Bablib components with comprehensive validation.
 
-    Verify that your DocBro installation is working correctly by checking
+    Verify that your Bablib installation is working correctly by checking
     system requirements, external services, configuration, and projects.
 
     \b
@@ -78,12 +78,12 @@ def health(ctx: click.Context, system: bool, services: bool, config: bool, proje
 
     \b
     EXAMPLES:
-      docbro health                    # Complete health check (recommended)
-      docbro health --system           # System requirements only
-      docbro health --services         # External services only
-      docbro health --format json     # JSON output for scripts
-      docbro health --verbose          # Detailed diagnostic information
-      docbro health --timeout 30      # Extended timeout for slow systems
+      bablib health                    # Complete health check (recommended)
+      bablib health --system           # System requirements only
+      bablib health --services         # External services only
+      bablib health --format json     # JSON output for scripts
+      bablib health --verbose          # Detailed diagnostic information
+      bablib health --timeout 30      # Extended timeout for slow systems
 
     \b
     TROUBLESHOOTING:
@@ -118,7 +118,7 @@ def health(ctx: click.Context, system: bool, services: bool, config: bool, proje
             except ValueError as e:
                 console = Console()
                 console.print(f"[red]Error: {e}[/red]")
-                console.print("Use [cyan]docbro health --help[/cyan] for usage information")
+                console.print("Use [cyan]bablib health --help[/cyan] for usage information")
                 sys.exit(4)  # Invalid arguments exit code
 
             # Initialize orchestrator with validated options
@@ -175,7 +175,7 @@ def health(ctx: click.Context, system: bool, services: bool, config: bool, proje
 
             # Check for import errors (likely missing dependencies)
             if "No module named" in str(e):
-                console.print("[yellow]Tip: Try running 'docbro setup' to fix installation issues[/yellow]")
+                console.print("[yellow]Tip: Try running 'bablib setup' to fix installation issues[/yellow]")
 
             sys.exit(3)  # Unavailable exit code
 

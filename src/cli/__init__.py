@@ -1,4 +1,4 @@
-"""CLI module for DocBro."""
+"""CLI module for Bablib."""
 
 # Import main only when explicitly requested to avoid circular import warnings
 def get_main():

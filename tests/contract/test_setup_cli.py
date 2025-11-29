@@ -1,7 +1,7 @@
-"""Contract tests for DocBro setup CLI command.
+"""Contract tests for Bablib setup CLI command.
 
 Tests CLI command interface according to cli-commands.yml specification:
-- `docbro setup [OPTIONS]`
+- `bablib setup [OPTIONS]`
 - Exit codes: 0 (success), 1 (general error), 2 (config error), 3 (dependency error), 4 (user cancel)
 - Supports --auto flag for automatic setup
 - Supports --force flag to re-run setup

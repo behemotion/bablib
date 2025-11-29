@@ -29,7 +29,7 @@ class ProjectExport(BaseModel):
 
     # Export metadata
     export_version: str = Field(default="1.0", description="Export format version")
-    docbro_version: Optional[str] = Field(default=None, description="DocBro version that created export")
+    bablib_version: Optional[str] = Field(default=None, description="Bablib version that created export")
     export_type: str = Field(default="full", description="Type of export (full, settings-only)")
 
     def to_json(self, pretty: bool = True) -> str:
@@ -89,8 +89,8 @@ class ProjectExportService:
             ProjectExport object with all relevant data
         """
         try:
-            # Get DocBro version if available
-            docbro_version = await self._get_docbro_version()
+            # Get Bablib version if available
+            bablib_version = await self._get_bablib_version()
 
             # Prepare statistics
             statistics = {}
@@ -107,7 +107,7 @@ class ProjectExportService:
                 source_url=project.source_url,
                 statistics=statistics,
                 export_type=export_type,
-                docbro_version=docbro_version
+                bablib_version=bablib_version
             )
 
             self.logger.info(f"Exported project '{project.name}' (type: {export_type})")
@@ -349,7 +349,7 @@ class ProjectExportService:
         defaults = {
             ProjectType.CRAWLING: {
                 'rate_limit': 1.0,
-                'user_agent': 'DocBro/1.0',
+                'user_agent': 'Bablib/1.0',
                 'max_file_size': 10485760,
                 'allowed_formats': ['html', 'pdf', 'txt', 'md']
             },
@@ -401,12 +401,12 @@ class ProjectExportService:
 
         return migrated
 
-    async def _get_docbro_version(self) -> Optional[str]:
-        """Get current DocBro version."""
+    async def _get_bablib_version(self) -> Optional[str]:
+        """Get current Bablib version."""
         try:
             # Try to get version from package
             import importlib.metadata
-            return importlib.metadata.version('docbro')
+            return importlib.metadata.version('bablib')
         except Exception:
             # Fallback to reading from pyproject.toml or version file
             try:
@@ -448,14 +448,14 @@ class ProjectExportService:
             "batch_export_version": "1.0",
             "created_at": datetime.now(timezone.utc).isoformat(),
             "total_projects": len(projects),
-            "docbro_version": await self._get_docbro_version(),
+            "bablib_version": await self._get_bablib_version(),
             "projects": exports
         }
 
         # Determine output path
         if output_path is None:
             timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-            output_path = Path.cwd() / f"docbro_projects_batch_{timestamp}.json"
+            output_path = Path.cwd() / f"bablib_projects_batch_{timestamp}.json"
 
         # Write batch export
         try:

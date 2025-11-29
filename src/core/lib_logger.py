@@ -1,4 +1,4 @@
-"""Structured logging configuration for DocBro."""
+"""Structured logging configuration for Bablib."""
 
 import json
 import logging
@@ -10,7 +10,7 @@ from typing import Any
 from rich.console import Console
 from rich.logging import RichHandler
 
-from .config import DocBroConfig
+from .config import BablibConfig
 
 
 class StructuredFormatter(logging.Formatter):
@@ -57,8 +57,8 @@ class StructuredFormatter(logging.Formatter):
         return json.dumps(log_entry, default=str)
 
 
-class DocBroLoggerAdapter(logging.LoggerAdapter):
-    """Logger adapter that adds DocBro-specific context."""
+class BablibLoggerAdapter(logging.LoggerAdapter):
+    """Logger adapter that adds Bablib-specific context."""
 
     def __init__(self, logger: logging.Logger, extra: dict[str, Any]):
         """Initialize with logger and extra context."""
@@ -71,17 +71,17 @@ class DocBroLoggerAdapter(logging.LoggerAdapter):
         kwargs["extra"] = extra
         return msg, kwargs
 
-    def with_context(self, **context) -> "DocBroLoggerAdapter":
+    def with_context(self, **context) -> "BablibLoggerAdapter":
         """Create new adapter with additional context."""
         new_extra = self.extra.copy()
         new_extra.update(context)
-        return DocBroLoggerAdapter(self.logger, new_extra)
+        return BablibLoggerAdapter(self.logger, new_extra)
 
 
 class LoggingManager:
-    """Manage logging configuration for DocBro."""
+    """Manage logging configuration for Bablib."""
 
-    def __init__(self, config: DocBroConfig):
+    def __init__(self, config: BablibConfig):
         """Initialize logging manager with configuration."""
         self.config = config
         self.console = Console(stderr=True)
@@ -125,7 +125,7 @@ class LoggingManager:
 
         # Set up file handler with structured logging
         if self.config.log_file or self.config.logs_dir:
-            log_file = self.config.log_file or (self.config.logs_dir / "docbro.log")
+            log_file = self.config.log_file or (self.config.logs_dir / "bablib.log")
             file_handler = logging.FileHandler(log_file, mode="a", encoding="utf-8")
             file_handler.setLevel(logging.DEBUG)  # Always log everything to file
 
@@ -135,7 +135,7 @@ class LoggingManager:
             root_logger.addHandler(file_handler)
 
         # Set up separate error log file
-        error_log_file = self.config.logs_dir / "docbro-errors.log"
+        error_log_file = self.config.logs_dir / "bablib-errors.log"
         error_handler = logging.FileHandler(error_log_file, mode="a", encoding="utf-8")
         error_handler.setLevel(logging.ERROR)
         error_handler.setFormatter(StructuredFormatter())
@@ -165,17 +165,17 @@ class LoggingManager:
             logger = logging.getLogger(logger_name)
             logger.setLevel(level)
 
-    def get_logger(self, name: str, **context) -> DocBroLoggerAdapter:
-        """Get a logger with DocBro-specific context."""
+    def get_logger(self, name: str, **context) -> BablibLoggerAdapter:
+        """Get a logger with Bablib-specific context."""
         if not self._configured:
             self.setup_logging()
 
         logger = logging.getLogger(name)
-        return DocBroLoggerAdapter(logger, context)
+        return BablibLoggerAdapter(logger, context)
 
-    def get_component_logger(self, component: str, **context) -> DocBroLoggerAdapter:
-        """Get a logger for a specific DocBro component."""
-        logger_name = f"docbro.{component}"
+    def get_component_logger(self, component: str, **context) -> BablibLoggerAdapter:
+        """Get a logger for a specific Bablib component."""
+        logger_name = f"bablib.{component}"
         context["component"] = component
         return self.get_logger(logger_name, **context)
 
@@ -183,14 +183,14 @@ class LoggingManager:
         """Log system information at startup."""
         import platform
 
-        logger = self.get_logger("docbro.system")
+        logger = self.get_logger("bablib.system")
 
         system_info = {
             "python_version": sys.version,
             "platform": platform.platform(),
             "architecture": platform.architecture(),
             "processor": platform.processor(),
-            "docbro_config": {
+            "bablib_config": {
                 "data_dir": str(self.config.data_dir),
                 "debug": self.config.debug,
                 "log_level": self.config.log_level,
@@ -198,11 +198,11 @@ class LoggingManager:
             }
         }
 
-        logger.info("DocBro starting up", extra={"system_info": system_info})
+        logger.info("Bablib starting up", extra={"system_info": system_info})
 
     def log_service_status(self, service_status: dict[str, bool]) -> None:
         """Log service connectivity status."""
-        logger = self.get_logger("docbro.services")
+        logger = self.get_logger("bablib.services")
 
         for service, is_healthy in service_status.items():
             if is_healthy:
@@ -210,12 +210,12 @@ class LoggingManager:
             else:
                 logger.warning(f"{service} service is unhealthy", extra={"service": service, "status": "unhealthy"})
 
-    def setup_crawl_logging(self, project_name: str, crawl_id: str) -> DocBroLoggerAdapter:
+    def setup_crawl_logging(self, project_name: str, crawl_id: str) -> BablibLoggerAdapter:
         """Set up logging for a crawl session."""
         crawl_log_file = self.config.logs_dir / f"crawl-{project_name}-{crawl_id}.log"
 
         # Create a specific logger for this crawl
-        crawl_logger = logging.getLogger(f"docbro.crawl.{project_name}")
+        crawl_logger = logging.getLogger(f"bablib.crawl.{project_name}")
 
         # Add file handler for crawl-specific logs
         crawl_handler = logging.FileHandler(crawl_log_file, mode="w", encoding="utf-8")
@@ -223,7 +223,7 @@ class LoggingManager:
         crawl_handler.setFormatter(StructuredFormatter())
         crawl_logger.addHandler(crawl_handler)
 
-        return DocBroLoggerAdapter(crawl_logger, {
+        return BablibLoggerAdapter(crawl_logger, {
             "project": project_name,
             "crawl_id": crawl_id
         })
@@ -232,7 +232,7 @@ class LoggingManager:
         """Clean up log files older than specified days."""
         import time
 
-        logger = self.get_logger("docbro.cleanup")
+        logger = self.get_logger("bablib.cleanup")
         cutoff_time = time.time() - (days * 24 * 60 * 60)
         cleaned_count = 0
 
@@ -253,7 +253,7 @@ class LoggingManager:
 _logging_manager: LoggingManager | None = None
 
 
-def setup_logging(config: DocBroConfig) -> LoggingManager:
+def setup_logging(config: BablibConfig) -> LoggingManager:
     """Set up global logging configuration."""
     global _logging_manager
     _logging_manager = LoggingManager(config)
@@ -261,7 +261,7 @@ def setup_logging(config: DocBroConfig) -> LoggingManager:
     return _logging_manager
 
 
-def get_logger(name: str, **context) -> DocBroLoggerAdapter:
+def get_logger(name: str, **context) -> BablibLoggerAdapter:
     """Get a logger instance."""
     if _logging_manager is None:
         # Fallback if logging not configured
@@ -271,7 +271,7 @@ def get_logger(name: str, **context) -> DocBroLoggerAdapter:
     return _logging_manager.get_logger(name, **context)
 
 
-def get_component_logger(component: str, **context) -> DocBroLoggerAdapter:
+def get_component_logger(component: str, **context) -> BablibLoggerAdapter:
     """Get a component-specific logger."""
     if _logging_manager is None:
         from .config import get_config

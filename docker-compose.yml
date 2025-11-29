@@ -1,16 +1,16 @@
-name: docbro
+name: bablib
 
 networks:
-  docbro:
-    name: docbro
+  bablib:
+    name: bablib
     driver: bridge
 
 services:
-  docbro-memory-qdrant:
+  bablib-memory-qdrant:
     image: qdrant/qdrant:v1.15.4
-    container_name: docbro-memory-qdrant
+    container_name: bablib-memory-qdrant
     networks:
-      - docbro
+      - bablib
     ports:
       - "6333:6333"
       - "6334:6334"

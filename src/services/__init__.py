@@ -1,4 +1,4 @@
-"""Services module for DocBro."""
+"""Services module for Bablib."""
 
 from .database import DatabaseManager
 from .embeddings import EmbeddingService

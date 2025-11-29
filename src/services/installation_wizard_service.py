@@ -48,7 +48,7 @@ class InstallationWizardService:
     ) -> dict[str, Any]:
         """Start the complete installation process."""
         try:
-            logger.info("Starting DocBro installation wizard")
+            logger.info("Starting Bablib installation wizard")
 
             # Create installation profile
             profile = InstallationProfile.create_new()
@@ -311,10 +311,10 @@ class InstallationWizardService:
             logger.error(f"Failed to check installation status: {e}")
             return {"status": "ERROR", "error": str(e)}
 
-    async def uninstall_docbro(self, remove_data: bool = False) -> dict[str, Any]:
-        """Uninstall DocBro components."""
+    async def uninstall_bablib(self, remove_data: bool = False) -> dict[str, Any]:
+        """Uninstall Bablib components."""
         try:
-            logger.info("Starting DocBro uninstall")
+            logger.info("Starting Bablib uninstall")
 
             results = {"success": True, "removed_components": [], "errors": []}
 
@@ -327,7 +327,7 @@ class InstallationWizardService:
             results["errors"].extend(qdrant_result["errors"])
 
             # Clean up Docker resources
-            cleanup_result = await self.docker_manager.cleanup_docbro_resources(
+            cleanup_result = await self.docker_manager.cleanup_bablib_resources(
                 include_volumes=remove_data
             )
             results["removed_components"].extend([

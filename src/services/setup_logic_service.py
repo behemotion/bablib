@@ -1,4 +1,4 @@
-"""SetupLogicService orchestration for DocBro setup logic.
+"""SetupLogicService orchestration for Bablib setup logic.
 
 This is the main orchestration service that coordinates all setup operations.
 """
@@ -58,7 +58,7 @@ class SetupLogicService:
             if docker_available:
                 initial_vector_storage = VectorStorageConfig(
                     connection_url="http://localhost:6333",
-                    data_path="/tmp/docbro/qdrant"
+                    data_path="/tmp/bablib/qdrant"
                 )
 
             if ollama_available:
@@ -72,7 +72,7 @@ class SetupLogicService:
                 initial_vector_storage = VectorStorageConfig(
                     provider="qdrant",
                     connection_url="http://localhost:6333",
-                    data_path="/tmp/docbro/qdrant"
+                    data_path="/tmp/bablib/qdrant"
                 )
 
             # Create setup configuration with initial components
@@ -95,7 +95,7 @@ class SetupLogicService:
                 from pathlib import Path
                 data_path = Path(config.vector_storage.data_path)
                 await self.docker_manager.create_qdrant_container(
-                    container_name="docbro-memory-qdrant",
+                    container_name="bablib-memory-qdrant",
                     port=6333,
                     data_path=data_path
                 )
@@ -149,7 +149,7 @@ class SetupLogicService:
             if docker_available:
                 initial_vector_storage = VectorStorageConfig(
                     connection_url="http://localhost:6333",
-                    data_path="/tmp/docbro/qdrant"
+                    data_path="/tmp/bablib/qdrant"
                 )
 
             if ollama_available:
@@ -163,7 +163,7 @@ class SetupLogicService:
                 initial_vector_storage = VectorStorageConfig(
                     provider="qdrant",
                     connection_url="http://localhost:6333",
-                    data_path="/tmp/docbro/qdrant"
+                    data_path="/tmp/bablib/qdrant"
                 )
 
             # Create setup configuration with initial components
@@ -186,7 +186,7 @@ class SetupLogicService:
                 from pathlib import Path
                 data_path = Path(config.vector_storage.data_path)
                 await self.docker_manager.create_qdrant_container(
-                    container_name="docbro-memory-qdrant",
+                    container_name="bablib-memory-qdrant",
                     port=6333,
                     data_path=data_path
                 )
@@ -345,7 +345,7 @@ class SetupLogicService:
         }
 
     async def check_system_requirements(self) -> dict[str, Any]:
-        """Check system requirements for DocBro."""
+        """Check system requirements for Bablib."""
         try:
             validation_results = await self.requirements_service.validate_all_requirements()
 

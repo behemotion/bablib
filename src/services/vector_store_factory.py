@@ -2,7 +2,7 @@
 
 import logging
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.vector_store_types import VectorStoreProvider
 from src.services.settings_service import SettingsService
 from src.services.sqlite_vec_service import SQLiteVecService, detect_sqlite_vec
@@ -15,7 +15,7 @@ class VectorStoreFactory:
     """Factory for creating vector store services based on configuration."""
 
     @staticmethod
-    def create_vector_store(config: DocBroConfig = None, provider: VectorStoreProvider = None) -> VectorStoreService | SQLiteVecService:
+    def create_vector_store(config: BablibConfig = None, provider: VectorStoreProvider = None) -> VectorStoreService | SQLiteVecService:
         """Create appropriate vector store service based on provider."""
 
         # If provider not specified, get from settings
@@ -35,9 +35,9 @@ class VectorStoreFactory:
             if not available:
                 logger.warning(f"SQLite-vec not available: {message}")
                 raise VectorStoreError(f"SQLite-vec extension not available: {message}")
-            return SQLiteVecService(config or DocBroConfig())
+            return SQLiteVecService(config or BablibConfig())
         elif provider == VectorStoreProvider.QDRANT:
-            return VectorStoreService(config or DocBroConfig())
+            return VectorStoreService(config or BablibConfig())
         else:
             raise ValueError(f"Unsupported vector store provider: {provider}")
 
@@ -69,15 +69,15 @@ class VectorStoreFactory:
             return (
                 "SQLite-vec is not available. Suggestions:\n"
                 "  1. Install sqlite-vec: uv pip install --system sqlite-vec\n"
-                "  2. Use Qdrant instead: docbro setup --init --vector-store qdrant --force\n"
+                "  2. Use Qdrant instead: bablib setup --init --vector-store qdrant --force\n"
                 "  3. Check Python installation (macOS may need Homebrew Python)"
             )
         elif provider == VectorStoreProvider.QDRANT:
             return (
                 "Qdrant is not available. Suggestions:\n"
                 "  1. Start Qdrant: docker run -p 6333:6333 qdrant/qdrant\n"
-                "  2. Use SQLite-vec instead: docbro setup --init --vector-store sqlite_vec --force\n"
-                "  3. Check Qdrant service status: docbro services list"
+                "  2. Use SQLite-vec instead: bablib setup --init --vector-store sqlite_vec --force\n"
+                "  3. Check Qdrant service status: bablib services list"
             )
         else:
             return f"Unknown provider: {provider}"

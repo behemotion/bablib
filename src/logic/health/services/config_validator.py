@@ -11,14 +11,14 @@ from ..models.status import HealthStatus
 
 
 class ConfigurationValidator:
-    """Service for validating DocBro configuration files."""
+    """Service for validating Bablib configuration files."""
 
     def __init__(self):
         """Initialize configuration validator."""
         self.config_paths = self._get_config_paths()
 
     async def validate_global_settings(self) -> HealthCheck:
-        """Validate global DocBro settings file."""
+        """Validate global Bablib settings file."""
         execution_start = self._get_current_time()
 
         try:
@@ -28,7 +28,7 @@ class ConfigurationValidator:
                 status = HealthStatus.WARNING
                 message = "Global settings file not found"
                 details = f"Expected location: {settings_path}" if settings_path else "No settings path configured"
-                resolution = "Run 'docbro setup' to create initial configuration"
+                resolution = "Run 'bablib setup' to create initial configuration"
             else:
                 # Try to load and validate settings
                 validation_result = await self._validate_yaml_file(settings_path)
@@ -42,7 +42,7 @@ class ConfigurationValidator:
                     status = HealthStatus.ERROR
                     message = "Global settings file is invalid"
                     details = validation_result['error']
-                    resolution = "Fix configuration errors or run 'docbro setup --reset'"
+                    resolution = "Fix configuration errors or run 'bablib setup --reset'"
 
             execution_time = self._get_current_time() - execution_start
 
@@ -148,7 +148,7 @@ class ConfigurationValidator:
                 status = HealthStatus.WARNING
                 message = "Vector store configuration not found"
                 details = "Global settings file missing"
-                resolution = "Run 'docbro setup' to configure vector store"
+                resolution = "Run 'bablib setup' to configure vector store"
             else:
                 # Load settings and check vector store configuration
                 settings_data = await self._load_yaml_file(settings_path)
@@ -157,7 +157,7 @@ class ConfigurationValidator:
                     status = HealthStatus.ERROR
                     message = "Cannot read vector store configuration"
                     details = "Global settings file is corrupted or empty"
-                    resolution = "Run 'docbro setup --reset' to regenerate configuration"
+                    resolution = "Run 'bablib setup --reset' to regenerate configuration"
                 else:
                     vector_provider = settings_data.get('vector_store_provider')
 
@@ -165,7 +165,7 @@ class ConfigurationValidator:
                         status = HealthStatus.WARNING
                         message = "Vector store provider not configured"
                         details = "No vector_store_provider specified in settings"
-                        resolution = "Run 'docbro setup --vector-store <provider>' to configure"
+                        resolution = "Run 'bablib setup --vector-store <provider>' to configure"
                     elif vector_provider in ['sqlite_vec', 'qdrant']:
                         status = HealthStatus.HEALTHY
                         message = f"Vector store configured: {vector_provider}"
@@ -250,8 +250,8 @@ class ConfigurationValidator:
             import os
             from pathlib import Path
 
-            config_dir = Path(os.environ.get('XDG_CONFIG_HOME', Path.home() / '.config')) / 'docbro'
-            data_dir = Path(os.environ.get('XDG_DATA_HOME', Path.home() / '.local' / 'share')) / 'docbro'
+            config_dir = Path(os.environ.get('XDG_CONFIG_HOME', Path.home() / '.config')) / 'bablib'
+            data_dir = Path(os.environ.get('XDG_DATA_HOME', Path.home() / '.local' / 'share')) / 'bablib'
 
             return {
                 'settings': config_dir / 'settings.yaml',

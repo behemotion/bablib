@@ -38,15 +38,15 @@ class ConfigManager:
     def _get_default_data_directory(self) -> str:
         """Get default data directory using XDG specification."""
         return os.environ.get(
-            'DOCBRO_DATA_DIR',
-            str(Path.home() / '.local' / 'share' / 'docbro')
+            'BABLIB_DATA_DIR',
+            str(Path.home() / '.local' / 'share' / 'bablib')
         )
 
     def _get_default_config_directory(self) -> str:
         """Get default config directory using XDG specification."""
         return os.environ.get(
-            'DOCBRO_CONFIG_DIR',
-            str(Path.home() / '.config' / 'docbro')
+            'BABLIB_CONFIG_DIR',
+            str(Path.home() / '.config' / 'bablib')
         )
 
     def _ensure_directories(self) -> None:

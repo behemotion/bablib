@@ -1,20 +1,20 @@
 {
   "mcpServers": {
-    "docbro": {
-      "command": "/Users/alexandr/Repository/local-doc-bro/docbro",
+    "bablib": {
+      "command": "/Users/alexandr/Repository/local-doc-bro/bablib",
       "args": [
         "serve",
         "--port",
         "9382"
       ],
       "env": {
-        "DOCBRO_MCP_PORT": "9382",
-        "DOCBRO_DATABASE_PATH": "/Users/alexandr/.docbro/docbro.db",
-        "DOCBRO_QDRANT_URL": "http://localhost:6333",
-        "DOCBRO_REDIS_URL": "redis://localhost:6379",
-        "DOCBRO_OLLAMA_URL": "http://localhost:11434",
-        "DOCBRO_EMBEDDING_MODEL": "mxbai-embed-large",
-        "DOCBRO_LOG_LEVEL": "INFO"
+        "BABLIB_MCP_PORT": "9382",
+        "BABLIB_DATABASE_PATH": "/Users/alexandr/.bablib/bablib.db",
+        "BABLIB_QDRANT_URL": "http://localhost:6333",
+        "BABLIB_REDIS_URL": "redis://localhost:6379",
+        "BABLIB_OLLAMA_URL": "http://localhost:11434",
+        "BABLIB_EMBEDDING_MODEL": "mxbai-embed-large",
+        "BABLIB_LOG_LEVEL": "INFO"
       }
     }
   }

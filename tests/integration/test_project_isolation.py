@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import List
 
 from src.services.sqlite_vec_service import SQLiteVecService
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.vector_store_types import VectorStoreProvider
 
 
@@ -16,8 +16,8 @@ class TestProjectIsolation:
     @pytest.fixture
     async def sqlite_service(self, tmp_path):
         """Create and initialize SQLiteVecService."""
-        config = DocBroConfig(
-            database_path=str(tmp_path / "docbro.db"),
+        config = BablibConfig(
+            database_path=str(tmp_path / "bablib.db"),
             data_dir=str(tmp_path / "data"),
             vector_store_provider=VectorStoreProvider.SQLITE_VEC,
         )

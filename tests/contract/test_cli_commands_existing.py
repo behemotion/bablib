@@ -8,18 +8,18 @@ from typing import Dict, Any, Optional, List
 
 
 class TestSetupCommandContract:
-    """Contract tests for docbro setup command."""
+    """Contract tests for bablib setup command."""
 
     def test_setup_interactive_mode(self):
         """Test setup command in interactive mode."""
-        response = self._mock_command("docbro setup")
+        response = self._mock_command("bablib setup")
 
         assert response.exit_code == 0
         assert "Settings updated" in response.output or "No changes made" in response.output
 
     def test_setup_with_reset(self):
         """Test setup command with --reset flag."""
-        response = self._mock_command("docbro setup --reset")
+        response = self._mock_command("bablib setup --reset")
 
         assert response.exit_code == 0
         assert "reset to factory defaults" in response.output.lower()
@@ -27,7 +27,7 @@ class TestSetupCommandContract:
 
     def test_setup_non_interactive(self):
         """Test setup command in non-interactive mode."""
-        response = self._mock_command("docbro setup --non-interactive")
+        response = self._mock_command("bablib setup --non-interactive")
 
         assert response.exit_code == 0
         # Should display current settings without menu
@@ -38,7 +38,7 @@ class TestSetupCommandContract:
         # Simulate key sequence: down, down, enter, "5", enter, q
         key_sequence = ["↓", "↓", "↵", "5", "↵", "q"]
 
-        response = self._mock_interactive_command("docbro setup", key_sequence)
+        response = self._mock_interactive_command("bablib setup", key_sequence)
 
         assert response.exit_code == 0
         assert response.settings_changed == True
@@ -48,7 +48,7 @@ class TestSetupCommandContract:
         """Test escaping from menu without saving."""
         key_sequence = ["↓", "↵", "test", "ESC", "ESC"]
 
-        response = self._mock_interactive_command("docbro setup", key_sequence)
+        response = self._mock_interactive_command("bablib setup", key_sequence)
 
         assert response.exit_code == 0
         assert response.settings_changed == False
@@ -58,7 +58,7 @@ class TestSetupCommandContract:
         # Try to set crawl_depth to 20 (exceeds maximum)
         key_sequence = ["↓", "↓", "↵", "20", "↵"]
 
-        response = self._mock_interactive_command("docbro setup", key_sequence)
+        response = self._mock_interactive_command("bablib setup", key_sequence)
 
         assert "must be between 1 and 10" in response.error_message
         assert response.edit_mode == True  # Should stay in edit mode
@@ -170,7 +170,7 @@ class TestSettingsIntegrationContract:
     def test_global_project_override_flow(self):
         """Test complete flow of global settings with project overrides."""
         # 1. Set global defaults
-        self._execute_command("docbro init")
+        self._execute_command("bablib init")
 
         # 2. Create project with overrides
         self._create_project("/test/project")
@@ -220,7 +220,7 @@ class TestSettingsIntegrationContract:
         })
 
         # Reset global settings
-        self._execute_command("docbro setup --reset")
+        self._execute_command("bablib setup --reset")
 
         # Project settings should be preserved
         project_settings = self._get_project_settings("/test/project")

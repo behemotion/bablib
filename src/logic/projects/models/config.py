@@ -201,7 +201,7 @@ class ProjectConfig(BaseModel):
                 'allowed_formats': ['html', 'pdf', 'txt', 'md', 'rst'],
                 'crawl_depth': 3,
                 'rate_limit': 1.0,
-                'user_agent': 'DocBro/1.0',
+                'user_agent': 'Bablib/1.0',
                 'follow_redirects': True,
                 'respect_robots_txt': True,
                 'concurrent_uploads': 3,

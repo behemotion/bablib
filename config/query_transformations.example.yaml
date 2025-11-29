@@ -6,7 +6,7 @@
 # Format:
 #   term: [synonym1, synonym2, ...]
 #
-# Place your custom version at: ~/.config/docbro/query_transformations.yaml
+# Place your custom version at: ~/.config/bablib/query_transformations.yaml
 
 # Container & Orchestration
 docker: [container, containerization, docker-engine, moby]

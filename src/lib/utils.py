@@ -1,4 +1,4 @@
-"""Utility functions for DocBro setup logic."""
+"""Utility functions for Bablib setup logic."""
 
 import asyncio
 import functools

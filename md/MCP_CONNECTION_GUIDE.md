@@ -1,4 +1,4 @@
-# DocBro MCP Server Connection Guide
+# Bablib MCP Server Connection Guide
 
 ## Quick Start
 
@@ -11,14 +11,14 @@ Admin Server:     http://127.0.0.1:9384
 ### Start the Server
 ```bash
 # Read-only server (safe, public access)
-docbro serve
+bablib serve
 
 # Admin server (localhost only, full control)
-docbro serve --admin
+bablib serve --admin
 
 # Both servers concurrently
-docbro serve &
-docbro serve --admin &
+bablib serve &
+bablib serve --admin &
 ```
 
 ---
@@ -64,8 +64,8 @@ curl -X POST http://0.0.0.0:9383/mcp/v1/search -d '{"query":"test"}'
 ```json
 {
   "mcpServers": {
-    "docbro": {
-      "command": "docbro",
+    "bablib": {
+      "command": "bablib",
       "args": ["serve"],
       "env": {}
     }
@@ -96,7 +96,7 @@ curl -X POST http://0.0.0.0:9383/mcp/v1/search -d '{"query":"test"}'
 **Usage:**
 ```bash
 # Claude Code automatically discovers MCP servers
-# Use built-in tools to interact with DocBro
+# Use built-in tools to interact with Bablib
 ```
 
 ---
@@ -112,10 +112,10 @@ pip install httpx asyncio
 
 **Example:**
 ```python
-from mcp_client_example import DocBroMCPClient
+from mcp_client_example import BablibMCPClient
 
 # Health check (standard HTTP - works)
-client = DocBroMCPClient("http://0.0.0.0:9383")
+client = BablibMCPClient("http://0.0.0.0:9383")
 health = await client.health_check()
 print(health)
 
@@ -137,7 +137,7 @@ print(health)
 
 1. **Start Server:**
    ```bash
-   docbro serve --foreground
+   bablib serve --foreground
    ```
 
 2. **Health Check (HTTP works):**
@@ -179,7 +179,7 @@ print(health)
 
 **Operations:**
 - All read-only operations **plus:**
-- `execute_command` - Run DocBro commands
+- `execute_command` - Run Bablib commands
 - `create_project` - Create new projects
 - `crawl` - Start crawling operations
 - `batch_process` - Batch operations
@@ -217,7 +217,7 @@ curl http://127.0.0.1:9384/mcp/v1/health
 **Using Claude Desktop:**
 1. Configure MCP server (see Method 1)
 2. Restart Claude Desktop
-3. Ask: "List my DocBro projects"
+3. Ask: "List my Bablib projects"
 
 **Using Python:**
 ```bash
@@ -230,19 +230,19 @@ python3 mcp_client_example.py
 
 ```bash
 # Vector store selection
-export DOCBRO_VECTOR_STORE=sqlite_vec  # or qdrant
+export BABLIB_VECTOR_STORE=sqlite_vec  # or qdrant
 
 # Qdrant configuration (if using Qdrant)
-export DOCBRO_QDRANT_URL=http://localhost:6333
+export BABLIB_QDRANT_URL=http://localhost:6333
 
 # Server configuration
-export DOCBRO_MCP_READ_ONLY_HOST=0.0.0.0
-export DOCBRO_MCP_READ_ONLY_PORT=9383
-export DOCBRO_MCP_ADMIN_HOST=127.0.0.1
-export DOCBRO_MCP_ADMIN_PORT=9384
+export BABLIB_MCP_READ_ONLY_HOST=0.0.0.0
+export BABLIB_MCP_READ_ONLY_PORT=9383
+export BABLIB_MCP_ADMIN_HOST=127.0.0.1
+export BABLIB_MCP_ADMIN_PORT=9384
 
 # Start server with custom config
-docbro serve
+bablib serve
 ```
 
 ---
@@ -256,7 +256,7 @@ docbro serve
 lsof -i :9383
 
 # Use different port
-docbro serve --port 9385
+bablib serve --port 9385
 ```
 
 ### "Invalid method" Error
@@ -274,10 +274,10 @@ docbro serve --port 9385
 
 ```bash
 # Check if server is running
-ps aux | grep docbro
+ps aux | grep bablib
 
 # Check server logs
-docbro serve --foreground
+bablib serve --foreground
 ```
 
 ### Permission Denied (Admin Server)
@@ -319,7 +319,7 @@ curl http://0.0.0.0:9384/mcp/v1/health     # ❌ Fails
 ## Additional Resources
 
 - **MCP Protocol Spec:** https://modelcontextprotocol.io
-- **DocBro Documentation:** See CLAUDE.md in repository root
+- **Bablib Documentation:** See CLAUDE.md in repository root
 - **Claude Desktop:** https://claude.ai/download
 - **Claude Code:** Official CLI from Anthropic
 
@@ -329,8 +329,8 @@ curl http://0.0.0.0:9384/mcp/v1/health     # ❌ Fails
 
 | Task | Command |
 |------|---------|
-| Start read-only server | `docbro serve` |
-| Start admin server | `docbro serve --admin` |
+| Start read-only server | `bablib serve` |
+| Start admin server | `bablib serve --admin` |
 | Health check | `curl http://0.0.0.0:9383/mcp/v1/health` |
 | Test with Python | `python3 mcp_client_example.py` |
 | Configure Claude Desktop | Edit `~/Library/Application Support/Claude/claude_desktop_config.json` |
@@ -338,4 +338,4 @@ curl http://0.0.0.0:9384/mcp/v1/health     # ❌ Fails
 ---
 
 **Last Updated:** 2025-10-01
-**DocBro Version:** 0.3.2+
+**Bablib Version:** 0.3.2+

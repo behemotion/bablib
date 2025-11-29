@@ -1,4 +1,4 @@
-"""Integration test for DocBro uninstall backup functionality."""
+"""Integration test for Bablib uninstall backup functionality."""
 
 import pytest
 from pathlib import Path
@@ -22,9 +22,9 @@ class TestUninstallBackup:
     def temp_installation(self, tmp_path):
         """Create a temporary installation with test data."""
         # Create directories
-        config_dir = tmp_path / ".config" / "docbro"
-        data_dir = tmp_path / ".local" / "share" / "docbro"
-        cache_dir = tmp_path / ".cache" / "docbro"
+        config_dir = tmp_path / ".config" / "bablib"
+        data_dir = tmp_path / ".local" / "share" / "bablib"
+        cache_dir = tmp_path / ".cache" / "bablib"
 
         for dir_path in [config_dir, data_dir, cache_dir]:
             dir_path.mkdir(parents=True, exist_ok=True)
@@ -33,7 +33,7 @@ class TestUninstallBackup:
         config_content = {"api_key": "test123", "port": 8765}
         (config_dir / "config.json").write_text(json.dumps(config_content))
 
-        (data_dir / "docbro.db").write_bytes(b"SQLite test database content")
+        (data_dir / "bablib.db").write_bytes(b"SQLite test database content")
         (data_dir / "embeddings.idx").write_bytes(b"Vector embeddings index")
 
         (cache_dir / "temp.cache").write_text("temporary cache data")
@@ -51,7 +51,7 @@ class TestUninstallBackup:
         """Test backup creation with default path."""
         from src.cli.main import cli
 
-        backup_path = tmp_path / "docbro-backup.tar.gz"
+        backup_path = tmp_path / "bablib-backup.tar.gz"
 
         with patch('src.services.component_detection.ComponentDetectionService') as mock_detection:
             with patch('src.services.backup_service.BackupService') as mock_backup:
@@ -65,7 +65,7 @@ class TestUninstallBackup:
                             temp_installation['config_dir'],
                             temp_installation['data_dir']
                         ],
-                        'package': 'docbro'
+                        'package': 'bablib'
                     })
 
                     backup_instance = mock_backup.return_value
@@ -76,7 +76,7 @@ class TestUninstallBackup:
                         'manifest': {
                             'backup_id': 'test-backup-123',
                             'created_at': datetime.now().isoformat(),
-                            'docbro_version': '1.0.0',
+                            'bablib_version': '1.0.0',
                             'components_included': ['config', 'data'],
                             'compression_ratio': 0.65
                         }
@@ -109,10 +109,10 @@ class TestUninstallBackup:
                 with patch('src.services.uninstall_service.UninstallService') as mock_uninstall:
                     detection_instance = mock_detection.return_value
                     detection_instance.detect_all_components = AsyncMock(return_value={
-                        'containers': [{'Names': ['/docbro-qdrant'], 'Id': 'container1'}],
-                        'volumes': [{'Name': 'docbro_data', 'Driver': 'local'}],
+                        'containers': [{'Names': ['/bablib-qdrant'], 'Id': 'container1'}],
+                        'volumes': [{'Name': 'bablib_data', 'Driver': 'local'}],
                         'directories': [temp_installation['data_dir']],
-                        'package': 'docbro'
+                        'package': 'bablib'
                     })
 
                     backup_instance = mock_backup.return_value
@@ -123,7 +123,7 @@ class TestUninstallBackup:
                         'manifest': {
                             'backup_id': 'custom-backup-456',
                             'created_at': datetime.now().isoformat(),
-                            'docbro_version': '1.0.0',
+                            'bablib_version': '1.0.0',
                             'components_included': ['containers', 'volumes', 'data'],
                             'compression_ratio': 0.55
                         }
@@ -159,8 +159,8 @@ class TestUninstallBackup:
                 detection_instance.detect_all_components = AsyncMock(return_value={
                     'containers': [],
                     'volumes': [],
-                    'directories': [Path.home() / '.config/docbro'],
-                    'package': 'docbro'
+                    'directories': [Path.home() / '.config/bablib'],
+                    'package': 'bablib'
                 })
 
                 backup_instance = mock_backup.return_value
@@ -234,7 +234,7 @@ class TestUninstallBackup:
                     detection_instance.detect_all_components = AsyncMock(return_value={
                         'containers': [],
                         'volumes': [],
-                        'directories': [Path.home() / '.config/docbro'],
+                        'directories': [Path.home() / '.config/bablib'],
                         'package': None
                     })
 
@@ -274,18 +274,18 @@ class TestUninstallBackup:
                 with patch('src.services.uninstall_service.UninstallService') as mock_uninstall:
                     components = {
                         'containers': [
-                            {'Names': ['/docbro-qdrant'], 'Id': 'c1'},
-                            {'Names': ['/docbro-redis'], 'Id': 'c2'}
+                            {'Names': ['/bablib-qdrant'], 'Id': 'c1'},
+                            {'Names': ['/bablib-redis'], 'Id': 'c2'}
                         ],
                         'volumes': [
-                            {'Name': 'docbro_qdrant_data'},
-                            {'Name': 'docbro_redis_data'}
+                            {'Name': 'bablib_qdrant_data'},
+                            {'Name': 'bablib_redis_data'}
                         ],
                         'directories': [
-                            Path.home() / '.config/docbro',
-                            Path.home() / '.local/share/docbro'
+                            Path.home() / '.config/bablib',
+                            Path.home() / '.local/share/bablib'
                         ],
-                        'package': 'docbro'
+                        'package': 'bablib'
                     }
 
                     detection_instance = mock_detection.return_value
@@ -294,7 +294,7 @@ class TestUninstallBackup:
                     expected_manifest = {
                         'backup_id': 'manifest-test-123',
                         'created_at': datetime.now().isoformat(),
-                        'docbro_version': '1.0.0',
+                        'bablib_version': '1.0.0',
                         'components_included': [
                             '2 containers',
                             '2 volumes',
@@ -339,7 +339,7 @@ class TestUninstallBackup:
                 detection_instance.detect_all_components = AsyncMock(return_value={
                     'containers': [],
                     'volumes': [],
-                    'directories': [Path.home() / '.config/docbro'],
+                    'directories': [Path.home() / '.config/bablib'],
                     'package': None
                 })
 

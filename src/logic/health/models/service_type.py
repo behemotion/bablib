@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class ServiceType(Enum):
-    """Types of external services that DocBro integrates with."""
+    """Types of external services that Bablib integrates with."""
 
     DOCKER = "DOCKER"
     QDRANT = "QDRANT"
@@ -35,7 +35,7 @@ class ServiceType(Enum):
 
     @property
     def is_required(self) -> bool:
-        """Check if service is required for basic DocBro operation."""
+        """Check if service is required for basic Bablib operation."""
         required = {
             ServiceType.DOCKER: False,
             ServiceType.QDRANT: False,

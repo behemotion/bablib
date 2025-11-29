@@ -24,11 +24,11 @@ class TestNavigationSystem:
             pytest.skip("Navigation modules not yet implemented")
 
     def test_setup_menu_shows_without_flags(self):
-        """docbro setup without flags should show interactive menu"""
+        """bablib setup without flags should show interactive menu"""
         runner = CliRunner()
         with patch('sys.stdout.isatty', return_value=True):
             result = runner.invoke(self.cli, ['setup'], input='5\n')  # Exit option
-            assert "DOCBRO" in result.output  # ASCII art
+            assert "BABLIB" in result.output  # ASCII art
             assert "Initialize" in result.output
             assert "Configuration" in result.output or "Configure" in result.output
             assert "Uninstall" in result.output

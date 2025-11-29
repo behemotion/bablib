@@ -1,4 +1,4 @@
-"""CommandExecutionRequest model for executing DocBro CLI commands via admin server."""
+"""CommandExecutionRequest model for executing Bablib CLI commands via admin server."""
 
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field, field_validator
@@ -26,7 +26,7 @@ class AllowedCommand(str, Enum):
 
 
 class CommandExecutionRequest(BaseModel):
-    """Request to execute DocBro CLI commands via admin server.
+    """Request to execute Bablib CLI commands via admin server.
 
     Attributes:
         command: Base command (e.g., "project", "crawl")
@@ -81,7 +81,7 @@ class CommandExecutionRequest(BaseModel):
 
     def to_command_string(self) -> str:
         """Convert to command string for execution."""
-        parts = [f"docbro {self.command.value}"]
+        parts = [f"bablib {self.command.value}"]
 
         # Add arguments
         parts.extend(self.arguments)

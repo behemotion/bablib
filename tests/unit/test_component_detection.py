@@ -11,22 +11,22 @@ class TestComponentDetection:
 
     @pytest.mark.asyncio
     async def test_detect_docker_containers(self):
-        """Test detection of DocBro Docker containers."""
+        """Test detection of Bablib Docker containers."""
         from src.services.component_detection import ComponentDetectionService
 
         mock_docker_client = Mock()
         mock_docker_client.containers.list.return_value = [
             Mock(
                 id='container1',
-                name='docbro-qdrant',
+                name='bablib-qdrant',
                 status='running',
-                labels={'docbro.managed': 'true'}
+                labels={'bablib.managed': 'true'}
             ),
             Mock(
                 id='container2',
-                name='docbro-redis',
+                name='bablib-redis',
                 status='running',
-                labels={'docbro.managed': 'true'}
+                labels={'bablib.managed': 'true'}
             ),
             Mock(
                 id='container3',
@@ -41,24 +41,24 @@ class TestComponentDetection:
 
         assert len(containers) == 2
         assert all(c.component_type == 'container' for c in containers)
-        assert any(c.component_name == 'docbro-qdrant' for c in containers)
-        assert any(c.component_name == 'docbro-redis' for c in containers)
+        assert any(c.component_name == 'bablib-qdrant' for c in containers)
+        assert any(c.component_name == 'bablib-redis' for c in containers)
         assert not any(c.component_name == 'other-container' for c in containers)
 
     @pytest.mark.asyncio
     async def test_detect_docker_volumes(self):
-        """Test detection of DocBro Docker volumes."""
+        """Test detection of Bablib Docker volumes."""
         from src.services.component_detection import ComponentDetectionService
 
         mock_docker_client = Mock()
         mock_docker_client.volumes.list.return_value = [
             Mock(
-                name='docbro_qdrant_data',
-                attrs={'Driver': 'local', 'Labels': {'docbro.managed': 'true'}}
+                name='bablib_qdrant_data',
+                attrs={'Driver': 'local', 'Labels': {'bablib.managed': 'true'}}
             ),
             Mock(
-                name='docbro_redis_data',
-                attrs={'Driver': 'local', 'Labels': {'docbro.managed': 'true'}}
+                name='bablib_redis_data',
+                attrs={'Driver': 'local', 'Labels': {'bablib.managed': 'true'}}
             ),
             Mock(
                 name='external_volume',
@@ -71,13 +71,13 @@ class TestComponentDetection:
 
         assert len(volumes) == 2
         assert all(v.component_type == 'volume' for v in volumes)
-        assert any(v.component_name == 'docbro_qdrant_data' for v in volumes)
-        assert any(v.component_name == 'docbro_redis_data' for v in volumes)
+        assert any(v.component_name == 'bablib_qdrant_data' for v in volumes)
+        assert any(v.component_name == 'bablib_redis_data' for v in volumes)
         assert not any(v.component_name == 'external_volume' for v in volumes)
 
     @pytest.mark.asyncio
     async def test_detect_data_directories(self):
-        """Test detection of DocBro data directories."""
+        """Test detection of Bablib data directories."""
         from src.services.component_detection import ComponentDetectionService
 
         with patch('pathlib.Path.exists') as mock_exists:
@@ -94,24 +94,24 @@ class TestComponentDetection:
                     # Should find standard XDG directories
                     assert len(directories) > 0
                     assert any(
-                        '.config/docbro' in str(d.component_path)
+                        '.config/bablib' in str(d.component_path)
                         for d in directories
                     )
                     assert any(
-                        '.local/share/docbro' in str(d.component_path)
+                        '.local/share/bablib' in str(d.component_path)
                         for d in directories
                     )
                     assert all(d.component_type == 'directory' for d in directories)
 
     @pytest.mark.asyncio
     async def test_detect_config_files(self):
-        """Test detection of DocBro configuration files."""
+        """Test detection of Bablib configuration files."""
         from src.services.component_detection import ComponentDetectionService
 
         test_files = [
-            Path.home() / '.config/docbro/config.yaml',
-            Path.home() / '.config/docbro/settings.json',
-            Path.home() / '.local/share/docbro/docbro.db'
+            Path.home() / '.config/bablib/config.yaml',
+            Path.home() / '.config/bablib/settings.json',
+            Path.home() / '.local/share/bablib/bablib.db'
         ]
 
         with patch('pathlib.Path.glob') as mock_glob:
@@ -127,18 +127,18 @@ class TestComponentDetection:
 
     @pytest.mark.asyncio
     async def test_check_package_installation(self):
-        """Test checking if DocBro package is installed."""
+        """Test checking if Bablib package is installed."""
         from src.services.component_detection import ComponentDetectionService
 
         with patch('subprocess.run') as mock_run:
             # Package is installed
-            mock_run.return_value = Mock(returncode=0, stdout='docbro==1.0.0')
+            mock_run.return_value = Mock(returncode=0, stdout='bablib==1.0.0')
 
             service = ComponentDetectionService()
             package_status = await service.check_package_installation()
 
             assert package_status.component_type == 'package'
-            assert package_status.component_name == 'docbro'
+            assert package_status.component_name == 'bablib'
             assert package_status.status == 'pending'
 
             # Package not installed
@@ -159,18 +159,18 @@ class TestComponentDetection:
                         with patch.object(ComponentDetectionService, 'check_package_installation') as mock_package:
                             # Setup mocks
                             mock_containers.return_value = [
-                                Mock(component_name='docbro-qdrant', component_type='container')
+                                Mock(component_name='bablib-qdrant', component_type='container')
                             ]
                             mock_volumes.return_value = [
-                                Mock(component_name='docbro_data', component_type='volume')
+                                Mock(component_name='bablib_data', component_type='volume')
                             ]
                             mock_dirs.return_value = [
-                                Mock(component_path=Path.home() / '.config/docbro', component_type='directory')
+                                Mock(component_path=Path.home() / '.config/bablib', component_type='directory')
                             ]
                             mock_configs.return_value = [
-                                Mock(component_path=Path.home() / '.config/docbro/config.yaml', component_type='config')
+                                Mock(component_path=Path.home() / '.config/bablib/config.yaml', component_type='config')
                             ]
-                            mock_package.return_value = Mock(component_name='docbro', component_type='package')
+                            mock_package.return_value = Mock(component_name='bablib', component_type='package')
 
                             service = ComponentDetectionService()
                             all_components = await service.detect_all_components()
@@ -201,25 +201,25 @@ class TestComponentDetection:
         assert containers == []  # Should return empty list, not crash
 
     @pytest.mark.asyncio
-    async def test_filter_docbro_components(self):
-        """Test filtering to only include DocBro-managed components."""
+    async def test_filter_bablib_components(self):
+        """Test filtering to only include Bablib-managed components."""
         from src.services.component_detection import ComponentDetectionService
 
         mock_docker_client = Mock()
         mock_docker_client.containers.list.return_value = [
             Mock(
                 id='c1',
-                name='docbro-qdrant',
-                labels={'docbro.managed': 'true'}
+                name='bablib-qdrant',
+                labels={'bablib.managed': 'true'}
             ),
             Mock(
                 id='c2',
-                name='postgres',  # Not a DocBro container
+                name='postgres',  # Not a Bablib container
                 labels={}
             ),
             Mock(
                 id='c3',
-                name='docbro-test',  # Has docbro in name
+                name='bablib-test',  # Has bablib in name
                 labels={}
             )
         ]
@@ -229,8 +229,8 @@ class TestComponentDetection:
 
         # Should include containers with label or name pattern
         assert len(containers) == 2
-        assert any(c.component_name == 'docbro-qdrant' for c in containers)
-        assert any(c.component_name == 'docbro-test' for c in containers)
+        assert any(c.component_name == 'bablib-qdrant' for c in containers)
+        assert any(c.component_name == 'bablib-test' for c in containers)
         assert not any(c.component_name == 'postgres' for c in containers)
 
     @pytest.mark.asyncio
@@ -257,9 +257,9 @@ class TestComponentDetection:
         """Test detection of custom data paths from environment."""
         from src.services.component_detection import ComponentDetectionService
 
-        custom_path = '/custom/docbro/data'
+        custom_path = '/custom/bablib/data'
 
-        with patch.dict('os.environ', {'DOCBRO_DATABASE_PATH': custom_path}):
+        with patch.dict('os.environ', {'BABLIB_DATABASE_PATH': custom_path}):
             with patch('pathlib.Path.exists') as mock_exists:
                 mock_exists.return_value = True
 

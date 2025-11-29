@@ -1,5 +1,5 @@
 """
-Integration tests for docbro setup --init command.
+Integration tests for bablib setup --init command.
 """
 
 import pytest
@@ -12,18 +12,18 @@ from src.models.settings import GlobalSettings
 
 
 class TestSetupInitCommand:
-    """Test docbro setup --init command integration."""
+    """Test bablib setup --init command integration."""
 
     def test_setup_init_creates_default_settings(self, tmp_path, monkeypatch):
         """Test setup --init command creates default settings."""
-        config_dir = tmp_path / ".config" / "docbro"
+        config_dir = tmp_path / ".config" / "bablib"
         monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / ".config"))
 
         runner = CliRunner()
         result = runner.invoke(setup, ["--init"])
 
         assert result.exit_code == 0
-        assert "Initializing DocBro" in result.output or "Setup completed" in result.output
+        assert "Initializing Bablib" in result.output or "Setup completed" in result.output
 
         # Check settings file created
         settings_file = config_dir / "settings.yaml"
@@ -49,7 +49,7 @@ class TestSetupInitCommand:
         assert result.exit_code == 0
 
         # Check overrides applied
-        settings_file = tmp_path / ".config" / "docbro" / "settings.yaml"
+        settings_file = tmp_path / ".config" / "bablib" / "settings.yaml"
         with open(settings_file) as f:
             data = yaml.safe_load(f)
             assert data["settings"]["crawl_depth"] == 5
@@ -57,7 +57,7 @@ class TestSetupInitCommand:
 
     def test_setup_init_force_flag_overwrites_existing(self, tmp_path, monkeypatch):
         """Test setup --init --force overwrites existing installation."""
-        config_dir = tmp_path / ".config" / "docbro"
+        config_dir = tmp_path / ".config" / "bablib"
         config_dir.mkdir(parents=True)
         monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / ".config"))
 
@@ -100,6 +100,6 @@ class TestSetupInitCommand:
         result = runner.invoke(setup, ["--init"])
 
         assert result.exit_code == 0
-        assert (tmp_path / ".config" / "docbro").exists()
-        assert (tmp_path / ".local/share" / "docbro").exists()
-        assert (tmp_path / ".cache" / "docbro").exists()
+        assert (tmp_path / ".config" / "bablib").exists()
+        assert (tmp_path / ".local/share" / "bablib").exists()
+        assert (tmp_path / ".cache" / "bablib").exists()

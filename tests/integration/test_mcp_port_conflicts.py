@@ -76,7 +76,7 @@ class TestMcpPortConflictPrevention:
         self, read_only_port: int, admin_port: int
     ) -> None:
         """Test that ports are assigned sequentially from base port 9382."""
-        base_port = 9382  # Original DocBro MCP server port
+        base_port = 9382  # Original Bablib MCP server port
 
         # Verify the sequential assignment pattern
         assert read_only_port == base_port + 1  # 9383

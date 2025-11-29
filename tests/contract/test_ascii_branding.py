@@ -28,7 +28,7 @@ class TestASCIIBranding:
             with patch('sys.stdout.isatty', return_value=True):
                 logo = branding.render()
                 lines = logo.strip().split('\n')
-                # 7 for DOCBRO + 1 for subtitle
+                # 7 for BABLIB + 1 for subtitle
                 assert len(lines) == 8
 
     def test_ascii_logo_shows_subtitle(self):
@@ -42,7 +42,7 @@ class TestASCIIBranding:
         branding = self.ASCIIBranding()
         with patch.object(branding, 'detect_terminal_width', return_value=50):
             logo = branding.render()
-            assert logo == "DOCBRO\nBY BEHEMOTION"
+            assert logo == "BABLIB\nBY BEHEMOTION"
 
     def test_ascii_uses_256_color_gradient(self):
         """Should use 256-color gradient when supported"""

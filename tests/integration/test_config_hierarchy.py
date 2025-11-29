@@ -41,7 +41,7 @@ async def config_manager():
 def temp_config_dir():
     """Create temporary configuration directory"""
     temp_dir = tempfile.mkdtemp()
-    config_dir = Path(temp_dir) / "docbro"
+    config_dir = Path(temp_dir) / "bablib"
     config_dir.mkdir(parents=True)
     return config_dir
 
@@ -61,7 +61,7 @@ async def test_global_default_settings(config_manager, temp_config_dir):
             "crawling": {
                 "crawl_depth": 3,
                 "rate_limit": 1.0,
-                "user_agent": "DocBro/1.0"
+                "user_agent": "Bablib/1.0"
             },
             "data": {
                 "chunk_size": 500,
@@ -334,9 +334,9 @@ async def test_environment_variable_overrides(config_manager, temp_config_dir):
     # Set environment variables
     import os
     env_overrides = {
-        "DOCBRO_MAX_FILE_SIZE": "20971520",  # 20MB
-        "DOCBRO_CHUNK_SIZE": "750",
-        "DOCBRO_EMBEDDING_MODEL": "env-model"
+        "BABLIB_MAX_FILE_SIZE": "20971520",  # 20MB
+        "BABLIB_CHUNK_SIZE": "750",
+        "BABLIB_EMBEDDING_MODEL": "env-model"
     }
 
     with patch.dict(os.environ, env_overrides):

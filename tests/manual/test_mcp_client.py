@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test MCP client for DocBro server."""
+"""Test MCP client for Bablib server."""
 
 import asyncio
 import httpx
@@ -7,8 +7,8 @@ import json
 from typing import Dict, Any, List
 
 
-class DocBroMCPClient:
-    """Simple MCP client for DocBro server."""
+class BablibMCPClient:
+    """Simple MCP client for Bablib server."""
 
     def __init__(self, base_url: str = "http://localhost:9382"):
         self.base_url = base_url
@@ -82,10 +82,10 @@ class DocBroMCPClient:
 
 async def test_mcp_connection():
     """Test MCP server connectivity and functionality."""
-    print("Testing DocBro MCP Server Connection...")
+    print("Testing Bablib MCP Server Connection...")
     print("=" * 50)
 
-    async with DocBroMCPClient() as client:
+    async with BablibMCPClient() as client:
         # Connection status
         print("\n0. MCP Connection:")
         if client.token:

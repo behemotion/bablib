@@ -3,11 +3,11 @@
 from typing import Any, Dict, List, Optional
 
 
-class DocBroError(Exception):
-    """Base exception for all DocBro errors."""
+class BablibError(Exception):
+    """Base exception for all Bablib errors."""
 
     def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
-        """Initialize DocBro error."""
+        """Initialize Bablib error."""
         super().__init__(message)
         self.message = message
         self.details = details or {}
@@ -21,7 +21,7 @@ class DocBroError(Exception):
         }
 
 
-class SchemaCompatibilityError(DocBroError):
+class SchemaCompatibilityError(BablibError):
     """Raised when project schema is incompatible with current version."""
 
     def __init__(
@@ -71,7 +71,7 @@ class SchemaCompatibilityError(DocBroError):
         )
 
 
-class MigrationRequiredError(DocBroError):
+class MigrationRequiredError(BablibError):
     """Raised when project requires migration before operation can proceed."""
 
     def __init__(
@@ -101,7 +101,7 @@ class MigrationRequiredError(DocBroError):
         super().__init__(message, details)
 
 
-class RecreationRequiredError(DocBroError):
+class RecreationRequiredError(BablibError):
     """Raised when project must be recreated due to incompatible schema."""
 
     def __init__(
@@ -132,7 +132,7 @@ class RecreationRequiredError(DocBroError):
         super().__init__(message, details)
 
 
-class ProjectValidationError(DocBroError):
+class ProjectValidationError(BablibError):
     """Raised when project data fails validation."""
 
     def __init__(
@@ -157,7 +157,7 @@ class ProjectValidationError(DocBroError):
         super().__init__(message, details)
 
 
-class MigrationError(DocBroError):
+class MigrationError(BablibError):
     """Raised when database migration fails."""
 
     def __init__(
@@ -184,7 +184,7 @@ class MigrationError(DocBroError):
         super().__init__(message, details)
 
 
-class ProjectAccessDeniedError(DocBroError):
+class ProjectAccessDeniedError(BablibError):
     """Raised when access to project is denied due to compatibility issues."""
 
     def __init__(
@@ -212,7 +212,7 @@ class ProjectAccessDeniedError(DocBroError):
         super().__init__(message, details)
 
 
-class DatabaseSchemaError(DocBroError):
+class DatabaseSchemaError(BablibError):
     """Raised when database schema is corrupted or invalid."""
 
     def __init__(
@@ -239,7 +239,7 @@ class DatabaseSchemaError(DocBroError):
         super().__init__(message, details)
 
 
-class UnifiedProjectError(DocBroError):
+class UnifiedProjectError(BablibError):
     """Raised for unified project model errors."""
 
     def __init__(
@@ -326,7 +326,7 @@ def handle_project_access(
         )
 
 
-def create_actionable_error_message(error: DocBroError) -> str:
+def create_actionable_error_message(error: BablibError) -> str:
     """Create user-friendly error message with actionable instructions."""
     base_message = error.message
 
@@ -347,16 +347,16 @@ To upgrade to the new Shelf-Box system:
    Export any important data before proceeding
 
 2. RECREATE using Shelf-Box system:
-   docbro shelf create 'my-shelf'
-   docbro box create '{project_name}' --type drag  # or rag/bag as appropriate
+   bablib shelf create 'my-shelf'
+   bablib box create '{project_name}' --type drag  # or rag/bag as appropriate
 
 3. REFILL with content:
-   docbro fill '{project_name}' --source <your-source-url-or-path>
+   bablib fill '{project_name}' --source <your-source-url-or-path>
 
 Note: This will create a new documentation structure using the modern
 Shelf-Box system. You may need to reconfigure your content sources.
 
-For help: docbro --help"""
+For help: bablib --help"""
 
     elif isinstance(error, MigrationRequiredError):
         project_name = error.details.get("project_name", "the project")
@@ -371,13 +371,13 @@ Migration Available: v{from_version} → v{to_version}
 To migrate this project:
 
 1. AUTOMATIC migration (if available):
-   docbro migrate --project {project_name}
+   bablib migrate --project {project_name}
 
 2. Or migrate ALL projects:
-   docbro migrate --all
+   bablib migrate --all
 
 3. Check migration status:
-   docbro box list  # to verify new system is working"""
+   bablib box list  # to verify new system is working"""
         else:
             return f"""{base_message}
 
@@ -389,11 +389,11 @@ Automatic migration is not available. Manual recreation required:
    Export any important data before proceeding
 
 2. RECREATE using Shelf-Box system:
-   docbro shelf create 'my-shelf'
-   docbro box create '{project_name}' --type drag  # or rag/bag as appropriate
+   bablib shelf create 'my-shelf'
+   bablib box create '{project_name}' --type drag  # or rag/bag as appropriate
 
 3. REFILL with content:
-   docbro fill '{project_name}' --source <your-source-url-or-path>"""
+   bablib fill '{project_name}' --source <your-source-url-or-path>"""
 
     elif isinstance(error, ProjectAccessDeniedError):
         project_name = error.details.get("project_name", "the project")
@@ -410,15 +410,15 @@ Blocked Operation: {operation}
 To enable {operation} operations using the new Shelf-Box system:
 
 1. CHECK current system status:
-   docbro health --detailed
+   bablib health --detailed
 
 2. BACKUP current data (recommended):
    Export any important data before proceeding
 
 3. RECREATE using Shelf-Box system:
-   docbro shelf create 'my-shelf'
-   docbro box create '{project_name}' --type drag  # or rag/bag as appropriate
-   docbro fill '{project_name}' --source <your-source-url-or-path>
+   bablib shelf create 'my-shelf'
+   bablib box create '{project_name}' --type drag  # or rag/bag as appropriate
+   bablib fill '{project_name}' --source <your-source-url-or-path>
 
 After recreation, you can resume {operation} operations."""
 
@@ -461,18 +461,18 @@ Schema Analysis:
 To resolve these compatibility issues:
 
 1. GET detailed system status:
-   docbro health --detailed
+   bablib health --detailed
 
 2. BACKUP your data:
    Export any important data before proceeding
 
 3. RECREATE using Shelf-Box system:
-   docbro shelf create 'my-shelf'
-   docbro box create '{project_name}' --type drag  # or rag/bag as appropriate
-   docbro fill '{project_name}' --source <your-source-url-or-path>
+   bablib shelf create 'my-shelf'
+   bablib box create '{project_name}' --type drag  # or rag/bag as appropriate
+   bablib fill '{project_name}' --source <your-source-url-or-path>
 
 4. VERIFY new system is working:
-   docbro box list"""
+   bablib box list"""
 
         return message
 
@@ -481,7 +481,7 @@ To resolve these compatibility issues:
 
 def format_error_for_api(error: Exception) -> Dict[str, Any]:
     """Format any exception for API response."""
-    if isinstance(error, DocBroError):
+    if isinstance(error, BablibError):
         response = error.to_dict()
         response["suggestion"] = create_actionable_error_message(error)
         return response
@@ -496,7 +496,7 @@ def format_error_for_api(error: Exception) -> Dict[str, Any]:
 
 def format_error_for_cli(error: Exception) -> str:
     """Format any exception for CLI display."""
-    if isinstance(error, DocBroError):
+    if isinstance(error, BablibError):
         return create_actionable_error_message(error)
     else:
         return f"Error: {error}"

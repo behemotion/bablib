@@ -71,7 +71,7 @@ class TestCommandExecutor:
             args, kwargs = mock_exec.call_args
             assert args[0] == "uv"
             assert args[1] == "run"
-            assert args[2] == "docbro"
+            assert args[2] == "bablib"
             assert args[3] == "health"
 
     @pytest.mark.asyncio
@@ -128,7 +128,7 @@ class TestCommandExecutor:
             called_args = args
             assert "uv" in called_args
             assert "run" in called_args
-            assert "docbro" in called_args
+            assert "bablib" in called_args
             assert "project" in called_args
             assert "test-project" in called_args
 
@@ -239,14 +239,14 @@ class TestCommandExecutor:
         """Test getting help for a valid command."""
         mock_process = MockProcess(
             returncode=0,
-            stdout=b"Usage: docbro health [OPTIONS]\n\nHealth check commands...",
+            stdout=b"Usage: bablib health [OPTIONS]\n\nHealth check commands...",
             stderr=b""
         )
 
         with patch('asyncio.create_subprocess_exec', return_value=mock_process) as mock_exec:
             help_text = await self.executor.get_command_help("health")
 
-            assert "Usage: docbro health" in help_text
+            assert "Usage: bablib health" in help_text
             assert "Health check commands" in help_text
 
             # Verify correct help command was called
@@ -254,7 +254,7 @@ class TestCommandExecutor:
             args, kwargs = mock_exec.call_args
             assert args[0] == "uv"
             assert args[1] == "run"
-            assert args[2] == "docbro"
+            assert args[2] == "bablib"
             assert args[3] == "health"
             assert args[4] == "--help"
 
@@ -347,7 +347,7 @@ class TestCommandExecutor:
 
             assert "uv" in called_args
             assert "run" in called_args
-            assert "docbro" in called_args
+            assert "bablib" in called_args
             assert "project" in called_args
             assert "test-project" in called_args
             assert "--create" in called_args

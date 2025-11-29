@@ -1,5 +1,5 @@
 """
-Settings service for managing DocBro configuration.
+Settings service for managing Bablib configuration.
 """
 
 import shutil
@@ -8,20 +8,20 @@ from pathlib import Path
 
 import yaml
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.lib.paths import ensure_directory, get_global_settings_path
 from src.models.settings import GlobalSettings
 
 
 class SettingsService:
-    """Service for managing DocBro settings."""
+    """Service for managing Bablib settings."""
 
     def __init__(self):
         """Initialize settings service."""
         self.settings_path = get_global_settings_path()
         self.settings_version = "2.0.0"  # Bumped version for new structure
 
-    def get_settings(self) -> DocBroConfig:
+    def get_settings(self) -> BablibConfig:
         """Load settings from file or create defaults."""
         if self.settings_path.exists():
             try:
@@ -45,14 +45,14 @@ class SettingsService:
                             from src.core.config import ServiceDeployment
                             settings_data['ollama_deployment'] = ServiceDeployment(settings_data['ollama_deployment'])
 
-                        return DocBroConfig(**settings_data)
+                        return BablibConfig(**settings_data)
             except Exception as e:
                 print(f"Warning: Failed to load settings: {e}")
 
         # Return defaults if file doesn't exist or is invalid
-        return DocBroConfig()
+        return BablibConfig()
 
-    def save_settings(self, settings: DocBroConfig) -> None:
+    def save_settings(self, settings: BablibConfig) -> None:
         """Save settings to file."""
         ensure_directory(self.settings_path.parent)
 
@@ -107,7 +107,7 @@ class SettingsService:
             backup_path = None
 
         # Save factory defaults
-        default_settings = DocBroConfig()
+        default_settings = BablibConfig()
         self.save_settings(default_settings)
 
         return backup_path
@@ -129,7 +129,7 @@ class SettingsService:
 
                 # Migrate to new format
                 old_settings = data.get('settings', {})
-                new_config = DocBroConfig(**old_settings)
+                new_config = BablibConfig(**old_settings)
                 self.save_settings(new_config)
 
                 print(f"Migrated settings from v1 to v2 format. Backup saved to {backup_path}")
@@ -145,13 +145,13 @@ class SettingsService:
     def get_global_settings(self) -> GlobalSettings:
         """Get global settings as GlobalSettings model for backward compatibility."""
         # For backward compatibility, return GlobalSettings with its own defaults
-        # rather than converting from DocBroConfig which has different defaults
+        # rather than converting from BablibConfig which has different defaults
         return GlobalSettings()
 
     def save_global_settings(self, settings: GlobalSettings) -> None:
         """Save global settings from GlobalSettings model for backward compatibility."""
-        # Convert back to DocBroConfig
-        config = DocBroConfig(**settings.model_dump())
+        # Convert back to BablibConfig
+        config = BablibConfig(**settings.model_dump())
         self.save_settings(config)
 
     def validate_settings(self, settings_dict: dict) -> tuple[bool, list[str]]:

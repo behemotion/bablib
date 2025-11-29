@@ -1,4 +1,4 @@
-"""Data models for DocBro."""
+"""Data models for Bablib."""
 
 # Page moved to src.logic.crawler.models.page
 from src.logic.crawler.models.page import Page, PageStatus

@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-DocBro has undergone a major architectural evolution from a simple documentation crawler to a sophisticated Shelf-Box Rhyme System with context-aware commands. The tests for these features have been written following TDD principles, but the actual implementations are incomplete or missing. This document provides a comprehensive overview of what needs to be built.
+Bablib has undergone a major architectural evolution from a simple documentation crawler to a sophisticated Shelf-Box Rhyme System with context-aware commands. The tests for these features have been written following TDD principles, but the actual implementations are incomplete or missing. This document provides a comprehensive overview of what needs to be built.
 
 ---
 
@@ -26,7 +26,7 @@ The vision is to create a CLI that "understands" the user's intent and current s
 #### What Needs to Be Built
 
 **Context Detection & Creation Prompts**
-When a user runs `docbro shelf my-docs` and the shelf doesn't exist:
+When a user runs `bablib shelf my-docs` and the shelf doesn't exist:
 - Detect the missing shelf via ContextService
 - Prompt: "Shelf 'my-docs' not found. Create it? (y/n)"
 - If yes → create shelf
@@ -64,7 +64,7 @@ Step 4/4: Tags
 - Track "current shelf" concept (like git branches)
 - Commands default to current shelf unless specified
 - Visual indicator in CLI prompt when shelf is set
-- Easy switching: `docbro shelf current my-other-docs`
+- Easy switching: `bablib shelf current my-other-docs`
 
 **Implementation Location**: `src/cli/commands/shelf.py`
 
@@ -95,7 +95,7 @@ Three box types with different behaviors:
 When user accesses an empty box, provide type-specific guidance:
 
 ```bash
-$ docbro box web-docs
+$ bablib box web-docs
 Box 'web-docs' (drag) is empty.
 
 Options:
@@ -171,7 +171,7 @@ The fill command should automatically route to the correct subsystem based on bo
 
 ```bash
 # For drag boxes → route to crawler
-$ docbro fill web-docs --source https://docs.example.com
+$ bablib fill web-docs --source https://docs.example.com
 Detected: drag box 'web-docs'
 Routing to: Website Crawler
 Crawling https://docs.example.com...
@@ -180,7 +180,7 @@ Crawling https://docs.example.com...
   └─ ETA: 8 minutes
 
 # For rag boxes → route to document uploader
-$ docbro fill doc-collection --source ./technical-docs/
+$ bablib fill doc-collection --source ./technical-docs/
 Detected: rag box 'doc-collection'
 Routing to: Document Uploader
 Scanning ./technical-docs/...
@@ -189,7 +189,7 @@ Scanning ./technical-docs/...
   └─ Embedding with mxbai-embed-large
 
 # For bag boxes → route to file storage
-$ docbro fill assets --source ./images/ --pattern "*.png"
+$ bablib fill assets --source ./images/ --pattern "*.png"
 Detected: bag box 'assets'
 Routing to: File Storage
 Storing files from ./images/...
@@ -232,7 +232,7 @@ Type-specific progress indicators:
 
 **Error Handling with Suggestions**
 ```bash
-$ docbro fill web-docs --source /path/to/local/files
+$ bablib fill web-docs --source /path/to/local/files
 Error: Box 'web-docs' is type 'drag' (websites only)
 
   You provided: Local file path
@@ -240,11 +240,11 @@ Error: Box 'web-docs' is type 'drag' (websites only)
 
 Suggestions:
   1. Use a different box:
-     docbro fill local-files --source /path/to/local/files
+     bablib fill local-files --source /path/to/local/files
 
   2. Create a rag box for this content:
-     docbro box create local-files --type rag
-     docbro fill local-files --source /path/to/local/files
+     bablib box create local-files --type rag
+     bablib fill local-files --source /path/to/local/files
 ```
 
 **Implementation Location**: `src/cli/commands/fill.py`
@@ -676,7 +676,7 @@ Setup MCP servers through wizard:
 
 **New User Setup Workflow**
 Complete journey from nothing to working system:
-1. Run `docbro setup`
+1. Run `bablib setup`
 2. Choose vector store (SQLite-vec or Qdrant)
 3. System validation passes
 4. Create first shelf via wizard
@@ -794,7 +794,7 @@ Several test files reference old architecture and need to be deleted or complete
 ---
 
 ### Phase 2 (Weeks 3-4): MCP Integration
-**Goal**: AI assistants can interact with DocBro
+**Goal**: AI assistants can interact with Bablib
 
 1. MCP context endpoints (Category 2.1)
 2. MCP admin operations (Category 2.2)

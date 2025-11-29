@@ -31,7 +31,7 @@ class TestNonOverridableFields:
         service.save_global_settings(global_settings)
 
         # Try to override non-overridable fields in project
-        project_file = project_dir / ".docbro" / "settings.yaml"
+        project_file = project_dir / ".bablib" / "settings.yaml"
         project_file.parent.mkdir(parents=True)
 
         # Manually create project settings with non-overridable fields
@@ -136,7 +136,7 @@ class TestNonOverridableFields:
         service.save_global_settings(GlobalSettings())
 
         # Manually create project file with non-overridable fields
-        project_file = project_dir / ".docbro" / "settings.yaml"
+        project_file = project_dir / ".bablib" / "settings.yaml"
         project_file.parent.mkdir(parents=True)
 
         invalid_data = {
@@ -154,4 +154,4 @@ class TestNonOverridableFields:
         effective = service.get_effective_settings(project_dir)
 
         # Should use global value, not project attempt
-        assert "~/.local/share/docbro/vectors" in effective.vector_storage
+        assert "~/.local/share/bablib/vectors" in effective.vector_storage

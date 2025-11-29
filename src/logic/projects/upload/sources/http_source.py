@@ -24,8 +24,6 @@ from src.logic.projects.upload.sources.base_source import BaseUploadSource
 
 logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
-
 
 class HTTPSource(BaseUploadSource):
     """Handler for HTTP/HTTPS upload sources"""
@@ -399,7 +397,7 @@ class HTTPSource(BaseUploadSource):
         for client in self._client_pool.values():
             try:
                 await client.aclose()
-            except:
+            except (httpx.HTTPError, OSError, RuntimeError):
                 pass
         self._client_pool.clear()
 
@@ -440,7 +438,7 @@ class HTTPSource(BaseUploadSource):
                     # Parse "bytes start-end/total" format
                     try:
                         total_size = int(content_range.split('/')[-1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
                 # Resume download

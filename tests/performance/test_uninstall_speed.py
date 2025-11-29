@@ -20,23 +20,23 @@ class TestUninstallPerformance:
         # Create mock components
         mock_components = {
             'containers': [
-                Mock(component_name='docbro-qdrant', component_type='container'),
-                Mock(component_name='docbro-redis', component_type='container'),
-                Mock(component_name='docbro-ollama', component_type='container')
+                Mock(component_name='bablib-qdrant', component_type='container'),
+                Mock(component_name='bablib-redis', component_type='container'),
+                Mock(component_name='bablib-ollama', component_type='container')
             ],
             'volumes': [
-                Mock(component_name='docbro_qdrant_data', component_type='volume', is_external=False),
-                Mock(component_name='docbro_redis_data', component_type='volume', is_external=False)
+                Mock(component_name='bablib_qdrant_data', component_type='volume', is_external=False),
+                Mock(component_name='bablib_redis_data', component_type='volume', is_external=False)
             ],
             'directories': [
-                Mock(component_path=Path.home() / '.config/docbro', component_type='directory'),
-                Mock(component_path=Path.home() / '.local/share/docbro', component_type='directory'),
-                Mock(component_path=Path.home() / '.cache/docbro', component_type='directory')
+                Mock(component_path=Path.home() / '.config/bablib', component_type='directory'),
+                Mock(component_path=Path.home() / '.local/share/bablib', component_type='directory'),
+                Mock(component_path=Path.home() / '.cache/bablib', component_type='directory')
             ],
             'configs': [
-                Mock(component_path=Path.home() / '.config/docbro/config.yaml', component_type='config')
+                Mock(component_path=Path.home() / '.config/bablib/config.yaml', component_type='config')
             ],
-            'package': Mock(component_name='docbro', component_type='package')
+            'package': Mock(component_name='bablib', component_type='package')
         }
 
         # Mock the service methods
@@ -76,11 +76,11 @@ class TestUninstallPerformance:
             # Mock Docker client
             mock_client = Mock()
             mock_client.containers.list.return_value = [
-                Mock(name=f'docbro-{i}', labels={'docbro.managed': 'true'})
+                Mock(name=f'bablib-{i}', labels={'bablib.managed': 'true'})
                 for i in range(10)  # 10 containers
             ]
             mock_client.volumes.list.return_value = [
-                Mock(name=f'docbro_volume_{i}', attrs={'Labels': {'docbro.managed': 'true'}})
+                Mock(name=f'bablib_volume_{i}', attrs={'Labels': {'bablib.managed': 'true'}})
                 for i in range(10)  # 10 volumes
             ]
             mock_docker.from_env.return_value = mock_client
@@ -146,7 +146,7 @@ class TestUninstallPerformance:
         mock_components = {
             'containers': [],
             'volumes': [
-                Mock(component_name=f'docbro_volume_{i}', is_external=False)
+                Mock(component_name=f'bablib_volume_{i}', is_external=False)
                 for i in range(5)
             ],
             'directories': [],

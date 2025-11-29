@@ -1,16 +1,16 @@
 """MCP service layer for shelf operations."""
 
-import logging
 import uuid
-from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
-from src.services.shelf_service import ShelfService
-from src.services.box_service import BoxService
-from src.models.shelf import ShelfNotFoundError
+from src.core.lib_logger import get_component_logger
 from src.models.box import BoxNotFoundError
 from src.models.box_type import BoxType
-from src.core.lib_logger import get_component_logger
+from src.models.shelf import ShelfNotFoundError
+from src.services.box_service import BoxService
+from src.services.database import DatabaseManager
+from src.services.shelf_service import ShelfService
 
 logger = get_component_logger("shelf_mcp_service")
 
@@ -20,18 +20,101 @@ class ShelfMcpService:
 
     def __init__(
         self,
-        shelf_service: Optional[ShelfService] = None,
-        box_service: Optional[BoxService] = None
+        shelf_service: ShelfService | None = None,
+        box_service: BoxService | None = None,
+        db_manager: DatabaseManager | None = None
     ):
         """Initialize shelf MCP service."""
         self.shelf_service = shelf_service or ShelfService()
         self.box_service = box_service or BoxService()
+        self.db_manager = db_manager or DatabaseManager()
         self._session_id = str(uuid.uuid4())
 
     async def initialize(self) -> None:
         """Initialize services."""
         await self.shelf_service.initialize()
         await self.box_service.initialize()
+        await self.db_manager.initialize()
+
+    async def _get_box_file_count(self, box_name: str, box_type: BoxType) -> int:
+        """
+        Get file/page count for a box based on its type.
+
+        Args:
+            box_name: Name of the box
+            box_type: Type of the box (DRAG/RAG/BAG)
+
+        Returns:
+            Count of files/pages in the box
+        """
+        try:
+            if box_type == BoxType.DRAG:
+                # For crawling boxes, count pages from box
+                box = await self.box_service.get_box_by_name(box_name)
+                if box:
+                    pages = await self.db_manager.get_box_pages(box.id)
+                    return len(pages)
+            # RAG and BAG boxes don't have file tracking yet
+            return 0
+        except Exception as e:
+            logger.debug(f"Could not get file count for box '{box_name}': {e}")
+            return 0
+
+    async def _get_box_total_size(self, box_name: str, box_type: BoxType) -> int:
+        """
+        Get total size in bytes for a box based on its type.
+
+        Args:
+            box_name: Name of the box
+            box_type: Type of the box (DRAG/RAG/BAG)
+
+        Returns:
+            Total size in bytes
+        """
+        try:
+            if box_type == BoxType.DRAG:
+                # For crawling boxes, sum page sizes from box
+                box = await self.box_service.get_box_by_name(box_name)
+                if box:
+                    pages = await self.db_manager.get_box_pages(box.id)
+                    return sum(p.size_bytes or 0 for p in pages)
+            return 0
+        except Exception as e:
+            logger.debug(f"Could not get size for box '{box_name}': {e}")
+            return 0
+
+    async def _get_box_file_list(self, box_name: str, box_type: BoxType) -> list[dict[str, Any]]:
+        """
+        Get list of files/pages for a box.
+
+        Args:
+            box_name: Name of the box
+            box_type: Type of the box (DRAG/RAG/BAG)
+
+        Returns:
+            List of file/page info dictionaries
+        """
+        try:
+            if box_type == BoxType.DRAG:
+                # For crawling boxes, return page URLs
+                box = await self.box_service.get_box_by_name(box_name)
+                if box:
+                    pages = await self.db_manager.get_box_pages(box.id)
+                    return [
+                        {
+                            "url": p.url,
+                            "title": p.title,
+                            "status": p.status.value if hasattr(p.status, 'value') else str(p.status),
+                            "size_bytes": p.size_bytes or 0,
+                            "crawled_at": p.crawled_at.isoformat() if p.crawled_at else None
+                        }
+                        for p in pages[:100]  # Limit to 100 files
+                    ]
+            # RAG and BAG boxes don't have file tracking yet
+            return []
+        except Exception as e:
+            logger.debug(f"Could not get file list for box '{box_name}': {e}")
+            return []
 
     async def list_shelfs(
         self,
@@ -39,7 +122,7 @@ class ShelfMcpService:
         include_empty: bool = True,
         current_only: bool = False,
         limit: int = 50
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         List all shelves with optional basket details.
 
@@ -89,11 +172,13 @@ class ShelfMcpService:
                 boxes = await self.box_service.list_boxes(shelf_name=shelf.name)
                 baskets = []
                 for box in boxes:
+                    box_type = box.type if isinstance(box.type, BoxType) else BoxType(box.type)
+                    file_count = await self._get_box_file_count(box.name, box_type)
                     baskets.append({
                         "name": box.name,
-                        "type": box.type.value if isinstance(box.type, BoxType) else box.type,
-                        "status": "ready" if box.name else "empty",
-                        "files": 0  # TODO: Get actual file count when implemented
+                        "type": box_type.value,
+                        "status": "ready" if file_count > 0 else "empty",
+                        "files": file_count
                     })
                 shelf_dict["baskets"] = baskets
                 total_baskets += len(baskets)
@@ -119,7 +204,7 @@ class ShelfMcpService:
         shelf_name: str,
         include_basket_details: bool = True,
         include_file_list: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get detailed structure of a specific shelf.
 
@@ -156,30 +241,38 @@ class ShelfMcpService:
         boxes = await self.box_service.list_boxes(shelf_name=shelf_name)
         baskets = []
         total_files = 0
+        total_size = 0
 
         for box in boxes:
+            box_type = box.type if isinstance(box.type, BoxType) else BoxType(box.type)
+            file_count = await self._get_box_file_count(box.name, box_type)
+            box_size = await self._get_box_total_size(box.name, box_type)
+
             basket_dict = {
                 "name": box.name,
-                "type": box.type.value if isinstance(box.type, BoxType) else box.type,
+                "type": box_type.value,
             }
 
             if include_basket_details:
                 basket_dict.update({
                     "created_at": box.created_at.isoformat() if box.created_at else None,
-                    "status": "ready" if box.name else "empty",
-                    "file_count": 0  # TODO: Get actual count
+                    "status": "ready" if file_count > 0 else "empty",
+                    "file_count": file_count
                 })
 
             if include_file_list:
-                basket_dict["files"] = []  # TODO: Implement file listing
+                # File listing for DRAG boxes returns page URLs
+                basket_dict["files"] = await self._get_box_file_list(box.name, box_type)
 
+            total_files += file_count
+            total_size += box_size
             baskets.append(basket_dict)
 
         # Build summary
         summary = {
             "total_baskets": len(baskets),
             "total_files": total_files,
-            "total_size_bytes": 0  # TODO: Calculate when file tracking implemented
+            "total_size_bytes": total_size
         }
 
         return {
@@ -188,7 +281,7 @@ class ShelfMcpService:
             "summary": summary
         }
 
-    async def get_current_shelf(self) -> Dict[str, Any]:
+    async def get_current_shelf(self) -> dict[str, Any]:
         """
         Get information about the current active shelf.
 
@@ -203,16 +296,22 @@ class ShelfMcpService:
             # Get boxes in current shelf
             boxes = await self.box_service.list_boxes(shelf_name=current_shelf.name)
 
+            # Calculate total files across all boxes
+            total_files = 0
+            for box in boxes:
+                box_type = box.type if isinstance(box.type, BoxType) else BoxType(box.type)
+                total_files += await self._get_box_file_count(box.name, box_type)
+
             return {
                 "current_shelf": {
                     "name": current_shelf.name,
                     "created_at": current_shelf.created_at.isoformat() if current_shelf.created_at else None,
                     "basket_count": len(boxes),
-                    "total_files": 0  # TODO: Calculate actual count
+                    "total_files": total_files
                 },
                 "context": {
                     "session_id": self._session_id,
-                    "last_context_update": datetime.now(timezone.utc).isoformat()
+                    "last_context_update": datetime.now(UTC).isoformat()
                 }
             }
         else:
@@ -223,7 +322,7 @@ class ShelfMcpService:
                 "available_shelfs": [s.name for s in shelves],
                 "context": {
                     "session_id": self._session_id,
-                    "last_context_update": datetime.now(timezone.utc).isoformat()
+                    "last_context_update": datetime.now(UTC).isoformat()
                 }
             }
 
@@ -232,10 +331,10 @@ class ShelfMcpService:
     async def create_shelf_admin(
         self,
         name: str,
-        description: Optional[str] = None,
+        description: str | None = None,
         set_current: bool = False,
         force: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Create a new shelf via admin MCP.
 
@@ -288,9 +387,9 @@ class ShelfMcpService:
         shelf_name: str,
         basket_name: str,
         basket_type: str = "data",
-        description: Optional[str] = None,
+        description: str | None = None,
         force: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Add a basket (box) to a shelf via admin MCP.
 
@@ -346,7 +445,7 @@ class ShelfMcpService:
         basket_name: str,
         confirm: bool = False,
         backup: bool = True
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Remove a basket from a shelf via admin MCP.
 
@@ -381,9 +480,48 @@ class ShelfMcpService:
         if not box:
             raise BoxNotFoundError(f"Basket '{basket_name}' not found")
 
-        # TODO: Implement backup if requested
-        # TODO: Implement actual removal
-        # For now, just return success
+        # Get file count before deletion
+        box_type = box.type if isinstance(box.type, BoxType) else BoxType(box.type)
+        files_count = await self._get_box_file_count(basket_name, box_type)
+
+        # Create backup if requested (using same pattern as shelf backup)
+        backup_created = False
+        if backup:
+            try:
+                import json
+
+                from src.lib.paths import get_bablib_data_dir
+
+                backup_dir = get_bablib_data_dir() / "backups" / "boxes"
+                backup_dir.mkdir(parents=True, exist_ok=True)
+
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                backup_file = backup_dir / f"box_{basket_name}_{timestamp}.json"
+
+                backup_data = {
+                    "backup_version": "1.0",
+                    "backup_timestamp": datetime.now(UTC).isoformat(),
+                    "box": {
+                        "id": box.id,
+                        "name": box.name,
+                        "type": box_type.value,
+                        "description": getattr(box, 'description', None),
+                        "shelf_name": shelf_name,
+                        "file_count": files_count
+                    }
+                }
+
+                with open(backup_file, 'w', encoding='utf-8') as f:
+                    json.dump(backup_data, f, indent=2, ensure_ascii=False)
+
+                backup_created = True
+                logger.info(f"Created box backup: {backup_file}")
+            except Exception as e:
+                logger.warning(f"Failed to create backup for box '{basket_name}': {e}")
+
+        # Remove box from shelf first, then delete box
+        await self.box_service.remove_box_from_shelf(basket_name, shelf_name)
+        await self.box_service.delete_box(basket_name, force=True)
 
         return {
             "operation": "remove_basket",
@@ -391,12 +529,12 @@ class ShelfMcpService:
             "basket_name": basket_name,
             "result": "removed",
             "details": {
-                "files_deleted": 0,  # TODO: Actual count
-                "backup_created": backup
+                "files_deleted": files_count,
+                "backup_created": backup_created
             }
         }
 
-    async def set_current_shelf_admin(self, shelf_name: str) -> Dict[str, Any]:
+    async def set_current_shelf_admin(self, shelf_name: str) -> dict[str, Any]:
         """
         Set current shelf via admin MCP.
 

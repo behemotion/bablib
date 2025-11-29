@@ -5,7 +5,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.models.command_context import CommandContext
 from src.models.configuration_state import ConfigurationState
 from src.services.database import DatabaseManager
@@ -17,9 +17,9 @@ logger = get_component_logger("context_service")
 class ContextService:
     """Service for checking shelf/box existence and status."""
 
-    def __init__(self, config: Optional[DocBroConfig] = None):
+    def __init__(self, config: Optional[BablibConfig] = None):
         """Initialize context service."""
-        self.config = config or DocBroConfig()
+        self.config = config or BablibConfig()
         self.db_manager = DatabaseManager(self.config)
         self.cache_ttl = timedelta(minutes=5)  # 5-minute cache TTL
 

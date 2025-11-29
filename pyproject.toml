@@ -3,14 +3,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "docbro"
+name = "bablib"
 version = "0.3.2"
 description = "Documentation crawler and search tool with RAG capabilities and MCP server integration"
 readme = "README.md"
 requires-python = ">=3.13"
 license = {text = "MIT"}
 authors = [
-    {name = "DocBro Contributors"}
+    {name = "Bablib Contributors"}
 ]
 keywords = ["documentation", "crawler", "rag", "search", "mcp", "uvx", "uv"]
 classifiers = [
@@ -25,26 +25,26 @@ classifiers = [
 ]
 
 dependencies = [
-    "click>=8.1.0",
-    "rich>=14.1.0",
-    "qdrant-client>=1.15.1",
-    "fastapi>=0.117.0",
-    "uvicorn>=0.37.0",
-    "pydantic>=2.11.0",
-    "pydantic-settings>=2.8.0",
-    "aiosqlite>=0.20.0",
-    "httpx>=0.27.0",
-    "beautifulsoup4>=4.13.0",
-    "platformdirs>=4.3.0",
-    "packaging>=24.2",
-    "docker>=7.1.0",
-    "psutil>=6.1.0",
-    "pyyaml>=6.0.2",
-    "sqlite-vec>=0.1.6",
-    "paramiko>=3.5.0",
-    "smbprotocol>=1.14.0",
-    "python-magic>=0.4.27",
-    "aiofiles>=24.1.0",
+    "click>=8.1.0,<9.0",
+    "rich>=14.1.0,<15.0",
+    "qdrant-client>=1.15.1,<2.0",
+    "fastapi>=0.117.0,<1.0",
+    "uvicorn>=0.37.0,<1.0",
+    "pydantic>=2.11.0,<3.0",
+    "pydantic-settings>=2.8.0,<3.0",
+    "aiosqlite>=0.20.0,<1.0",
+    "httpx>=0.27.0,<1.0",
+    "beautifulsoup4>=4.13.0,<5.0",
+    "platformdirs>=4.3.0,<5.0",
+    "packaging>=24.2,<25.0",
+    "docker>=7.1.0,<8.0",
+    "psutil>=6.1.0,<7.0",
+    "pyyaml>=6.0.2,<7.0",
+    "sqlite-vec>=0.1.6,<1.0",  # Early-stage package, monitor for breaking changes
+    "paramiko>=3.5.0,<4.0",
+    "smbprotocol>=1.14.0,<2.0",
+    "python-magic>=0.4.27,<1.0",
+    "aiofiles>=24.1.0,<25.0",
 ]
 
 [project.optional-dependencies]
@@ -64,17 +64,17 @@ dev = [
 ]
 
 [project.scripts]
-docbro = "src.cli.main:main"
+bablib = "src.cli.main:main"
 
 [project.entry-points."uv.tool"]
-docbro = "src.cli.main:main"
+bablib = "src.cli.main:main"
 
 
 [project.urls]
-Homepage = "https://github.com/yourusername/docbro"
-Repository = "https://github.com/yourusername/docbro"
-Documentation = "https://github.com/yourusername/docbro/docs"
-Issues = "https://github.com/yourusername/docbro/issues"
+Homepage = "https://github.com/behemotion/bablib"
+Repository = "https://github.com/behemotion/bablib"
+Documentation = "https://github.com/behemotion/bablib/docs"
+Issues = "https://github.com/behemotion/bablib/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
@@ -162,12 +162,12 @@ filterwarnings = [
     "ignore:.*unclosed.*:ResourceWarning",
 ]
 env = [
-    "DOCBRO_TEST_MODE = true",
-    "DOCBRO_LOG_LEVEL = DEBUG",
-    "DOCBRO_DATABASE_PATH = :memory:",
-    "DOCBRO_QDRANT_URL = http://localhost:6333",
-    "DOCBRO_OLLAMA_URL = http://localhost:11434",
-    "DOCBRO_EMBEDDING_MODEL = mxbai-embed-large",
+    "BABLIB_TEST_MODE = true",
+    "BABLIB_LOG_LEVEL = DEBUG",
+    "BABLIB_DATABASE_PATH = :memory:",
+    "BABLIB_QDRANT_URL = http://localhost:6333",
+    "BABLIB_OLLAMA_URL = http://localhost:11434",
+    "BABLIB_EMBEDDING_MODEL = mxbai-embed-large",
     "UV_CACHE_DIR = /tmp/uv-test-cache",
 ]
 

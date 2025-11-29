@@ -36,8 +36,8 @@ class ProjectManager:
     def _get_default_data_directory(self) -> str:
         """Get default data directory using XDG specification."""
         return os.environ.get(
-            'DOCBRO_DATA_DIR',
-            str(Path.home() / '.local' / 'share' / 'docbro')
+            'BABLIB_DATA_DIR',
+            str(Path.home() / '.local' / 'share' / 'bablib')
         )
 
     def _ensure_directories(self) -> None:

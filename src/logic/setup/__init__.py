@@ -1,4 +1,4 @@
-"""Setup logic for DocBro installation and configuration."""
+"""Setup logic for Bablib installation and configuration."""
 
 from src.logic.setup.core.menu import InteractiveMenu
 from src.logic.setup.core.orchestrator import SetupOrchestrator

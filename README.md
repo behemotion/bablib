@@ -7,7 +7,7 @@
 ╚═════╝  ╚═════╝  ╚═════╝╚═════╝ ╚═╝  ╚═╝ ╚═════╝
 ```
 
-# DocBro
+# Bablib
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![UV Tool](https://img.shields.io/badge/UV-0.8+-green.svg)](https://docs.astral.sh/uv/)
@@ -17,52 +17,52 @@
 
 ```bash
 # Install globally with UV
-uv tool install git+https://github.com/behemotion/doc-bro
+uv tool install git+https://github.com/behemotion/bablib
 
 # Run interactive setup
-docbro setup
+bablib setup
 ```
 
-## What DocBro Can Do
+## What Bablib Can Do
 
-DocBro transforms any documentation website into a searchable knowledge base with AI-powered semantic search. It crawls documentation sites, processes content into vector embeddings, and provides an MCP server for AI assistants like Claude Code to search and retrieve relevant information instantly.
+Bablib transforms any documentation website into a searchable knowledge base with AI-powered semantic search. It crawls documentation sites, processes content into vector embeddings, and provides an MCP server for AI assistants like Claude Code to search and retrieve relevant information instantly.
 
-The tool offers flexible vector storage options - either SQLite-vec for local zero-dependency usage or Qdrant for scalable production deployments. With intelligent crawling, rate limiting, and universal arrow-key navigation throughout its CLI interface, DocBro makes documentation accessible and searchable within your coding workflow through seamless AI assistant integration.
+The tool offers flexible vector storage options - either SQLite-vec for local zero-dependency usage or Qdrant for scalable production deployments. With intelligent crawling, rate limiting, and universal arrow-key navigation throughout its CLI interface, Bablib makes documentation accessible and searchable within your coding workflow through seamless AI assistant integration.
 
 ## Commands
 
 ```
-Usage: docbro [OPTIONS] COMMAND [ARGS]...
+Usage: bablib [OPTIONS] COMMAND [ARGS]...
 
-  DocBro - Local documentation crawler and search tool with RAG capabilities.
+  Bablib - Local documentation crawler and search tool with RAG capabilities.
 
-  DocBro crawls documentation websites, stores them locally, and provides
+  Bablib crawls documentation websites, stores them locally, and provides
   semantic search through an MCP server for AI assistants like Claude.
 
   INSTALLATION:
-    uv tool install git+https://github.com/behemotion/doc-bro
+    uv tool install git+https://github.com/behemotion/bablib
 
   QUICK START:
-    docbro setup                                  # Interactive setup wizard
-    docbro project --create myproject --type crawling
-    docbro crawl myproject
-    docbro serve                                  # Start MCP server for AI assistants
+    bablib setup                                  # Interactive setup wizard
+    bablib project --create myproject --type crawling
+    bablib crawl myproject
+    bablib serve                                  # Start MCP server for AI assistants
 
   PROJECT MANAGEMENT:
-    docbro project                                # Interactive project menu
-    docbro project --list                         # List all projects
-    docbro project --create <name> --type <type>  # Create project
-    docbro project --remove myproject             # Remove project
-    docbro project --show myproject               # Show project details
-    docbro upload                                 # Upload files to projects
-    docbro health                                 # Check system health
+    bablib project                                # Interactive project menu
+    bablib project --list                         # List all projects
+    bablib project --create <name> --type <type>  # Create project
+    bablib project --remove myproject             # Remove project
+    bablib project --show myproject               # Show project details
+    bablib upload                                 # Upload files to projects
+    bablib health                                 # Check system health
 
   VECTOR STORE OPTIONS:
     - SQLite-vec: Local, no dependencies, perfect for getting started
     - Qdrant: Scalable, production-ready, requires Docker
 
   AI ASSISTANT INTEGRATION:
-    Once the MCP server is running (docbro serve), AI assistants like Claude
+    Once the MCP server is running (bablib serve), AI assistants like Claude
     can access your documentation for context-aware responses.
 
 Options:
@@ -78,16 +78,16 @@ Options:
 
 Commands:
   crawl    Start crawling a documentation project.
-  health   Check health status of DocBro components with comprehensive...
+  health   Check health status of Bablib components with comprehensive...
   project  Manage documentation projects.
   serve    Start the MCP server for AI assistant integration.
-  setup    Unified setup command for DocBro configuration.
+  setup    Unified setup command for Bablib configuration.
   upload   Upload files to documentation projects.
 ```
 
 ## Enhanced RAG Features ⚡
 
-DocBro now includes advanced RAG (Retrieval-Augmented Generation) capabilities for improved search quality and performance:
+Bablib now includes advanced RAG (Retrieval-Augmented Generation) capabilities for improved search quality and performance:
 
 ### 🚀 Performance Improvements
 - **Parallel Sub-Query Execution**: 50-70% faster advanced search (<100ms)
@@ -117,19 +117,19 @@ DocBro now includes advanced RAG (Retrieval-Augmented Generation) capabilities f
 **Semantic Chunking** (opt-in):
 ```bash
 # Index with semantic chunking for better topic coherence
-docbro fill my-box --source https://docs.example.com --chunk-strategy semantic
+bablib fill my-box --source https://docs.example.com --chunk-strategy semantic
 ```
 
 **Query Transformation** (opt-in):
 ```bash
 # Search with query expansion using synonyms
-# Customize synonyms at: ~/.config/docbro/query_transformations.yaml
-docbro search "docker setup" --transform-query --strategy fusion
+# Customize synonyms at: ~/.config/bablib/query_transformations.yaml
+bablib search "docker setup" --transform-query --strategy fusion
 ```
 
 **Custom Synonym Dictionary**:
 ```yaml
-# Example: ~/.config/docbro/query_transformations.yaml
+# Example: ~/.config/bablib/query_transformations.yaml
 docker: [container, containerization, docker-engine]
 install: [setup, installation, deploy, configure]
 search: [find, lookup, query, retrieve]

@@ -45,33 +45,33 @@ class TestMcpReadOnlyHealth:
 
         # Validate HealthResponse schema
         health_data = data["data"]
-        required_fields = ["server_type", "status", "docbro_health"]
+        required_fields = ["server_type", "status", "bablib_health"]
         for field in required_fields:
             assert field in health_data
 
         # Validate field types and constraints
         assert health_data["server_type"] == "read-only"
         assert health_data["status"] in ["healthy", "degraded", "unhealthy"]
-        assert isinstance(health_data["docbro_health"], dict)
+        assert isinstance(health_data["bablib_health"], dict)
 
     @pytest.mark.contract
     @pytest.mark.asyncio
-    async def test_health_includes_docbro_health_output(self, base_url: str) -> None:
-        """Test that health response includes DocBro health command output."""
+    async def test_health_includes_bablib_health_output(self, base_url: str) -> None:
+        """Test that health response includes Bablib health command output."""
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{base_url}/mcp/v1/health")
 
         assert response.status_code == 200
         data = response.json()
 
-        # Should include output from `docbro health` command
+        # Should include output from `bablib health` command
         health_data = data["data"]
-        docbro_health = health_data["docbro_health"]
+        bablib_health = health_data["bablib_health"]
 
-        # DocBro health output should contain system information
-        # The exact structure depends on the actual `docbro health` implementation
-        assert isinstance(docbro_health, dict)
-        assert len(docbro_health) > 0  # Should not be empty
+        # Bablib health output should contain system information
+        # The exact structure depends on the actual `bablib health` implementation
+        assert isinstance(bablib_health, dict)
+        assert len(bablib_health) > 0  # Should not be empty
 
     @pytest.mark.contract
     @pytest.mark.asyncio

@@ -25,9 +25,9 @@ class TestMenuNavigationContract:
         """Test that main menu displays all setup options."""
         menu = mock_menu.return_value
         menu.get_main_menu_options.return_value = [
-            "Initialize DocBro",
+            "Initialize Bablib",
             "Modify Configuration",
-            "Uninstall DocBro",
+            "Uninstall Bablib",
             "Reset Installation",
             "Exit"
         ]
@@ -35,7 +35,7 @@ class TestMenuNavigationContract:
         options = menu.get_main_menu_options()
 
         assert len(options) == 5
-        assert "Initialize DocBro" in options
+        assert "Initialize Bablib" in options
         assert "Exit" in options
 
     def test_menu_arrow_key_navigation(self, mock_menu):

@@ -579,7 +579,7 @@ class TestMcpAdminShelfEndpoints:
         if "data" in data and "details" in data["data"]:
             details = data["data"]["details"]
             assert "CLI only" in details.get("allowed_methods", [])
-            assert "docbro shelf --remove" in details.get("alternative", "")
+            assert "bablib shelf --remove" in details.get("alternative", "")
 
     @pytest.mark.contract
     def test_add_basket_endpoint(self, client: TestClient) -> None:

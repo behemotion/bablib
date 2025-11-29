@@ -14,7 +14,7 @@ class EnvironmentConfigHandler:
     Handles environment variable configuration for projects.
 
     Provides a way to override project settings through environment variables,
-    following the pattern DOCBRO_PROJECT_<PROJECT_NAME>_<SETTING>.
+    following the pattern BABLIB_PROJECT_<PROJECT_NAME>_<SETTING>.
     """
 
     # Mapping of environment variable suffixes to setting paths
@@ -45,7 +45,7 @@ class EnvironmentConfigHandler:
         """
         # Replace non-alphanumeric characters with underscores
         clean_name = ''.join(c if c.isalnum() else '_' for c in project_name.upper())
-        return f"DOCBRO_PROJECT_{clean_name}"
+        return f"BABLIB_PROJECT_{clean_name}"
 
     @classmethod
     def get_env_overrides(cls, project_name: str) -> dict[str, Any]:
@@ -141,22 +141,22 @@ class EnvironmentConfigHandler:
         overrides = {}
 
         # Global project defaults
-        if value := os.environ.get('DOCBRO_PROJECT_MAX_FILE_SIZE'):
+        if value := os.environ.get('BABLIB_PROJECT_MAX_FILE_SIZE'):
             try:
                 overrides['project_max_file_size'] = int(value)
             except ValueError:
-                logger.warning(f"Invalid DOCBRO_PROJECT_MAX_FILE_SIZE: {value}")
+                logger.warning(f"Invalid BABLIB_PROJECT_MAX_FILE_SIZE: {value}")
 
         # CLI settings
-        if value := os.environ.get('DOCBRO_CLI_GLOBAL_UNIQUE_SHORTCUTS'):
+        if value := os.environ.get('BABLIB_CLI_GLOBAL_UNIQUE_SHORTCUTS'):
             overrides['cli_global_unique_shortcuts'] = value.lower() in ('true', '1', 'yes')
 
-        if value := os.environ.get('DOCBRO_CLI_TWO_CHAR_FALLBACK'):
+        if value := os.environ.get('BABLIB_CLI_TWO_CHAR_FALLBACK'):
             overrides['cli_two_char_fallback'] = value.lower() in ('true', '1', 'yes')
 
         # Project type defaults
         for project_type in ['CRAWLING', 'DATA', 'STORAGE']:
-            prefix = f"DOCBRO_DEFAULT_{project_type}"
+            prefix = f"BABLIB_DEFAULT_{project_type}"
 
             if chunk_size := os.environ.get(f"{prefix}_CHUNK_SIZE"):
                 try:
@@ -254,10 +254,10 @@ class EnvironmentConfigHandler:
         project_prefixes = set()
 
         for key in env_vars:
-            if key.startswith('DOCBRO_PROJECT_'):
+            if key.startswith('BABLIB_PROJECT_'):
                 # Extract project name from variable
                 parts = key.split('_')
-                if len(parts) >= 4:  # DOCBRO_PROJECT_<NAME>_<SETTING>
+                if len(parts) >= 4:  # BABLIB_PROJECT_<NAME>_<SETTING>
                     project_prefix = '_'.join(parts[:3])
                     project_prefixes.add(project_prefix)
 
@@ -272,16 +272,16 @@ class EnvironmentConfigHandler:
 
             setting_types = sum([has_crawling, has_data, has_storage])
             if setting_types > 1:
-                project_name = prefix.replace('DOCBRO_PROJECT_', '')
+                project_name = prefix.replace('BABLIB_PROJECT_', '')
                 warnings.append(
                     f"Project {project_name} has mixed type settings in environment variables"
                 )
 
         # Check for deprecated variables
         deprecated_vars = [
-            'DOCBRO_REDIS_URL',
-            'DOCBRO_REDIS_PASSWORD',
-            'DOCBRO_REDIS_DEPLOYMENT'
+            'BABLIB_REDIS_URL',
+            'BABLIB_REDIS_PASSWORD',
+            'BABLIB_REDIS_DEPLOYMENT'
         ]
         for var in deprecated_vars:
             if var in env_vars:
@@ -301,11 +301,11 @@ class EnvironmentConfigHandler:
         processed_prefixes = set()
 
         for key in os.environ:
-            if key.startswith('DOCBRO_PROJECT_'):
+            if key.startswith('BABLIB_PROJECT_'):
                 parts = key.split('_')
                 if len(parts) >= 4:
                     # Extract project name (may be multiple parts)
-                    # Pattern: DOCBRO_PROJECT_<NAME>_<SETTING>
+                    # Pattern: BABLIB_PROJECT_<NAME>_<SETTING>
                     # Find the last part that's a known setting
                     for i in range(len(parts) - 1, 2, -1):
                         if parts[i] in cls.ENV_VAR_MAPPING:

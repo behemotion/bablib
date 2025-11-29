@@ -1,7 +1,7 @@
 """Schema version tracking for migration management."""
 
 from datetime import datetime
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from pydantic import BaseModel, Field
 
@@ -100,7 +100,7 @@ class SchemaVersion(BaseModel):
         """Check if recreation is required for the given version."""
         return from_version != cls.CURRENT_VERSION
 
-    def to_summary(self) -> dict[str, any]:
+    def to_summary(self) -> dict[str, Any]:
         """Get a summary of this schema version."""
         return {
             "version": self.version,

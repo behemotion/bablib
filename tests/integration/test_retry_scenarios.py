@@ -195,7 +195,7 @@ class TestRetryScenarios:
             qdrant_install_attempts += 1
             if qdrant_install_attempts < 3:
                 raise Exception("Container creation failed")
-            return {"success": True, "container_name": "docbro-memory-qdrant"}
+            return {"success": True, "container_name": "bablib-memory-qdrant"}
 
         with patch.object(wizard_service.retry_service, 'retry_docker_operation') as mock_docker_retry, \
              patch.object(wizard_service.retry_service, 'retry_docker_operation') as mock_qdrant_retry, \

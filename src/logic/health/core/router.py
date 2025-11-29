@@ -132,12 +132,12 @@ class HealthCommandRouter:
         """Get appropriate title for the selected categories."""
         if len(categories) == 1:
             category = next(iter(categories))
-            return f"DocBro Health Status - {category.display_name}"
+            return f"Bablib Health Status - {category.display_name}"
         elif len(categories) == len(HealthCategory):
-            return "DocBro Health Status - Complete"
+            return "Bablib Health Status - Complete"
         else:
             category_names = [cat.display_name for cat in categories]
-            return f"DocBro Health Status - {', '.join(category_names)}"
+            return f"Bablib Health Status - {', '.join(category_names)}"
 
     def should_show_resolution_guidance(self, options: dict, has_issues: bool) -> bool:
         """Determine if resolution guidance should be shown."""

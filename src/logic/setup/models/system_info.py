@@ -1,5 +1,5 @@
 """
-System Information Models for DocBro Setup
+System Information Models for Bablib Setup
 Provides models for displaying system configuration and service status
 """
 
@@ -41,7 +41,7 @@ class ServiceStatus(BaseModel):
 
 
 class DirectoryInfo(BaseModel):
-    """Information about DocBro directories"""
+    """Information about Bablib directories"""
 
     config_dir: Path = Field(..., description="Configuration directory path")
     data_dir: Path = Field(..., description="Data storage directory path")
@@ -140,9 +140,9 @@ class SystemInfoPanel:
                 self.available_services.append(status)
 
             # Collect directories
-            config_dir = Path.home() / ".config" / "docbro"
-            data_dir = Path.home() / ".local" / "share" / "docbro"
-            cache_dir = Path.home() / ".cache" / "docbro"
+            config_dir = Path.home() / ".config" / "bablib"
+            data_dir = Path.home() / ".local" / "share" / "bablib"
+            cache_dir = Path.home() / ".cache" / "bablib"
 
             self.directories = DirectoryInfo(
                 config_dir=config_dir,
@@ -234,8 +234,8 @@ class SystemInfoPanel:
         self.projects_count = 0
         self.available_services = []
         self.directories = DirectoryInfo(
-            config_dir=Path.home() / ".config" / "docbro",
-            data_dir=Path.home() / ".local" / "share" / "docbro",
-            cache_dir=Path.home() / ".cache" / "docbro"
+            config_dir=Path.home() / ".config" / "bablib",
+            data_dir=Path.home() / ".local" / "share" / "bablib",
+            cache_dir=Path.home() / ".cache" / "bablib"
         )
         self.vector_stores = ["SQLite-vec"]

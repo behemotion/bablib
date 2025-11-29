@@ -1,4 +1,4 @@
-"""Integration tests for docbro setup --init with SQLite-vec option."""
+"""Integration tests for bablib setup --init with SQLite-vec option."""
 
 import pytest
 from pathlib import Path
@@ -10,7 +10,7 @@ from src.models.vector_store_types import VectorStoreProvider
 
 
 class TestSetupInitWithSQLiteVec:
-    """Test docbro setup --init command with SQLite-vec vector store option."""
+    """Test bablib setup --init command with SQLite-vec vector store option."""
 
     @pytest.fixture
     def runner(self):
@@ -78,7 +78,7 @@ class TestSetupInitWithSQLiteVec:
     def test_setup_init_creates_config_with_sqlite_vec(self, runner, temp_home):
         """Test that init creates configuration with SQLite-vec provider."""
         with runner.isolated_filesystem(temp_dir=str(temp_home)):
-            config_dir = Path.cwd() / ".config" / "docbro"
+            config_dir = Path.cwd() / ".config" / "bablib"
 
             with patch("src.logic.setup.services.detector.ServiceDetector.detect_sqlite_vec") as mock_detect:
                 mock_detect.return_value = (True, "sqlite-vec available")
@@ -141,7 +141,7 @@ class TestSetupInitWithSQLiteVec:
     def test_setup_init_with_existing_qdrant_config(self, runner, temp_home):
         """Test init with SQLite-vec when Qdrant is already configured."""
         with runner.isolated_filesystem(temp_dir=str(temp_home)):
-            config_dir = Path.cwd() / ".config" / "docbro"
+            config_dir = Path.cwd() / ".config" / "bablib"
             config_dir.mkdir(parents=True)
 
             # Create existing config with Qdrant

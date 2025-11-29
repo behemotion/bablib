@@ -1,4 +1,4 @@
-"""Serve command for DocBro CLI."""
+"""Serve command for Bablib CLI."""
 
 import os
 
@@ -40,14 +40,14 @@ def serve(ctx: click.Context, verbose: bool, quiet: bool, format: str, init: boo
 
     \b
     SERVER TYPES:
-      docbro serve                   # Read-only server (port 9383, all interfaces)
-      docbro serve --admin           # Admin server (port 9384, localhost only)
+      bablib serve                   # Read-only server (port 9383, all interfaces)
+      bablib serve --admin           # Admin server (port 9384, localhost only)
 
     \b
     SERVER MODES:
-      docbro serve                   # Start in background (recommended)
-      docbro serve --foreground      # Run in foreground (for debugging)
-      docbro serve --status          # Check if server is running
+      bablib serve                   # Start in background (recommended)
+      bablib serve --foreground      # Run in foreground (for debugging)
+      bablib serve --status          # Check if server is running
 
     \b
     CONFIGURATION:
@@ -65,19 +65,19 @@ def serve(ctx: click.Context, verbose: bool, quiet: bool, format: str, init: boo
       - Runs on port 9383, accessible from any interface
 
       ADMIN SERVER (--admin flag):
-      - Full DocBro command execution capabilities
+      - Full Bablib command execution capabilities
       - Project creation, removal, crawling operations
       - Runs on port 9384, localhost only for security
 
     \b
     EXAMPLES:
-      docbro serve                   # Start read-only server (background)
-      docbro serve --admin           # Start admin server (background)
-      docbro serve -f                # Read-only server in foreground
-      docbro serve --admin -f        # Admin server in foreground
-      docbro serve --init            # Launch MCP setup wizard
-      docbro serve --status          # Check server status
-      docbro serve --port 8080       # Custom port (overrides default)
+      bablib serve                   # Start read-only server (background)
+      bablib serve --admin           # Start admin server (background)
+      bablib serve -f                # Read-only server in foreground
+      bablib serve --admin -f        # Admin server in foreground
+      bablib serve --init            # Launch MCP setup wizard
+      bablib serve --status          # Check server status
+      bablib serve --port 8080       # Custom port (overrides default)
 
     \b
     CLIENT SETUP:
@@ -96,7 +96,7 @@ def serve(ctx: click.Context, verbose: bool, quiet: bool, format: str, init: boo
       - Use --foreground to see real-time server logs
       - Check --status to verify server is responding
       - Ensure no other service is using the port
-      - Run 'docbro health' to verify system components
+      - Run 'bablib health' to verify system components
     """
     import socket
     import asyncio
@@ -227,7 +227,7 @@ def serve(ctx: click.Context, verbose: bool, quiet: bool, format: str, init: boo
                         pass
                 else:
                     app.console.print(f"[yellow]⚠[/yellow] {server_type.value.title()} MCP server is not running on {host}:{port}")
-                    cmd_hint = "docbro serve --admin" if admin else "docbro serve"
+                    cmd_hint = "bablib serve --admin" if admin else "bablib serve"
                     app.console.print(f"[dim]Start it with: {cmd_hint}[/dim]")
         except Exception as e:
             app.console.print(f"[red]✗[/red] Error checking server status: {e}")
@@ -282,7 +282,7 @@ def serve(ctx: click.Context, verbose: bool, quiet: bool, format: str, init: boo
                 result = sock.connect_ex((host, port))
                 if result == 0:
                     app.console.print(f"[yellow]⚠[/yellow] {server_type.value.title()} server already running on {host}:{port}")
-                    cmd_hint = "docbro serve --admin --status" if admin else "docbro serve --status"
+                    cmd_hint = "bablib serve --admin --status" if admin else "bablib serve --status"
                     app.console.print(f"[dim]Use '{cmd_hint}' to check status[/dim]")
                     return
         except Exception:
@@ -322,9 +322,9 @@ def serve(ctx: click.Context, verbose: bool, quiet: bool, format: str, init: boo
             app.console.print("")
             app.console.print("[cyan]Server management:[/cyan]")
             app.console.print(f"  Stop server:   kill {pid}")
-            status_cmd = "docbro serve --admin --status" if admin else "docbro serve --status"
+            status_cmd = "bablib serve --admin --status" if admin else "bablib serve --status"
             app.console.print(f"  Check status:  {status_cmd}")
-            app.console.print("  View logs:     tail -f ~/.local/share/docbro/mcp_server.log")
+            app.console.print("  View logs:     tail -f ~/.local/share/bablib/mcp_server.log")
             app.console.print("")
             app.console.print("[cyan]Connect from AI Assistant:[/cyan]")
             app.console.print(f"  Server URL: {server_config.url}")

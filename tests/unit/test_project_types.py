@@ -231,7 +231,7 @@ class TestProjectTypeIntegration:
             project_type=ProjectType.CRAWLING,
             crawl_depth=3,
             rate_limit=1.0,
-            user_agent="DocBro/1.0"
+            user_agent="Bablib/1.0"
         )
         assert crawling_config.project_type == ProjectType.CRAWLING
         assert crawling_config.crawl_depth == 3

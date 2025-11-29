@@ -20,7 +20,7 @@ class ExecutionResult(NamedTuple):
 
 
 class CommandExecutor:
-    """Service for executing DocBro CLI commands safely."""
+    """Service for executing Bablib CLI commands safely."""
 
     def __init__(self):
         """Initialize command executor."""
@@ -46,7 +46,7 @@ class CommandExecutor:
             start_time = time.time()
 
             # Build the full command
-            cmd_args = ["uv", "run", "docbro"] + request.to_command_string().split()[1:]
+            cmd_args = ["uv", "run", "bablib"] + request.to_command_string().split()[1:]
 
             # Execute the command
             process = await asyncio.create_subprocess_exec(
@@ -132,7 +132,7 @@ class CommandExecutor:
 
             # Execute help command
             process = await asyncio.create_subprocess_exec(
-                "uv", "run", "docbro", command, "--help",
+                "uv", "run", "bablib", command, "--help",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )

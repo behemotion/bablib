@@ -129,12 +129,12 @@ async def submit_wizard_step(
                     {
                         "action": "view",
                         "description": "View the configured entity",
-                        "command": "docbro shelf example --verbose"
+                        "command": "bablib shelf example --verbose"
                     },
                     {
                         "action": "fill",
                         "description": "Add content to start using it",
-                        "command": "docbro box create example-box --type drag --init"
+                        "command": "bablib box create example-box --type drag --init"
                     }
                 ]
             }

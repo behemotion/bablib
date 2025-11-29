@@ -72,8 +72,8 @@ class ServiceConfiguration(BaseModel):
     def enforce_standard_qdrant_naming(self) -> bool:
         """Enforce standard Qdrant container naming (FR-004)"""
         if self.is_qdrant_service():
-            if self.container_name != "docbro-memory-qdrant":
-                self.container_name = "docbro-memory-qdrant"
+            if self.container_name != "bablib-memory-qdrant":
+                self.container_name = "bablib-memory-qdrant"
                 self.status = ServiceStatus.RENAMED
                 return True
         return False
@@ -147,7 +147,7 @@ class ServiceConfiguration(BaseModel):
         """Create standard Qdrant service configuration"""
         return cls(
             service_name="qdrant",
-            container_name="docbro-memory-qdrant",  # Standard naming (FR-004)
+            container_name="bablib-memory-qdrant",  # Standard naming (FR-004)
             port=port,
             image="qdrant/qdrant:latest",
             status=ServiceStatus.NOT_DETECTED,
@@ -245,6 +245,6 @@ class ServiceDependencyValidator:
 
 # Example usage:
 # qdrant_config = ServiceConfiguration.create_qdrant_config()
-# qdrant_config.enforce_standard_qdrant_naming()  # Ensures "docbro-memory-qdrant"
+# qdrant_config.enforce_standard_qdrant_naming()  # Ensures "bablib-memory-qdrant"
 # qdrant_config.mark_as_installing()
 # qdrant_config.mark_as_running()

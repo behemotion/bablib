@@ -44,7 +44,7 @@ class TestExistingConfigurationFlow:
                 },
                 'mcp_clients': []  # No MCP clients configured
             },
-            'configuration_file': '~/.config/docbro/setup-config.json'
+            'configuration_file': '~/.config/bablib/setup-config.json'
         }
 
     @pytest.fixture
@@ -261,7 +261,7 @@ class TestExistingConfigurationFlow:
 
         # Mock configuration backup
         config_service.backup_configuration.return_value = {
-            'backup_path': '~/.config/docbro/setup-config.json.backup.2025-01-26T14:30:15Z',
+            'backup_path': '~/.config/bablib/setup-config.json.backup.2025-01-26T14:30:15Z',
             'backup_created': True
         }
 

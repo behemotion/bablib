@@ -5,6 +5,7 @@ import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import click
 from rich.console import Console
@@ -159,7 +160,7 @@ class SetupWizardService:
 
         except KeyboardInterrupt:
             console.print("\n[yellow]Setup interrupted. Progress has been saved.[/yellow]")
-            console.print("Run [bold]docbro setup[/bold] again to continue.")
+            console.print("Run [bold]bablib setup[/bold] again to continue.")
             raise click.Abort()
         except Exception as e:
             logger.error(f"Setup failed: {e}")
@@ -196,10 +197,10 @@ class SetupWizardService:
     def _show_welcome(self) -> None:
         """Display welcome message and introduction."""
         welcome_text = """
-[bold blue]Welcome to DocBro![/bold blue]
+[bold blue]Welcome to Bablib![/bold blue]
 
-DocBro is a documentation crawler and search tool with RAG capabilities.
-This setup wizard will help you configure DocBro for first use.
+Bablib is a documentation crawler and search tool with RAG capabilities.
+This setup wizard will help you configure Bablib for first use.
 
 [dim]This will take about 2-3 minutes to complete.[/dim]
         """
@@ -350,7 +351,7 @@ Qdrant is the vector database for storing document embeddings.
         console.print("\n[bold]Setting up configuration...[/bold]")
 
         # Detect installation details
-        install_path = shutil.which("docbro")
+        install_path = shutil.which("bablib")
         if install_path:
             install_path = Path(install_path)
             # Check if it's a uv tool installation
@@ -359,7 +360,7 @@ Qdrant is the vector database for storing document embeddings.
             else:
                 install_method = "manual"
         else:
-            install_path = Path("./docbro")  # Development mode
+            install_path = Path("./bablib")  # Development mode
             install_method = "development"
 
         # Get Python version
@@ -394,7 +395,7 @@ Qdrant is the vector database for storing document embeddings.
         completion_text = f"""
 [bold green]✓ Setup Complete![/bold green]
 
-DocBro has been successfully configured:
+Bablib has been successfully configured:
 
 [dim]Installation Method:[/dim] {context.install_method}
 [dim]Install Path:[/dim] {context.install_path}
@@ -402,29 +403,29 @@ DocBro has been successfully configured:
 [dim]Data Directory:[/dim] {context.user_data_dir}
 
 [bold]Next Steps:[/bold]
-1. Create a shelf: [cyan]docbro shelf create 'my docs'[/cyan]
-2. Create a box: [cyan]docbro box create 'python-docs' --type drag[/cyan]
-3. Fill with content: [cyan]docbro fill 'python-docs' --source 'https://docs.python.org'[/cyan]
-4. Start MCP server: [cyan]docbro serve[/cyan]
+1. Create a shelf: [cyan]bablib shelf create 'my docs'[/cyan]
+2. Create a box: [cyan]bablib box create 'python-docs' --type drag[/cyan]
+3. Fill with content: [cyan]bablib fill 'python-docs' --source 'https://docs.python.org'[/cyan]
+4. Start MCP server: [cyan]bablib serve[/cyan]
 
 [bold]Need help?[/bold]
-• Check status: [cyan]docbro health[/cyan]
-• List shelves: [cyan]docbro shelf list[/cyan]
-• Get help: [cyan]docbro --help[/cyan]
+• Check status: [cyan]bablib health[/cyan]
+• List shelves: [cyan]bablib shelf list[/cyan]
+• Get help: [cyan]bablib --help[/cyan]
 
 [dim]If you skipped service installation, you can set them up later.
-DocBro will guide you through the process when needed.[/dim]
+Bablib will guide you through the process when needed.[/dim]
         """
 
         console.print()
-        console.print(Panel(completion_text.strip(), title="🎉 Welcome to DocBro!", expand=False))
+        console.print(Panel(completion_text.strip(), title="🎉 Welcome to Bablib!", expand=False))
 
     def check_setup_required(self) -> bool:
         """Check if setup wizard needs to run."""
         context = self.config_service.load_installation_context()
         return context is None
 
-    def get_setup_status(self) -> dict[str, any]:
+    def get_setup_status(self) -> dict[str, Any]:
         """Get current setup status for display."""
         context = self.config_service.load_installation_context()
         wizard_state = self.load_wizard_state()
@@ -491,7 +492,7 @@ DocBro will guide you through the process when needed.[/dim]
                 decision_id=f"data_conflict_{uuid.uuid4().hex[:8]}",
                 decision_type="data_directory",
                 title="Existing Data Directory",
-                description="DocBro data directory already exists with content.",
+                description="Bablib data directory already exists with content.",
                 options=[
                     {"id": "backup", "label": "Backup existing data", "recommended": True},
                     {"id": "merge", "label": "Merge with existing data"},
@@ -549,7 +550,7 @@ DocBro will guide you through the process when needed.[/dim]
             return False
 
     async def validate_system_requirements(self) -> SystemRequirements:
-        """Validate current system requirements for DocBro installation.
+        """Validate current system requirements for Bablib installation.
 
         Returns:
             SystemRequirements: Validation results for the current system
@@ -558,7 +559,7 @@ DocBro will guide you through the process when needed.[/dim]
             SetupError: If system requirements validation fails
         """
         try:
-            logger.info("Validating system requirements for DocBro installation")
+            logger.info("Validating system requirements for Bablib installation")
             requirements = await self.system_validator.validate_system_requirements()
 
             if not requirements.is_system_ready():
@@ -576,7 +577,7 @@ DocBro will guide you through the process when needed.[/dim]
             logger.error(f"System requirements validation error: {e}")
             raise SetupError(f"Failed to validate system requirements: {e}")
 
-    def get_system_requirements_summary(self, requirements: SystemRequirements) -> dict[str, any]:
+    def get_system_requirements_summary(self, requirements: SystemRequirements) -> dict[str, Any]:
         """Get a summary of system requirements for display.
 
         Args:

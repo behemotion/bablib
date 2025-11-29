@@ -82,9 +82,9 @@ class TestSetupPerformance:
         elapsed = end_time - start_time
 
         assert elapsed < 1, f"Directory creation took {elapsed:.2f} seconds"
-        assert (temp_home / ".config" / "docbro").exists()
-        assert (temp_home / ".local" / "share" / "docbro").exists()
-        assert (temp_home / ".cache" / "docbro").exists()
+        assert (temp_home / ".config" / "bablib").exists()
+        assert (temp_home / ".local" / "share" / "bablib").exists()
+        assert (temp_home / ".cache" / "bablib").exists()
 
     def test_config_generation_under_1_second(self, temp_home):
         """Test that config file generation is <1 second."""
@@ -93,7 +93,7 @@ class TestSetupPerformance:
         configurator = SetupConfigurator(home_dir=temp_home)
 
         # Ensure directories exist
-        (temp_home / ".config" / "docbro").mkdir(parents=True)
+        (temp_home / ".config" / "bablib").mkdir(parents=True)
 
         config_data = {
             "vector_store_provider": "sqlite_vec",
@@ -116,7 +116,7 @@ class TestSetupPerformance:
         initializer = SetupInitializer(home_dir=temp_home)
 
         # Ensure directories exist
-        (temp_home / ".local" / "share" / "docbro").mkdir(parents=True)
+        (temp_home / ".local" / "share" / "bablib").mkdir(parents=True)
 
         start_time = time.time()
         initializer.initialize_sqlite_vec()

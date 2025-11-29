@@ -148,8 +148,8 @@ class Project(BaseModel):
         from pathlib import Path
 
         # Use XDG-compliant data directory
-        data_dir = os.environ.get('DOCBRO_DATA_DIR',
-                                  str(Path.home() / '.local' / 'share' / 'docbro'))
+        data_dir = os.environ.get('BABLIB_DATA_DIR',
+                                  str(Path.home() / '.local' / 'share' / 'bablib'))
         return str(Path(data_dir) / 'projects' / self.name)
 
     def get_database_path(self) -> str:
@@ -173,7 +173,7 @@ class Project(BaseModel):
             ProjectType.CRAWLING: {
                 'crawl_depth': 3,
                 'rate_limit': 1.0,
-                'user_agent': 'DocBro/1.0',
+                'user_agent': 'Bablib/1.0',
                 'max_file_size': 10485760,  # 10MB
                 'allowed_formats': ['html', 'pdf', 'txt', 'md']
             },

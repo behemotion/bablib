@@ -103,7 +103,7 @@ class TestErrorReporter:
 
         assert "test-project" in str(report_dir)
         assert "reports" in str(report_dir)
-        assert "docbro" in str(report_dir)
+        assert "bablib" in str(report_dir)
 
     def test_generate_report(self):
         """Test report generation."""

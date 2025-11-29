@@ -1,11 +1,11 @@
-# DocBro Development Guidelines
+# Bablib Development Guidelines
 
 **Last Updated:** 2025-09-30
 
 **IMPORTANT:** This file must be updated every time new functional changes are implemented. Keep the content under 40,000 characters by removing outdated details when adding new content.
 
 ## Project Overview
-DocBro is a documentation crawler and search tool with RAG capabilities and MCP server integration. Features single-command UV installation with unified setup operations and the new Shelf-Box Rhyme System for intuitive documentation organization.
+Bablib is a documentation crawler and search tool with RAG capabilities and MCP server integration. Features single-command UV installation with unified setup operations and the new Shelf-Box Rhyme System for intuitive documentation organization.
 
 ### Documentation File Rules:
 1. **Documentation files (*.md)** → `./md/` (ONLY create .md files in this directory unless explicitly specified otherwise)
@@ -19,12 +19,12 @@ DocBro is a documentation crawler and search tool with RAG capabilities and MCP 
 ✅ **100% Complete** - Installation Process Reorganization + Unified Setup Command + Full Vector Store Support + Shelf-Box Rhyme System + Context-Aware Commands
 
 ### Core Components
-- **UV Installation** - Single command: `uv tool install git+https://github.com/behemotion/doc-bro`
+- **UV Installation** - Single command: `uv tool install git+https://github.com/behemotion/bablib`
 - **Shelf-Box Rhyme System** - Intuitive document organization: Shelves (collections) contain Boxes (drag/rag/bag types)
 - **Context-Aware Commands** - Automatic entity detection with creation prompts and setup wizards (NEW)
 - **Interactive Wizards** - Step-by-step setup for shelves, boxes, and MCP servers via `--init` flag (NEW)
 - **Unified Fill Command** - Type-based routing: drag→crawler, rag→uploader, bag→storage
-- **Unified Setup System** - All operations under `docbro setup` with flag-based routing
+- **Unified Setup System** - All operations under `bablib setup` with flag-based routing
 - **Universal Arrow Navigation** - Consistent keyboard navigation across all CLI interfaces
 - **Interactive Menu** - Rich-based UI for guided setup when no flags provided
 - **Vector Store Selection** - Runtime choice between SQLite-vec and Qdrant with factory pattern
@@ -77,7 +77,7 @@ tests/
 
 ### Default Shelf Behavior
 
-On first installation/migration, DocBro automatically creates a default shelf named **"common shelf"** with:
+On first installation/migration, Bablib automatically creates a default shelf named **"common shelf"** with:
 - `is_default = TRUE` - Marked as the default shelf
 - `is_deletable = FALSE` - Cannot be deleted (protection rule)
 - Contains one default box: "new year" (rag type)
@@ -89,15 +89,15 @@ This ensures users always have at least one shelf available for immediate use.
 
 ```bash
 # Single command installation with automatic setup
-uv tool install git+https://github.com/behemotion/doc-bro
+uv tool install git+https://github.com/behemotion/bablib
 
 # Commands available after installation
-docbro setup              # Unified setup command (interactive or flag-based)
-docbro shelf              # Manage documentation shelves (collections)
-docbro box                # Manage documentation boxes (drag/rag/bag)
-docbro fill               # Fill boxes with content (unified routing)
-docbro serve              # MCP server for AI assistants
-docbro health             # System health checks
+bablib setup              # Unified setup command (interactive or flag-based)
+bablib shelf              # Manage documentation shelves (collections)
+bablib box                # Manage documentation boxes (drag/rag/bag)
+bablib fill               # Fill boxes with content (unified routing)
+bablib serve              # MCP server for AI assistants
+bablib health             # System health checks
 ```
 
 **Key Features:**
@@ -114,26 +114,26 @@ docbro health             # System health checks
 ### Core Commands
 ```bash
 # Shelf Management (Collections)
-docbro shelf create <name> [--shelf-description "text"] [--set-current]
-docbro shelf list [--verbose] [--current-only] [--limit 10]
-docbro shelf current [<name>]                   # Get or set current shelf
-docbro shelf rename <old_name> <new_name>       # Rename shelf
-docbro shelf delete <name> [--force] [--no-backup]
+bablib shelf create <name> [--shelf-description "text"] [--set-current]
+bablib shelf list [--verbose] [--current-only] [--limit 10]
+bablib shelf current [<name>]                   # Get or set current shelf
+bablib shelf rename <old_name> <new_name>       # Rename shelf
+bablib shelf delete <name> [--force] [--no-backup]
 
 # NOTE: Creating a shelf automatically creates a default RAG box named "<shelf_name>_box"
 #       This behavior is by design to ensure every shelf has at least one box for content storage
 #       Location: src/services/shelf_service.py:62-67 (create_shelf method)
 
 # Box Management (Documentation Units)
-docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-description "text"]
-docbro box list [--shelf <name>] [--type <type>] [--verbose] [--limit 10]
-docbro box add <box_name> --to-shelf <shelf_name>    # Add box to shelf
-docbro box remove <box_name> --from-shelf <shelf_name>    # Remove box from shelf
-docbro box rename <old_name> <new_name>         # Rename box
-docbro box delete <name> [--force]              # Delete box
+bablib box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-description "text"]
+bablib box list [--shelf <name>] [--type <type>] [--verbose] [--limit 10]
+bablib box add <box_name> --to-shelf <shelf_name>    # Add box to shelf
+bablib box remove <box_name> --from-shelf <shelf_name>    # Remove box from shelf
+bablib box rename <old_name> <new_name>         # Rename box
+bablib box delete <name> [--force]              # Delete box
 
 # Unified Fill Command (Type-Based Routing)
-docbro fill <box_name> --source <url_or_path> [--shelf <name>]
+bablib fill <box_name> --source <url_or_path> [--shelf <name>]
 # Drag boxes (websites): --max-pages, --rate-limit, --depth
 # Rag boxes (documents): --chunk-size, --overlap
 # Bag boxes (files): --recursive, --pattern
@@ -142,16 +142,16 @@ docbro fill <box_name> --source <url_or_path> [--shelf <name>]
 # All documentation management is now handled through the unified Shelf-Box Rhyme System
 
 # Unified Setup & Configuration
-docbro setup                           # Interactive menu
-docbro setup --init --auto             # Quick initialization
-docbro setup --init --vector-store sqlite_vec
-docbro setup --uninstall --force       # Force uninstall
-docbro setup --reset --preserve-data   # Reset keeping projects
+bablib setup                           # Interactive menu
+bablib setup --init --auto             # Quick initialization
+bablib setup --init --vector-store sqlite_vec
+bablib setup --uninstall --force       # Force uninstall
+bablib setup --reset --preserve-data   # Reset keeping projects
 
 # Server Operations
-docbro serve [--host 0.0.0.0] [--port 9382] [--foreground]    # Read-only MCP server (default)
-docbro serve --admin [--host 127.0.0.1] [--port 9384]         # Admin MCP server (localhost only)
-docbro health [--system] [--services] [--config] [--projects]
+bablib serve [--host 0.0.0.0] [--port 9382] [--foreground]    # Read-only MCP server (default)
+bablib serve --admin [--host 127.0.0.1] [--port 9384]         # Admin MCP server (localhost only)
+bablib health [--system] [--services] [--config] [--projects]
 ```
 
 ### Context-Aware Command Patterns (NEW)
@@ -163,12 +163,12 @@ All shelf and box commands now include context awareness:
 
 ```bash
 # Accessing non-existent shelf prompts creation
-docbro shelf my-docs
+bablib shelf my-docs
 # > Shelf 'my-docs' not found. Create it? (y/n): y
 # > Shelf created! Launch setup wizard? (y/n): y
 
 # Accessing empty box prompts filling (type-aware)
-docbro box web-docs
+bablib box web-docs
 # > Box 'web-docs' is empty. Provide website URL to crawl? (y/n): y
 # > Enter URL: https://docs.example.com
 ```
@@ -178,13 +178,13 @@ Use `--init` or `-i` flag to launch interactive setup wizards:
 
 ```bash
 # Shelf wizard: description, auto-fill, default box type, tags
-docbro shelf create docs --init
+bablib shelf create docs --init
 
 # Box wizard: type confirmation, description, auto-process, file patterns
-docbro box create api-docs --type drag --init
+bablib box create api-docs --type drag --init
 
 # MCP server wizard: read-only/admin ports, auto-start configuration
-docbro serve --init
+bablib serve --init
 ```
 
 #### Standardized Flags
@@ -290,36 +290,36 @@ pytest --cov=src tests/         # Coverage report
 ## Configuration
 
 ### Directories (XDG-Compliant)
-- `~/.config/docbro/` - Config files
-- `~/.local/share/docbro/` - Data storage
-- `~/.cache/docbro/` - Temp files
+- `~/.config/bablib/` - Config files
+- `~/.local/share/bablib/` - Data storage
+- `~/.cache/bablib/` - Temp files
 
 ### Vector Store Configuration
-- **SQLite-vec**: Local storage in `~/.local/share/docbro/projects/`
+- **SQLite-vec**: Local storage in `~/.local/share/bablib/projects/`
 - **Qdrant**: External service at `http://localhost:6333`
-- **Provider Selection**: Stored in `~/.config/docbro/settings.yaml`
+- **Provider Selection**: Stored in `~/.config/bablib/settings.yaml`
 
 ### Environment Variables
 ```bash
 # Vector Store
-DOCBRO_VECTOR_STORE=qdrant|sqlite_vec
-DOCBRO_QDRANT_URL=http://localhost:6333
-DOCBRO_SQLITE_VEC_PATH=/path/to/vectors.db
+BABLIB_VECTOR_STORE=qdrant|sqlite_vec
+BABLIB_QDRANT_URL=http://localhost:6333
+BABLIB_SQLITE_VEC_PATH=/path/to/vectors.db
 
 # Embeddings & Processing
-DOCBRO_OLLAMA_URL=http://localhost:11434
-DOCBRO_EMBEDDING_MODEL=mxbai-embed-large
-DOCBRO_CHUNK_SIZE=500
-DOCBRO_CHUNK_OVERLAP=50
+BABLIB_OLLAMA_URL=http://localhost:11434
+BABLIB_EMBEDDING_MODEL=mxbai-embed-large
+BABLIB_CHUNK_SIZE=500
+BABLIB_CHUNK_OVERLAP=50
 
 # Crawling & Server
-DOCBRO_DEFAULT_CRAWL_DEPTH=3
-DOCBRO_DEFAULT_RATE_LIMIT=1.0
-DOCBRO_MCP_READ_ONLY_HOST=0.0.0.0
-DOCBRO_MCP_READ_ONLY_PORT=9383
-DOCBRO_MCP_ADMIN_HOST=127.0.0.1
-DOCBRO_MCP_ADMIN_PORT=9384
-DOCBRO_LOG_LEVEL=WARNING|INFO|DEBUG
+BABLIB_DEFAULT_CRAWL_DEPTH=3
+BABLIB_DEFAULT_RATE_LIMIT=1.0
+BABLIB_MCP_READ_ONLY_HOST=0.0.0.0
+BABLIB_MCP_READ_ONLY_PORT=9383
+BABLIB_MCP_ADMIN_HOST=127.0.0.1
+BABLIB_MCP_ADMIN_PORT=9384
+BABLIB_LOG_LEVEL=WARNING|INFO|DEBUG
 ```
 
 ## Vector Store Architecture
@@ -347,14 +347,14 @@ DOCBRO_LOG_LEVEL=WARNING|INFO|DEBUG
 
 #### Dual Server Architecture
 - **Read-Only Server** (Port 9383): Provides safe read access to projects and documentation
-  - Server name: `docbro` (renamed from doc-bro-mcp)
+  - Server name: `bablib` (renamed from bablib-mcp)
   - Project listing and search capabilities
   - File access with project-type-based restrictions
   - Vector search across project content
   - Health monitoring endpoints
 - **Admin Server** (Port 9384): Full administrative control with security restrictions
-  - Server name: `docbro-admin` (renamed from doc-bro-mcp-admin)
-  - Complete DocBro command execution (with restrictions)
+  - Server name: `bablib-admin` (renamed from bablib-mcp-admin)
+  - Complete Bablib command execution (with restrictions)
   - Project creation and management
   - Crawling operations and batch processing
   - Localhost-only binding for security
@@ -565,10 +565,10 @@ from src.logic.setup.utils.progress import ProgressReporter
 
 **Unified CLI Command:**
 ```bash
-docbro setup                    # Interactive menu
-docbro setup --init --auto      # Quick initialization
-docbro setup --uninstall --force # Force uninstall
-docbro setup --reset            # Full reset
+bablib setup                    # Interactive menu
+bablib setup --init --auto      # Quick initialization
+bablib setup --uninstall --force # Force uninstall
+bablib setup --reset            # Full reset
 ```
 
 ## RAG Logic Organization & Enhancements
@@ -651,7 +651,7 @@ for result in results:
   - Respects topic boundaries, no mid-sentence splits
   - Falls back to character chunking on timeout (5s)
 - ✅ **Query Transformation**: 15-30% recall improvement
-  - Synonym expansion from `~/.config/docbro/query_transformations.yaml`
+  - Synonym expansion from `~/.config/bablib/query_transformations.yaml`
   - Max 5 query variations executed in parallel
 - ✅ **Fusion Retrieval**: 15-25% recall improvement
   - Combines semantic + keyword strategies with RRF (k=60)
@@ -699,7 +699,7 @@ results = await rag_service.search(
 - Quality test framework with ground truth validation
 
 ### Query Transformation Configuration
-**Example Synonym Dictionary** (`~/.config/docbro/query_transformations.yaml`):
+**Example Synonym Dictionary** (`~/.config/bablib/query_transformations.yaml`):
 ```yaml
 docker: [container, containerization, docker-engine]
 install: [setup, installation, deploy, configure]

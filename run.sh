@@ -1,5 +1,5 @@
 #!/bin/bash
-# Quick start script for DocBro
+# Quick start script for Bablib
 
 set -e
 
@@ -9,7 +9,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo "==================================="
-echo "     Starting DocBro Services"
+echo "     Starting Bablib Services"
 echo "==================================="
 echo
 
@@ -37,15 +37,15 @@ python3 -m src.cli.main status
 
 echo
 echo "==================================="
-echo -e "${GREEN}DocBro is ready!${NC}"
+echo -e "${GREEN}Bablib is ready!${NC}"
 echo "==================================="
 echo
 echo "Quick commands:"
-echo "  docbro --help                    # Show all commands"
-echo "  docbro status                    # Check system status"
-echo "  docbro list                      # List projects"
-echo "  docbro create <name> --url <url> # Create project"
-echo "  docbro crawl <name>              # Crawl documentation"
-echo "  docbro search <query>            # Search documentation"
-echo "  docbro serve                     # Start MCP server"
+echo "  bablib --help                    # Show all commands"
+echo "  bablib status                    # Check system status"
+echo "  bablib list                      # List projects"
+echo "  bablib create <name> --url <url> # Create project"
+echo "  bablib crawl <name>              # Crawl documentation"
+echo "  bablib search <query>            # Search documentation"
+echo "  bablib serve                     # Start MCP server"
 echo

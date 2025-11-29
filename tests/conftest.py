@@ -1,4 +1,4 @@
-"""Test configuration and fixtures for DocBro tests."""
+"""Test configuration and fixtures for Bablib tests."""
 
 import asyncio
 import sqlite3
@@ -12,7 +12,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 from click.testing import CliRunner
 
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 from src.services.database import DatabaseManager
 from src.services.database_migrator import DatabaseMigrator
 
@@ -25,9 +25,9 @@ def temp_dir() -> Generator[Path, None, None]:
 
 
 @pytest.fixture
-def test_config(temp_dir: Path) -> DocBroConfig:
+def test_config(temp_dir: Path) -> BablibConfig:
     """Create test configuration with temporary directories."""
-    config = DocBroConfig(data_dir=temp_dir / "data")
+    config = BablibConfig(data_dir=temp_dir / "data")
 
     # Ensure directories exist
     config.data_dir.mkdir(exist_ok=True)
@@ -36,7 +36,7 @@ def test_config(temp_dir: Path) -> DocBroConfig:
 
 
 @pytest.fixture
-def db_manager(test_config: DocBroConfig) -> DatabaseManager:
+def db_manager(test_config: BablibConfig) -> DatabaseManager:
     """Create database manager with test database."""
     manager = DatabaseManager(test_config)
 

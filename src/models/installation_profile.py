@@ -103,7 +103,7 @@ class InstallationProfile(BaseModel):
     # Core identification and metadata
     id: UUID = Field(default_factory=uuid4, description="Unique identifier for installation session")
     install_method: str = Field(..., description="Installation method (uvx, uv-tool, development)")
-    version: str = Field(..., description="DocBro version being installed")
+    version: str = Field(..., description="Bablib version being installed")
     python_version: str = Field(..., description="Python version (must be 3.13+)")
     uv_version: str = Field(..., description="UV version detected")
 

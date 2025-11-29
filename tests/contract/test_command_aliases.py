@@ -21,45 +21,45 @@ class TestCommandAliases:
             pytest.skip("CLI module not yet implemented")
 
     def test_uninstall_alias_shows_deprecation_warning(self):
-        """docbro uninstall should show deprecation warning"""
+        """bablib uninstall should show deprecation warning"""
         runner = CliRunner()
         result = runner.invoke(self.cli, ['uninstall'], input='n\n')
         assert "deprecated" in result.output.lower()
-        assert "docbro setup --uninstall" in result.output
+        assert "bablib setup --uninstall" in result.output
 
     def test_uninstall_alias_shows_confirmation_prompt(self):
-        """docbro uninstall should show detailed confirmation"""
+        """bablib uninstall should show detailed confirmation"""
         runner = CliRunner()
         result = runner.invoke(self.cli, ['uninstall'], input='n\n')
-        assert "This will remove all DocBro data and configuration" in result.output
+        assert "This will remove all Bablib data and configuration" in result.output
         assert "Continue?" in result.output  # Rich Confirm uses [y/n] format
 
     def test_init_alias_shows_deprecation_warning(self):
-        """docbro init should show deprecation warning"""
+        """bablib init should show deprecation warning"""
         runner = CliRunner()
         result = runner.invoke(self.cli, ['init'], input='n\n')
         assert "deprecated" in result.output.lower()
-        assert "docbro setup --init" in result.output
+        assert "bablib setup --init" in result.output
 
     def test_init_alias_shows_confirmation_prompt(self):
-        """docbro init should show detailed confirmation"""
+        """bablib init should show detailed confirmation"""
         runner = CliRunner()
         result = runner.invoke(self.cli, ['init'], input='n\n')
-        assert "This will initialize DocBro and create configuration files" in result.output
+        assert "This will initialize Bablib and create configuration files" in result.output
         assert "Continue?" in result.output  # Rich Confirm uses [y/n] format
 
     def test_reset_alias_shows_deprecation_warning(self):
-        """docbro reset should show deprecation warning"""
+        """bablib reset should show deprecation warning"""
         runner = CliRunner()
         result = runner.invoke(self.cli, ['reset'], input='n\n')
         assert "deprecated" in result.output.lower()
-        assert "docbro setup --reset" in result.output
+        assert "bablib setup --reset" in result.output
 
     def test_reset_alias_shows_confirmation_prompt(self):
-        """docbro reset should show detailed confirmation"""
+        """bablib reset should show detailed confirmation"""
         runner = CliRunner()
         result = runner.invoke(self.cli, ['reset'], input='n\n')
-        assert "This will reset DocBro to default settings. Projects will be preserved" in result.output
+        assert "This will reset Bablib to default settings. Projects will be preserved" in result.output
         assert "Continue?" in result.output  # Rich Confirm uses [y/n] format
 
     def test_y_n_prompt_accepts_valid_inputs(self):

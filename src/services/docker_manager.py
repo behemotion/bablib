@@ -1,7 +1,7 @@
-"""Docker container management service for DocBro setup logic.
+"""Docker container management service for Bablib setup logic.
 
 This service handles Docker container lifecycle management for vector storage components,
-specifically Qdrant containers used by DocBro.
+specifically Qdrant containers used by Bablib.
 """
 
 import asyncio
@@ -75,7 +75,7 @@ def check_docker_availability() -> tuple[bool, str]:
         if result.returncode == 0:
             compose_available = True
             compose_cmd = "docker compose"
-    except:
+    except (subprocess.SubprocessError, FileNotFoundError, OSError):
         pass
 
     # Try docker-compose (legacy syntax) if docker compose failed
@@ -90,7 +90,7 @@ def check_docker_availability() -> tuple[bool, str]:
             if result.returncode == 0:
                 compose_available = True
                 compose_cmd = "docker-compose"
-        except:
+        except (subprocess.SubprocessError, FileNotFoundError, OSError):
             pass
 
     if not compose_available:
@@ -100,7 +100,7 @@ def check_docker_availability() -> tuple[bool, str]:
 
 
 async def run_qdrant_container(
-    container_name: str = "docbro-qdrant",
+    container_name: str = "bablib-qdrant",
     port: int = 6333,
     image: str = "qdrant/qdrant:latest"
 ) -> tuple[bool, str]:
@@ -155,7 +155,7 @@ async def run_qdrant_container(
         return False, f"Error running Docker command: {e}"
 
 
-async def stop_qdrant_container(container_name: str = "docbro-qdrant") -> tuple[bool, str]:
+async def stop_qdrant_container(container_name: str = "bablib-qdrant") -> tuple[bool, str]:
     """Stop Qdrant container using subprocess.
 
     Returns:
@@ -183,7 +183,7 @@ async def stop_qdrant_container(container_name: str = "docbro-qdrant") -> tuple[
 
 
 class DockerManager:
-    """Manages Docker container operations for DocBro setup."""
+    """Manages Docker container operations for Bablib setup."""
 
     def __init__(self):
         """Initialize Docker client."""
@@ -373,7 +373,7 @@ class DockerManager:
 
     async def create_qdrant_container(
         self,
-        container_name: str = "docbro-memory-qdrant",
+        container_name: str = "bablib-memory-qdrant",
         port: int = 6333,
         data_path: Path | None = None,
         image: str = "qdrant/qdrant:v1.15.4"
@@ -480,7 +480,7 @@ class DockerManager:
 
     async def recreate_qdrant_container(
         self,
-        container_name: str = "docbro-memory-qdrant",
+        container_name: str = "bablib-memory-qdrant",
         **kwargs
     ) -> dict[str, Any]:
         """Recreate Qdrant container (remove old, create new)."""

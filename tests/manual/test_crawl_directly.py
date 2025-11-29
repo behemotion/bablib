@@ -5,7 +5,7 @@ import asyncio
 import logging
 from src.services.database import DatabaseManager
 from src.logic.crawler.core.crawler import DocumentationCrawler
-from src.core.config import DocBroConfig
+from src.core.config import BablibConfig
 
 # Configure logging
 logging.basicConfig(
@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 
 async def test_crawl():
-    config = DocBroConfig()
+    config = BablibConfig()
     config.log_level = "DEBUG"
 
     db = DatabaseManager(config)
@@ -26,19 +26,19 @@ async def test_crawl():
     await crawler.initialize()
 
     try:
-        # Get the project
-        project = await db.get_project_by_name('google-adk')
-        if not project:
-            print("Project 'google-adk' not found")
+        # Get the box (box-centric architecture)
+        box = await db.get_box_by_name('google-adk')
+        if not box:
+            print("Box 'google-adk' not found")
             return
 
-        print(f"Starting crawl for project: {project.name}")
-        print(f"  crawl_depth: {project.crawl_depth}")
-        print(f"  source_url: {project.source_url}")
+        print(f"Starting crawl for box: {box['name']}")
+        print(f"  crawl_depth: {box.get('crawl_depth', 3)}")
+        print(f"  url: {box.get('url', 'N/A')}")
 
-        # Start crawl
+        # Start crawl with box_id
         session = await crawler.start_crawl(
-            project_id=project.id,
+            box_id=box['id'],
             rate_limit=1.0,
             max_pages=None  # No limit to see what happens
         )

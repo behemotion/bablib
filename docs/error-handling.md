@@ -1,6 +1,6 @@
 # Error Handling Guide - Context-Aware Commands
 
-**DocBro Context Failures and Recovery**
+**Bablib Context Failures and Recovery**
 
 This guide covers error scenarios, recovery procedures, and troubleshooting for context-aware command features including entity detection, wizards, and MCP integration.
 
@@ -40,16 +40,16 @@ Launch setup wizard? (y/n): y
 
 **Option B: Create manually with specific settings**
 ```bash
-docbro shelf create my-docs --description "My documentation" --set-current
+bablib shelf create my-docs --description "My documentation" --set-current
 ```
 
 **Option C: List existing shelves**
 ```bash
-docbro shelf list --verbose
+bablib shelf list --verbose
 ```
 
 **Prevention**:
-- Enable verbose mode to see available shelves: `docbro shelf list -v`
+- Enable verbose mode to see available shelves: `bablib shelf list -v`
 - Use tab completion (if enabled) for shelf names
 - Set current shelf to avoid specifying name repeatedly
 
@@ -79,16 +79,16 @@ Box type: (1) drag (2) rag (3) bag
 
 **Option B: Create explicitly with type**
 ```bash
-docbro box create api-docs --type drag --shelf my-shelf --init
+bablib box create api-docs --type drag --shelf my-shelf --init
 ```
 
 **Option C: List existing boxes**
 ```bash
-docbro box list --shelf my-shelf --verbose
+bablib box list --shelf my-shelf --verbose
 ```
 
 **Prevention**:
-- Use `docbro box list` to verify box names before accessing
+- Use `bablib box list` to verify box names before accessing
 - Specify `--shelf` flag to disambiguate boxes with same name
 - Enable context cache to reduce repeated lookups
 
@@ -110,29 +110,29 @@ Context detection unavailable
 
 1. **Check database file permissions**
    ```bash
-   ls -la ~/.local/share/docbro/docbro.db
-   chmod 644 ~/.local/share/docbro/docbro.db
+   ls -la ~/.local/share/bablib/bablib.db
+   chmod 644 ~/.local/share/bablib/bablib.db
    ```
 
 2. **Verify database isn't locked**
    ```bash
-   lsof ~/.local/share/docbro/docbro.db
+   lsof ~/.local/share/bablib/bablib.db
    # If locked, stop the locking process
    ```
 
 3. **Test database integrity**
    ```bash
-   sqlite3 ~/.local/share/docbro/docbro.db "PRAGMA integrity_check;"
+   sqlite3 ~/.local/share/bablib/bablib.db "PRAGMA integrity_check;"
    ```
 
 4. **Restore from backup (if available)**
    ```bash
-   cp ~/.local/share/docbro/backups/docbro.db.backup ~/.local/share/docbro/docbro.db
+   cp ~/.local/share/bablib/backups/bablib.db.backup ~/.local/share/bablib/bablib.db
    ```
 
 5. **Reset database (last resort)**
    ```bash
-   docbro setup --reset --preserve-data
+   bablib setup --reset --preserve-data
    ```
 
 **Prevention**:
@@ -156,10 +156,10 @@ Warning: Context cache corrupted, rebuilding...
 **Manual Recovery** (if automatic fails):
 ```bash
 # Clear context cache
-docbro debug clear-context-cache
+bablib debug clear-context-cache
 
 # Verify cache rebuild
-docbro shelf list -v
+bablib shelf list -v
 ```
 
 **Prevention**:
@@ -183,13 +183,13 @@ Performance degraded - check database size and load
 
 1. **Check database size**
    ```bash
-   du -h ~/.local/share/docbro/docbro.db
+   du -h ~/.local/share/bablib/bablib.db
    # If >500MB, consider cleanup
    ```
 
 2. **Optimize database**
    ```bash
-   docbro debug optimize-database
+   bablib debug optimize-database
    ```
 
 3. **Check system resources**
@@ -206,12 +206,12 @@ Performance degraded - check database size and load
 
 4. **Reduce cache TTL if memory-constrained**
    ```bash
-   # Edit ~/.config/docbro/settings.yaml
+   # Edit ~/.config/bablib/settings.yaml
    context_cache_ttl: 180  # Reduce from 300s to 180s
    ```
 
 **Prevention**:
-- Regular database maintenance via `docbro debug optimize-database`
+- Regular database maintenance via `bablib debug optimize-database`
 - Archive old shelves/boxes not actively used
 - Monitor system resources during heavy operations
 
@@ -232,10 +232,10 @@ Please restart the wizard to continue.
 **Recovery**:
 ```bash
 # Restart wizard from beginning
-docbro shelf create my-docs --init
+bablib shelf create my-docs --init
 
 # Or create without wizard
-docbro shelf create my-docs --description "Quick setup"
+bablib shelf create my-docs --description "Quick setup"
 ```
 
 **Prevention**:
@@ -302,11 +302,11 @@ Cleaning up partial session...
 **To Resume**:
 ```bash
 # Start fresh wizard session
-docbro shelf create my-docs --init
+bablib shelf create my-docs --init
 
 # Or skip wizard and configure manually
-docbro shelf create my-docs
-# Then edit config: ~/.config/docbro/shelves/my-docs.yaml
+bablib shelf create my-docs
+# Then edit config: ~/.config/bablib/shelves/my-docs.yaml
 ```
 
 **Prevention**:
@@ -330,17 +330,17 @@ Please complete or cancel existing wizards
 
 1. **List active sessions**
    ```bash
-   docbro debug wizard-sessions
+   bablib debug wizard-sessions
    ```
 
 2. **Cancel specific session**
    ```bash
-   docbro debug cancel-wizard <session-id>
+   bablib debug cancel-wizard <session-id>
    ```
 
 3. **Clear all stale sessions**
    ```bash
-   docbro setup --reset-wizards
+   bablib setup --reset-wizards
    ```
 
 **Prevention**:
@@ -372,7 +372,7 @@ Run setup wizard? (y/n): y
 **Option B: Manual configuration**
 ```bash
 # Edit shelf config
-vi ~/.config/docbro/shelves/my-docs.yaml
+vi ~/.config/bablib/shelves/my-docs.yaml
 
 # Set configuration_state:
 configuration_state:
@@ -383,7 +383,7 @@ configuration_state:
 
 **Prevention**:
 - Always use `--init` flag for guided setup
-- Review entity status after creation: `docbro shelf my-docs`
+- Review entity status after creation: `bablib shelf my-docs`
 
 ---
 
@@ -395,7 +395,7 @@ Notice: Configuration schema updated
 Migrate 'my-docs' to latest version? (y/n):
 ```
 
-**Cause**: DocBro version upgrade changed configuration schema.
+**Cause**: Bablib version upgrade changed configuration schema.
 
 **Recovery**:
 
@@ -406,18 +406,18 @@ Migrate 'my-docs' to latest version? (y/n): y
 
 **Option B: Manual migration**
 ```bash
-docbro debug migrate-config my-docs
+bablib debug migrate-config my-docs
 ```
 
 **Option C: Export and recreate**
 ```bash
 # Export data
-docbro shelf export my-docs > backup.json
+bablib shelf export my-docs > backup.json
 
 # Recreate with new schema
-docbro shelf delete my-docs --force
-docbro shelf create my-docs --init
-docbro shelf import my-docs < backup.json
+bablib shelf delete my-docs --force
+bablib shelf create my-docs --init
+bablib shelf import my-docs < backup.json
 ```
 
 **Prevention**:
@@ -443,14 +443,14 @@ MCP server may not be running
 
 1. **Check server status**
    ```bash
-   docbro health --services
+   bablib health --services
    ```
 
 2. **Start MCP servers**
    ```bash
-   docbro serve
+   bablib serve
    # Or with specific ports
-   docbro serve --host 0.0.0.0 --port 9383
+   bablib serve --host 0.0.0.0 --port 9383
    ```
 
 3. **Check port availability**
@@ -461,12 +461,12 @@ MCP server may not be running
 
 4. **Review server logs**
    ```bash
-   tail -f ~/.cache/docbro/logs/mcp-server.log
+   tail -f ~/.cache/bablib/logs/mcp-server.log
    ```
 
 **Prevention**:
-- Enable auto-start via wizard: `docbro serve --init`
-- Monitor server health: `docbro health --services`
+- Enable auto-start via wizard: `bablib serve --init`
+- Monitor server health: `bablib health --services`
 - Configure alerts for server downtime
 
 ---
@@ -487,17 +487,17 @@ Another service is running on this port
 ```bash
 lsof -i :9383
 kill <PID>
-docbro serve
+bablib serve
 ```
 
 **Option B: Use different port**
 ```bash
-docbro serve --port 9385
+bablib serve --port 9385
 ```
 
 **Option C: Reconfigure via wizard**
 ```bash
-docbro serve --init
+bablib serve --init
 # Wizard will detect conflict and suggest alternatives
 ```
 
@@ -522,7 +522,7 @@ MCP server not responding
 
 1. **Verify server is running**
    ```bash
-   docbro health --services
+   bablib health --services
    curl http://localhost:9383/health
    ```
 
@@ -537,7 +537,7 @@ MCP server not responding
 
 3. **Restart server in foreground for debugging**
    ```bash
-   docbro serve --foreground --verbose
+   bablib serve --foreground --verbose
    ```
 
 4. **Verify client configuration**
@@ -570,18 +570,18 @@ Unable to determine entity status
 1. **Retry with explicit name**
    ```bash
    # Specify exact entity name to avoid scanning
-   docbro shelf my-docs --force-cache-bypass
+   bablib shelf my-docs --force-cache-bypass
    ```
 
 2. **Optimize database**
    ```bash
-   docbro debug optimize-database
+   bablib debug optimize-database
    ```
 
 3. **Reduce query scope**
    ```bash
    # Use specific shelf context
-   docbro box my-box --shelf my-shelf
+   bablib box my-box --shelf my-shelf
    ```
 
 **Prevention**:
@@ -634,7 +634,7 @@ Session terminated to prevent system impact
 
 1. **Restart wizard with smaller inputs**
    ```bash
-   docbro shelf create my-docs --init
+   bablib shelf create my-docs --init
    # Provide shorter descriptions
    # Use fewer tags
    ```
@@ -660,60 +660,60 @@ Session terminated to prevent system impact
 
 ```bash
 # System health check
-docbro health --system --services --config
+bablib health --system --services --config
 
 # View active wizard sessions
-docbro debug wizard-sessions
+bablib debug wizard-sessions
 
 # Check context cache status
-docbro debug context-cache-stats
+bablib debug context-cache-stats
 
 # View recent errors
-docbro debug errors --last 10
+bablib debug errors --last 10
 
 # Database integrity check
-docbro debug verify-database
+bablib debug verify-database
 
 # Clear all caches
-docbro debug clear-caches
+bablib debug clear-caches
 
 # View logs
-tail -f ~/.cache/docbro/logs/docbro.log
+tail -f ~/.cache/bablib/logs/bablib.log
 ```
 
 ### Reset Commands
 
 ```bash
 # Clear context cache only
-docbro debug clear-context-cache
+bablib debug clear-context-cache
 
 # Reset all wizard sessions
-docbro setup --reset-wizards
+bablib setup --reset-wizards
 
 # Reset configuration (keep data)
-docbro setup --reset --preserve-data
+bablib setup --reset --preserve-data
 
 # Full reset (WARNING: deletes all data)
-docbro setup --reset --force
+bablib setup --reset --force
 ```
 
 ### Performance Commands
 
 ```bash
 # Optimize database
-docbro debug optimize-database
+bablib debug optimize-database
 
 # Rebuild indexes
-docbro debug rebuild-indexes
+bablib debug rebuild-indexes
 
 # Analyze performance
-docbro debug performance-report
+bablib debug performance-report
 
 # Test context detection speed
-time docbro shelf my-docs
+time bablib shelf my-docs
 
 # Test wizard performance
-docbro debug benchmark-wizard
+bablib debug benchmark-wizard
 ```
 
 ---
@@ -722,21 +722,21 @@ docbro debug benchmark-wizard
 
 ### Log Locations
 
-- **Main log**: `~/.cache/docbro/logs/docbro.log`
-- **MCP server log**: `~/.cache/docbro/logs/mcp-server.log`
-- **Wizard log**: `~/.cache/docbro/logs/wizard.log`
-- **Error log**: `~/.cache/docbro/logs/errors.log`
+- **Main log**: `~/.cache/bablib/logs/bablib.log`
+- **MCP server log**: `~/.cache/bablib/logs/mcp-server.log`
+- **Wizard log**: `~/.cache/bablib/logs/wizard.log`
+- **Error log**: `~/.cache/bablib/logs/errors.log`
 
 ### Log Levels
 
 ```bash
 # Set log level in config
-# ~/.config/docbro/settings.yaml
+# ~/.config/bablib/settings.yaml
 log_level: DEBUG  # DEBUG, INFO, WARNING, ERROR
 
 # Or via environment variable
-export DOCBRO_LOG_LEVEL=DEBUG
-docbro shelf my-docs
+export BABLIB_LOG_LEVEL=DEBUG
+bablib shelf my-docs
 ```
 
 ### Common Log Patterns
@@ -767,9 +767,9 @@ ERROR: McpEndpoint: Context lookup failed for shelf 'nonexistent'
 
 1. Check this error handling guide
 2. Review logs for detailed error messages
-3. Verify system health: `docbro health --system`
+3. Verify system health: `bablib health --system`
 4. Try diagnostic commands above
-5. Search existing issues: https://github.com/behemotion/doc-bro/issues
+5. Search existing issues: https://github.com/behemotion/bablib/issues
 
 ### Reporting New Issues
 
@@ -777,18 +777,18 @@ Include the following information:
 
 ```bash
 # System information
-docbro --version
+bablib --version
 uname -a
 python --version
 
 # Health check
-docbro health --system --services --config
+bablib health --system --services --config
 
 # Recent logs
-tail -100 ~/.cache/docbro/logs/docbro.log
+tail -100 ~/.cache/bablib/logs/bablib.log
 
 # Reproduction steps
-1. Run command: docbro shelf create test --init
+1. Run command: bablib shelf create test --init
 2. Expected: Wizard starts
 3. Actual: Error message displayed
 4. Error text: [paste error message]
@@ -796,10 +796,10 @@ tail -100 ~/.cache/docbro/logs/docbro.log
 
 ### Getting Help
 
-- **GitHub Issues**: https://github.com/behemotion/doc-bro/issues
-- **Documentation**: https://github.com/behemotion/doc-bro/docs
-- **Logs**: `~/.cache/docbro/logs/`
-- **Debug mode**: `export DOCBRO_LOG_LEVEL=DEBUG`
+- **GitHub Issues**: https://github.com/behemotion/bablib/issues
+- **Documentation**: https://github.com/behemotion/bablib/docs
+- **Logs**: `~/.cache/bablib/logs/`
+- **Debug mode**: `export BABLIB_LOG_LEVEL=DEBUG`
 
 ---
 
@@ -807,9 +807,9 @@ tail -100 ~/.cache/docbro/logs/docbro.log
 
 | Error Type | Quick Fix | Documentation |
 |------------|-----------|---------------|
-| Entity not found | `docbro <entity> list` | Section 1 |
-| Context detection | `docbro debug clear-context-cache` | Section 2 |
+| Entity not found | `bablib <entity> list` | Section 1 |
+| Context detection | `bablib debug clear-context-cache` | Section 2 |
 | Wizard timeout | Restart wizard | Section 3 |
-| Config issues | `docbro setup --reset-wizards` | Section 4 |
-| MCP errors | `docbro serve --init` | Section 5 |
-| Performance | `docbro debug optimize-database` | Section 6 |
+| Config issues | `bablib setup --reset-wizards` | Section 4 |
+| MCP errors | `bablib serve --init` | Section 5 |
+| Performance | `bablib debug optimize-database` | Section 6 |

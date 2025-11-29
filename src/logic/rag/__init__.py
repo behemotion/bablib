@@ -1,4 +1,4 @@
-"""RAG logic module for DocBro.
+"""RAG logic module for Bablib.
 
 This module contains the core RAG implementation including:
 - Core services: search, chunking, reranking

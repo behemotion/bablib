@@ -54,10 +54,10 @@ class McpConfigGenerator:
         # Generate config data based on server type
         if config.server_type == McpServerType.READ_ONLY:
             config_data = self._generate_read_only_config(config)
-            filename = "docbro.json"
+            filename = "bablib.json"
         elif config.server_type == McpServerType.ADMIN:
             config_data = self._generate_admin_config(config)
-            filename = "docbro-admin.json"
+            filename = "bablib-admin.json"
         else:
             raise ValueError(f"Unknown server type: {config.server_type}")
 
@@ -79,18 +79,18 @@ class McpConfigGenerator:
         """
         return {
             "mcpServers": {
-                "docbro": {
+                "bablib": {
                     "command": "node",
                     "args": [],
                     "env": {
-                        "DOCBRO_MCP_URL": config.url
+                        "BABLIB_MCP_URL": config.url
                     }
                 }
             },
             "server": {
-                "name": "DocBro Read-Only MCP Server",
+                "name": "Bablib Read-Only MCP Server",
                 "version": "1.0.0",
-                "description": "Read-only access to DocBro documentation projects",
+                "description": "Read-only access to Bablib documentation projects",
                 "url": config.url,
                 "type": "read-only",
                 "endpoints": {
@@ -142,7 +142,7 @@ class McpConfigGenerator:
                     "config_path": "~/Library/Application Support/Claude/claude_desktop_config.json",
                     "config_snippet": {
                         "mcpServers": {
-                            "docbro": {
+                            "bablib": {
                                 "command": "curl",
                                 "args": [
                                     "-X", "POST",
@@ -168,18 +168,18 @@ class McpConfigGenerator:
         """
         return {
             "mcpServers": {
-                "docbro-admin": {
+                "bablib-admin": {
                     "command": "node",
                     "args": [],
                     "env": {
-                        "DOCBRO_MCP_ADMIN_URL": config.url
+                        "BABLIB_MCP_ADMIN_URL": config.url
                     }
                 }
             },
             "server": {
-                "name": "DocBro Admin MCP Server",
+                "name": "Bablib Admin MCP Server",
                 "version": "1.0.0",
-                "description": "Full administrative control over DocBro operations",
+                "description": "Full administrative control over Bablib operations",
                 "url": config.url,
                 "type": "admin",
                 "security_notice": "LOCALHOST ONLY - Admin server restricted to 127.0.0.1 for security",
@@ -224,7 +224,7 @@ class McpConfigGenerator:
                         }
                     },
                     {
-                        "description": "Execute any DocBro command",
+                        "description": "Execute any Bablib command",
                         "method": "execute_command",
                         "params": {
                             "command": "project",
@@ -234,7 +234,7 @@ class McpConfigGenerator:
                 ]
             },
             "security_warnings": [
-                "This server has full access to DocBro operations",
+                "This server has full access to Bablib operations",
                 "Only use with trusted local AI assistants",
                 "Server is restricted to localhost (127.0.0.1) only",
                 "Do not expose this server to external networks",
@@ -247,7 +247,7 @@ class McpConfigGenerator:
                     "security_note": "Ensure Claude Desktop is running locally and accessing 127.0.0.1 only",
                     "config_snippet": {
                         "mcpServers": {
-                            "docbro-admin": {
+                            "bablib-admin": {
                                 "command": "curl",
                                 "args": [
                                     "-X", "POST",
@@ -276,7 +276,7 @@ class McpConfigGenerator:
             "servers": [],
             "usage_guide": {
                 "read_only_server": "Use for safe documentation access and search",
-                "admin_server": "Use for project management and DocBro operations",
+                "admin_server": "Use for project management and Bablib operations",
                 "security": "Admin server is localhost-only for security"
             }
         }
@@ -287,15 +287,15 @@ class McpConfigGenerator:
 
             if config.server_type == McpServerType.READ_ONLY:
                 server_config = self._generate_read_only_config(config)
-                combined_config["mcpServers"]["docbro"] = server_config["mcpServers"]["docbro"]
+                combined_config["mcpServers"]["bablib"] = server_config["mcpServers"]["bablib"]
                 combined_config["servers"].append(server_config["server"])
             elif config.server_type == McpServerType.ADMIN:
                 server_config = self._generate_admin_config(config)
-                combined_config["mcpServers"]["docbro-admin"] = server_config["mcpServers"]["docbro-admin"]
+                combined_config["mcpServers"]["bablib-admin"] = server_config["mcpServers"]["bablib-admin"]
                 combined_config["servers"].append(server_config["server"])
 
         # Write combined config file
-        file_path = self.output_dir / "docbro-mcp-combined.json"
+        file_path = self.output_dir / "bablib-mcp-combined.json"
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(combined_config, f, indent=2)
 
@@ -305,9 +305,9 @@ class McpConfigGenerator:
     def clean_old_configs(self):
         """Remove old configuration files from output directory."""
         config_files = [
-            "docbro.json",
-            "docbro-admin.json",
-            "docbro-mcp-combined.json"
+            "bablib.json",
+            "bablib-admin.json",
+            "bablib-mcp-combined.json"
         ]
 
         for filename in config_files:

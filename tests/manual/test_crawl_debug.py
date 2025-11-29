@@ -5,12 +5,12 @@ import asyncio
 import logging
 from src.services.database import DatabaseManager
 from src.logic.crawler.core.crawler import DocumentationCrawler
-from src.lib.config import DocBroConfig
+from src.lib.config import BablibConfig
 
 logging.basicConfig(level=logging.DEBUG)
 
 async def test_crawl():
-    config = DocBroConfig()
+    config = BablibConfig()
     config.redis_url = "redis://localhost:6380"
 
     db_manager = DatabaseManager(config)
@@ -20,18 +20,18 @@ async def test_crawl():
     await crawler.initialize()
 
     try:
-        # Get test project
-        project = await db_manager.get_project_by_name("test-project")
-        if not project:
-            print("Project not found")
+        # Get test box (box-centric architecture)
+        box = await db_manager.get_box_by_name("test-box")
+        if not box:
+            print("Box not found")
             return
 
-        print(f"Starting crawl for project: {project.name}")
-        print(f"URL: {project.source_url}")
+        print(f"Starting crawl for box: {box['name']}")
+        print(f"URL: {box.get('url', 'N/A')}")
 
-        # Start crawl
+        # Start crawl with box_id
         session = await crawler.start_crawl(
-            project_id=project.id,
+            box_id=box['id'],
             max_pages=1,
             rate_limit=1.0
         )

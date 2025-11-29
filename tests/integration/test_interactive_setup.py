@@ -83,7 +83,7 @@ class TestInteractiveSetupFlow:
         setup_service.detect_components.return_value = mock_components_all_available
 
         # Mock user choices for interactive prompts
-        setup_service.get_user_vector_storage_choice.return_value = {'use_qdrant': True, 'container_name': 'docbro-memory-qdrant'}
+        setup_service.get_user_vector_storage_choice.return_value = {'use_qdrant': True, 'container_name': 'bablib-memory-qdrant'}
         setup_service.get_user_embedding_model_choice.return_value = {'model': 'embeddinggemma:300m-qat-q4_0', 'download': True}
         setup_service.get_user_mcp_client_choice.return_value = {'configure_claude_code': True}
 

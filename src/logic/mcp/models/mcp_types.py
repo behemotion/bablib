@@ -85,7 +85,7 @@ class Resource(BaseModel):
         Create a resource with sensible defaults.
 
         Args:
-            uri: Resource URI (e.g., "docbro://shelf/my-shelf")
+            uri: Resource URI (e.g., "bablib://shelf/my-shelf")
             name: Display name
             description: Optional description
             mime_type: MIME type (defaults to application/json)
@@ -135,7 +135,7 @@ class ResourceTemplate(BaseModel):
     uri_template: str = Field(
         ...,
         alias="uriTemplate",
-        description="URI template with placeholders (e.g., 'docbro://shelf/{name}')",
+        description="URI template with placeholders (e.g., 'bablib://shelf/{name}')",
     )
     name: str = Field(..., description="Template name")
     description: Optional[str] = Field(

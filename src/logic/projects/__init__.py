@@ -1,5 +1,5 @@
 """
-Projects logic package for DocBro.
+Projects logic package for Bablib.
 
 This package implements the unified project management system with support for
 three project types: crawling, data, and storage projects.

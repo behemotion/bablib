@@ -1,19 +1,19 @@
 {
   "mcpServers": {
-    "docbro": {
-      "command": "/Users/alexandr/.local/bin/docbro",
+    "bablib": {
+      "command": "/Users/alexandr/.local/bin/bablib",
       "args": ["serve", "--port", "9383", "--foreground"],
       "env": {
-        "DOCBRO_LOG_LEVEL": "WARNING",
-        "DOCBRO_VECTOR_STORE": "sqlite_vec"
+        "BABLIB_LOG_LEVEL": "WARNING",
+        "BABLIB_VECTOR_STORE": "sqlite_vec"
       }
     },
-    "docbro-admin": {
-      "command": "/Users/alexandr/.local/bin/docbro",
+    "bablib-admin": {
+      "command": "/Users/alexandr/.local/bin/bablib",
       "args": ["serve", "--admin", "--port", "9384", "--foreground"],
       "env": {
-        "DOCBRO_LOG_LEVEL": "WARNING",
-        "DOCBRO_VECTOR_STORE": "sqlite_vec"
+        "BABLIB_LOG_LEVEL": "WARNING",
+        "BABLIB_VECTOR_STORE": "sqlite_vec"
       }
     }
   }

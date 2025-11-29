@@ -51,7 +51,7 @@ class QueryTransformer:
                     logger.warning(f"Failed to load custom synonyms from {custom_path}: {e}")
 
         # Try default location
-        default_path = Path.home() / ".config" / "docbro" / "query_transformations.yaml"
+        default_path = Path.home() / ".config" / "bablib" / "query_transformations.yaml"
         if default_path.exists():
             try:
                 with open(default_path) as f:

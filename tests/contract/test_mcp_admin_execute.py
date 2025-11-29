@@ -173,7 +173,7 @@ class TestMcpAdminExecuteCommand:
 
     @pytest.mark.contract
     async def test_execute_command_allowed_commands_only(self, base_url: str) -> None:
-        """Test that only allowed DocBro commands can be executed."""
+        """Test that only allowed Bablib commands can be executed."""
         allowed_commands = ["project", "crawl", "setup", "health", "upload"]
 
         for command in allowed_commands:

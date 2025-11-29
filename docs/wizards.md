@@ -1,6 +1,6 @@
 # Setup Wizards User Guide
 
-**DocBro Interactive Setup Wizards**
+**Bablib Interactive Setup Wizards**
 
 Setup wizards provide step-by-step guided configuration for shelves, boxes, and MCP servers. Launch wizards using the `--init` or `-i` flag on any creation command.
 
@@ -8,13 +8,13 @@ Setup wizards provide step-by-step guided configuration for shelves, boxes, and 
 
 ```bash
 # Launch shelf wizard during creation
-docbro shelf create my-docs --init
+bablib shelf create my-docs --init
 
 # Launch box wizard during creation
-docbro box create web-docs --type drag --init
+bablib box create web-docs --type drag --init
 
 # Launch MCP server wizard
-docbro serve --init
+bablib serve --init
 ```
 
 ## Shelf Setup Wizard
@@ -37,7 +37,7 @@ Enter shelf description (optional):
 Auto-fill empty boxes when accessed? (y/n): y
 ```
 - `y`: Automatically prompt to fill content when accessing empty boxes
-- `n`: Manual filling only via `docbro fill` command
+- `n`: Manual filling only via `bablib fill` command
 - Recommended: `y` for active documentation shelves
 
 **Step 3: Default Box Type**
@@ -78,7 +78,7 @@ Apply this configuration? (y/n): y
 ### Example Session
 
 ```bash
-$ docbro shelf create python-docs --init
+$ bablib shelf create python-docs --init
 
 Setting up shelf: python-docs
 
@@ -112,8 +112,8 @@ Apply this configuration? (y/n): y
 ✓ Shelf 'python-docs' created and configured successfully!
 
 Next steps:
-  - Create boxes: docbro box create <name> --shelf python-docs
-  - View shelf: docbro shelf python-docs
+  - Create boxes: bablib box create <name> --shelf python-docs
+  - View shelf: bablib shelf python-docs
 ```
 
 ## Box Setup Wizard
@@ -214,7 +214,7 @@ Apply this configuration? (y/n): y
 ### Example Session
 
 ```bash
-$ docbro box create django-docs --type drag --shelf python-docs --init
+$ bablib box create django-docs --type drag --shelf python-docs --init
 
 Setting up box: django-docs
 
@@ -305,7 +305,7 @@ Admin server port (default: 9384):
 Auto-start MCP servers with system? (y/n): n
 ```
 - `y`: Servers start automatically on system boot
-- `n`: Manual start via `docbro serve`
+- `n`: Manual start via `bablib serve`
 - Recommended: `n` for most users
 
 **Step 6: Confirmation**
@@ -321,7 +321,7 @@ Apply this configuration? (y/n): y
 ### Example Session
 
 ```bash
-$ docbro serve --init
+$ bablib serve --init
 
 Setting up MCP servers
 
@@ -399,7 +399,7 @@ Wizards maintain state throughout the session:
 ```bash
 # If wizard is interrupted (network failure, terminal crash)
 # Restart the same command to begin a fresh session:
-docbro shelf create my-docs --init
+bablib shelf create my-docs --init
 
 # Previous incomplete sessions are automatically cleaned up
 ```
@@ -431,10 +431,10 @@ docbro shelf create my-docs --init
 ### Wizard Won't Start
 ```bash
 # Check if wizard is already running
-docbro debug wizard-sessions
+bablib debug wizard-sessions
 
 # Clear stuck sessions
-docbro setup --reset-wizards
+bablib setup --reset-wizards
 ```
 
 ### Invalid Input Errors
@@ -459,10 +459,10 @@ Create entities without wizards by omitting `--init` flag:
 
 ```bash
 # Create shelf without wizard
-docbro shelf create quick-shelf --description "Quick setup"
+bablib shelf create quick-shelf --description "Quick setup"
 
 # Create box without wizard
-docbro box create quick-box --type rag --shelf quick-shelf
+bablib box create quick-box --type rag --shelf quick-shelf
 ```
 
 ### Programmatic Configuration
@@ -498,15 +498,15 @@ curl -X POST http://localhost:9384/admin/wizards/{id}/step \
 
 ## Related Commands
 
-- `docbro shelf create <name>` - Create shelf (add `--init` for wizard)
-- `docbro box create <name> --type <type>` - Create box (add `--init` for wizard)
-- `docbro serve` - Start MCP servers (add `--init` for wizard)
-- `docbro setup` - System setup (includes wizard configuration)
-- `docbro health` - Check system and services status
+- `bablib shelf create <name>` - Create shelf (add `--init` for wizard)
+- `bablib box create <name> --type <type>` - Create box (add `--init` for wizard)
+- `bablib serve` - Start MCP servers (add `--init` for wizard)
+- `bablib setup` - System setup (includes wizard configuration)
+- `bablib health` - Check system and services status
 
 ## Support
 
 For issues or questions:
-- Check logs: `~/.cache/docbro/logs/`
-- Debug wizard state: `docbro debug wizard-sessions`
-- Report bugs: https://github.com/behemotion/doc-bro/issues
+- Check logs: `~/.cache/bablib/logs/`
+- Debug wizard state: `bablib debug wizard-sessions`
+- Report bugs: https://github.com/behemotion/bablib/issues

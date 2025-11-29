@@ -19,7 +19,7 @@ class StorageFile(BaseModel):
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), description="Unique file identifier")
-    project_id: str = Field(..., description="Parent project identifier")
+    box_id: str = Field(..., description="Parent box identifier")
     filename: str = Field(..., min_length=1, description="Original filename")
     file_path: str = Field(..., description="Local storage path")
     file_size: int = Field(..., ge=0, description="File size in bytes")
@@ -121,7 +121,7 @@ class StorageFile(BaseModel):
     @classmethod
     def from_upload(
         cls,
-        project_id: str,
+        box_id: str,
         filename: str,
         file_path: str,
         file_size: int,
@@ -135,7 +135,7 @@ class StorageFile(BaseModel):
             checksum = cls.calculate_file_checksum(file_path)
 
         return cls(
-            project_id=project_id,
+            box_id=box_id,
             filename=filename,
             file_path=file_path,
             file_size=file_size,
@@ -214,7 +214,7 @@ class DataDocument(BaseModel):
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), description="Unique document identifier")
-    project_id: str = Field(..., description="Parent project identifier")
+    box_id: str = Field(..., description="Parent box identifier")
     title: str = Field(..., min_length=1, description="Document title or filename")
     content: str = Field(..., description="Processed text content")
     source_path: str = Field(..., description="Original file path")
@@ -282,7 +282,7 @@ class DataDocument(BaseModel):
     @classmethod
     def from_file(
         cls,
-        project_id: str,
+        box_id: str,
         title: str,
         content: str,
         source_path: str,
@@ -291,7 +291,7 @@ class DataDocument(BaseModel):
     ) -> 'DataDocument':
         """Create DataDocument from file processing."""
         doc = cls(
-            project_id=project_id,
+            box_id=box_id,
             title=title,
             content=content,
             source_path=source_path,
@@ -424,7 +424,7 @@ class DataDocument(BaseModel):
     def __repr__(self) -> str:
         """Detailed string representation."""
         return (f"DataDocument(id='{self.id}', title='{self.title}', "
-                f"project_id='{self.project_id}', chunk_count={self.chunk_count})")
+                f"box_id='{self.box_id}', chunk_count={self.chunk_count})")
 
 
 class FileInventory(BaseModel):

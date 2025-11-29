@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "bablib": {
+      "command": "uvx",
+      "args": ["bablib", "serve", "--port", "9383", "--foreground"],
+      "env": {
+        "BABLIB_LOG_LEVEL": "WARNING"
+      }
+    }
+  }
+}

@@ -262,7 +262,7 @@ class FlagStandardizer:
                     long_form="--uninstall",
                     short_form="-u",
                     flag_type="boolean",
-                    description="Uninstall DocBro",
+                    description="Uninstall Bablib",
                     default_value="false"
                 ),
                 "reset": FlagMapping(

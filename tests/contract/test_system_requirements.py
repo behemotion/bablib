@@ -273,12 +273,12 @@ class TestSystemRequirementsEndpoint:
     def test_installation_requirements_endpoint_contract(self):
         """Test the contract for GET /installation/{id}/requirements endpoint when implemented."""
         from src.services.mcp_server import MCPServer
-        from src.core.config import DocBroConfig
+        from src.core.config import BablibConfig
 
         # This test defines the expected contract for the endpoint
         # It will fail until the endpoint is actually implemented
 
-        config = DocBroConfig()
+        config = BablibConfig()
         server = MCPServer(config)
 
         # Mock the services to avoid real initialization

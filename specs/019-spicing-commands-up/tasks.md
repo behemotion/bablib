@@ -1,6 +1,6 @@
 # Tasks: Context-Aware Command Enhancement
 
-**Input**: Design documents from `/Users/alexandr/Repository/local-doc-bro/specs/019-spicing-commands-up/`
+**Input**: Design documents from `/Users/alexandr/Repository/local-bablib/specs/019-spicing-commands-up/`
 **Prerequisites**: plan.md, research.md, data-model.md, contracts/, quickstart.md
 
 ## Execution Flow (main)

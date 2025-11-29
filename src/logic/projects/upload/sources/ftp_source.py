@@ -21,8 +21,6 @@ from src.logic.projects.upload.sources.base_source import BaseUploadSource
 
 logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
-
 
 class FTPSource(BaseUploadSource):
     """Handler for FTP upload sources"""
@@ -206,7 +204,7 @@ class FTPSource(BaseUploadSource):
                 # Test if connection is still alive
                 ftp.voidcmd("NOOP")
                 return ftp
-            except:
+            except (ftplib.error_temp, ftplib.error_perm, OSError, EOFError):
                 # Connection dead, remove from pool
                 del self._connection_pool[connection_key]
 
@@ -440,7 +438,7 @@ class FTPSource(BaseUploadSource):
             try:
                 ftp = self._connection_pool[connection_key]
                 ftp.quit()
-            except:
+            except (ftplib.error_temp, ftplib.error_perm, OSError, EOFError):
                 pass
             finally:
                 del self._connection_pool[connection_key]

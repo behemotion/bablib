@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 
 
 class SetupInitializer:
-    """Service for initializing DocBro setup."""
+    """Service for initializing Bablib setup."""
 
     def __init__(self, home_dir: Path | None = None):
         """Initialize the setup initializer.
@@ -19,9 +19,9 @@ class SetupInitializer:
             home_dir: Optional home directory for testing
         """
         self.home_dir = home_dir or Path.home()
-        self.config_dir = self.home_dir / ".config" / "docbro"
-        self.data_dir = self.home_dir / ".local" / "share" / "docbro"
-        self.cache_dir = self.home_dir / ".cache" / "docbro"
+        self.config_dir = self.home_dir / ".config" / "bablib"
+        self.data_dir = self.home_dir / ".local" / "share" / "bablib"
+        self.cache_dir = self.home_dir / ".cache" / "bablib"
 
     def create_directories(self) -> dict[str, Path]:
         """Create required directory structure.

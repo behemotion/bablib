@@ -139,11 +139,11 @@ class RemovalExecutor:
             return False
 
     async def uninstall_package(self) -> bool:
-        """Uninstall DocBro package using UV."""
+        """Uninstall Bablib package using UV."""
         try:
-            logger.info("Uninstalling DocBro package")
+            logger.info("Uninstalling Bablib package")
             result = subprocess.run(
-                ['uv', 'tool', 'uninstall', 'docbro'],
+                ['uv', 'tool', 'uninstall', 'bablib'],
                 capture_output=True,
                 text=True,
                 timeout=30
@@ -166,7 +166,7 @@ class RemovalExecutor:
             return False
 
     async def is_external_volume(self, volume) -> bool:
-        """Check if volume is external (not managed by DocBro)."""
+        """Check if volume is external (not managed by Bablib)."""
         # Check explicit external label
         if volume.attrs.get('Labels', {}).get('external') == 'true':
             return True
@@ -176,9 +176,9 @@ class RemovalExecutor:
         if mountpoint and not mountpoint.startswith('/var/lib/docker/volumes/'):
             return True
 
-        # Check if name doesn't match DocBro pattern
-        if not (volume.name.startswith('docbro_') or volume.name.startswith('docbro-')):
-            # Not a DocBro volume, treat as external
+        # Check if name doesn't match Bablib pattern
+        if not (volume.name.startswith('bablib_') or volume.name.startswith('bablib-')):
+            # Not a Bablib volume, treat as external
             return True
 
         return False
@@ -201,23 +201,23 @@ class RemovalExecutor:
         return False
 
     async def should_preserve_volume(self, volume_name: str) -> bool:
-        """Check if volume should be preserved (shared with non-DocBro containers)."""
+        """Check if volume should be preserved (shared with non-Bablib containers)."""
         if not self.docker_client:
             return True  # Preserve by default if we can't check
 
         try:
             containers = self.docker_client.containers.list(all=True)
-            non_docbro_using = False
+            non_bablib_using = False
 
             for container in containers:
                 mounts = container.attrs.get('Mounts', [])
                 for mount in mounts:
                     if mount.get('Type') == 'volume' and mount.get('Name') == volume_name:
-                        if not container.name.startswith('docbro-'):
-                            non_docbro_using = True
+                        if not container.name.startswith('bablib-'):
+                            non_bablib_using = True
 
-            # Preserve if used by non-DocBro containers
-            return non_docbro_using
+            # Preserve if used by non-Bablib containers
+            return non_bablib_using
         except docker.errors.APIError:
             return True  # Preserve by default on error
 
@@ -235,12 +235,12 @@ class RemovalExecutor:
             if await self.is_external_volume(volume):
                 continue
 
-            # Skip volumes shared with non-DocBro containers
+            # Skip volumes shared with non-Bablib containers
             if await self.should_preserve_volume(volume.name):
                 continue
 
-            # Include DocBro-managed volumes
-            if volume.name.startswith('docbro_') or volume.name.startswith('docbro-'):
+            # Include Bablib-managed volumes
+            if volume.name.startswith('bablib_') or volume.name.startswith('bablib-'):
                 removable.append(volume)
 
         return removable

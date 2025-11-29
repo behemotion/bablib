@@ -87,15 +87,15 @@ class TestPrompts:
 
         # Test uninstall prompt
         result = runner.invoke(self.cli, ['uninstall'], input='n\n')
-        assert "This will remove all DocBro data and configuration" in result.output
+        assert "This will remove all Bablib data and configuration" in result.output
 
         # Test init prompt
         result = runner.invoke(self.cli, ['init'], input='n\n')
-        assert "This will initialize DocBro and create configuration files" in result.output
+        assert "This will initialize Bablib and create configuration files" in result.output
 
         # Test reset prompt
         result = runner.invoke(self.cli, ['reset'], input='n\n')
-        assert "This will reset DocBro to default settings. Projects will be preserved" in result.output
+        assert "This will reset Bablib to default settings. Projects will be preserved" in result.output
 
     def test_no_number_options_in_yn_prompts(self):
         """Test that y/n prompts don't offer numbered options"""

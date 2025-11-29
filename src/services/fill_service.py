@@ -1,11 +1,13 @@
 """Service for unified fill command with type-based routing."""
 
 import logging
+from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 
+from src.core.config import BablibConfig
 from src.models.box_type import BoxType
 from src.services.box_service import BoxService
-from src.services.database import DatabaseError
+from src.services.database import DatabaseError, DatabaseManager
 from src.core.lib_logger import get_component_logger
 
 logger = get_component_logger("fill_service")
@@ -95,6 +97,8 @@ class FillService:
         Returns:
             Operation result
         """
+        from src.logic.crawler.core.crawler import DocumentationCrawler
+
         logger.info(f"Starting crawl operation for drag box '{box.name}'")
 
         # Extract drag-specific options
@@ -103,37 +107,50 @@ class FillService:
         depth = options.get('depth', box.crawl_depth or 3)
 
         try:
-            # TODO: Import and use actual crawler service
-            # from src.logic.crawler.core.crawler import DocumentationCrawler
-            # crawler = DocumentationCrawler()
-            # result = await crawler.crawl_documentation(
-            #     project_name=box.name,
-            #     base_url=source,
-            #     max_pages=max_pages,
-            #     rate_limit=rate_limit,
-            #     depth=depth
-            # )
-
-            # For now, simulate the operation
-            logger.info(f"Crawling {source} into drag box '{box.name}' (max_pages={max_pages}, rate_limit={rate_limit}, depth={depth})")
-
             # Update box URL if different
             if box.url != source:
                 await self._update_box_url(box, source)
 
-            return {
-                'success': True,
-                'box_name': box.name,
-                'box_type': 'drag',
-                'source': source,
-                'operation': 'crawl',
-                'max_pages': max_pages,
-                'rate_limit': rate_limit,
-                'depth': depth,
-                'message': f"Crawling {source} into drag box '{box.name}'..."
-            }
+            # Initialize database manager and crawler
+            config = BablibConfig()
+            db_manager = DatabaseManager(config)
+            await db_manager.initialize()
+
+            crawler = DocumentationCrawler(db_manager, config)
+            await crawler.initialize()
+
+            try:
+                # Start the crawl with box_id
+                session = await crawler.start_crawl(
+                    box_id=box.id,
+                    max_pages=max_pages,
+                    rate_limit=rate_limit
+                )
+
+                # Wait for crawl to complete
+                final_session = await crawler.wait_for_completion()
+
+                return {
+                    'success': True,
+                    'box_name': box.name,
+                    'box_type': 'drag',
+                    'source': source,
+                    'operation': 'crawl',
+                    'session_id': session.id,
+                    'pages_crawled': final_session.pages_crawled if final_session else 0,
+                    'pages_failed': final_session.pages_failed if final_session else 0,
+                    'max_pages': max_pages,
+                    'rate_limit': rate_limit,
+                    'depth': depth,
+                    'message': f"Crawled {source} into drag box '{box.name}'"
+                }
+
+            finally:
+                await crawler.cleanup()
+                await db_manager.cleanup()
 
         except Exception as e:
+            logger.error(f"Crawl failed: {e}")
             raise DatabaseError(f"Failed to crawl {source}: {e}")
 
     async def _fill_rag(self, box, source: str, **options) -> Dict[str, Any]:
@@ -148,43 +165,59 @@ class FillService:
         Returns:
             Operation result
         """
+        from src.logic.projects.upload.upload_manager import UploadManager
+        from src.logic.projects.models.upload import UploadSource, ConflictResolution
+
         logger.info(f"Starting document import for rag box '{box.name}'")
 
         # Extract rag-specific options
         chunk_size = options.get('chunk_size', 500)
         overlap = options.get('overlap', 50)
+        recursive = options.get('recursive', True)
+        conflict_resolution = options.get('conflict_resolution', ConflictResolution.OVERWRITE)
 
         try:
-            # TODO: Import and use actual uploader service
-            # from src.services.upload_service import UploadService
-            # uploader = UploadService()
-            # result = await uploader.upload_documents(
-            #     project_name=box.name,
-            #     source_path=source,
-            #     chunk_size=chunk_size,
-            #     overlap=overlap
-            # )
+            # Parse source string into UploadSource
+            upload_source = UploadSource.parse(source)
 
-            # For now, simulate the operation
-            logger.info(f"Importing {source} into rag box '{box.name}' (chunk_size={chunk_size}, overlap={overlap})")
+            # Initialize upload manager and start upload
+            upload_manager = UploadManager()
+            operation = await upload_manager.upload_files(
+                box=box,
+                source=upload_source,
+                recursive=recursive,
+                conflict_resolution=conflict_resolution
+            )
+
+            # Wait for operation to complete (poll status)
+            import asyncio
+            while operation.is_active():
+                await asyncio.sleep(0.5)
+                operation = await upload_manager.get_upload_status(operation.id)
+                if operation is None:
+                    break
 
             return {
-                'success': True,
+                'success': operation is not None and operation.files_failed == 0,
                 'box_name': box.name,
                 'box_type': 'rag',
                 'source': source,
                 'operation': 'import',
+                'operation_id': operation.id if operation else None,
+                'files_uploaded': operation.files_succeeded if operation else 0,
+                'files_failed': operation.files_failed if operation else 0,
                 'chunk_size': chunk_size,
                 'overlap': overlap,
-                'message': f"Importing {source} into rag box '{box.name}'..."
+                'message': f"Imported {operation.files_succeeded if operation else 0} files into rag box '{box.name}'"
             }
 
         except Exception as e:
+            logger.error(f"RAG import failed: {e}")
             raise DatabaseError(f"Failed to import {source}: {e}")
 
     async def _fill_bag(self, box, source: str, **options) -> Dict[str, Any]:
         """
-        Fill a bag box using storage service.
+        Fill a bag box using storage service (UploadManager).
 
         Args:
             box: Box model
@@ -194,38 +227,61 @@ class FillService:
         Returns:
             Operation result
         """
+        from src.logic.projects.upload.upload_manager import UploadManager
+        from src.logic.projects.models.upload import UploadSource, ConflictResolution
+
         logger.info(f"Starting file storage for bag box '{box.name}'")
 
         # Extract bag-specific options
         recursive = options.get('recursive', False)
         pattern = options.get('pattern', '*')
+        conflict_resolution = options.get('conflict_resolution', ConflictResolution.RENAME)
 
         try:
-            # TODO: Import and use actual storage service
-            # from src.services.storage_service import StorageService
-            # storage = StorageService()
-            # result = await storage.store_files(
-            #     project_name=box.name,
-            #     source_path=source,
-            #     recursive=recursive,
-            #     pattern=pattern
-            # )
+            # Parse source string into UploadSource
+            upload_source = UploadSource.parse(source)
 
-            # For now, simulate the operation
-            logger.info(f"Storing {source} into bag box '{box.name}' (recursive={recursive}, pattern={pattern})")
+            # Build exclude patterns from pattern (inverse matching)
+            exclude_patterns = []
+            if pattern != '*':
+                # If pattern is specified, exclude everything that doesn't match
+                # For now, we'll pass it through and let the handler filter
+                pass
+
+            # Initialize upload manager and start upload
+            upload_manager = UploadManager()
+            operation = await upload_manager.upload_files(
+                box=box,
+                source=upload_source,
+                recursive=recursive,
+                exclude_patterns=exclude_patterns,
+                conflict_resolution=conflict_resolution
+            )
+
+            # Wait for operation to complete (poll status)
+            import asyncio
+            while operation.is_active():
+                await asyncio.sleep(0.5)
+                operation = await upload_manager.get_upload_status(operation.id)
+                if operation is None:
+                    break
 
             return {
-                'success': True,
+                'success': operation is not None and operation.files_failed == 0,
                 'box_name': box.name,
                 'box_type': 'bag',
                 'source': source,
                 'operation': 'store',
+                'operation_id': operation.id if operation else None,
+                'files_stored': operation.files_succeeded if operation else 0,
+                'files_failed': operation.files_failed if operation else 0,
                 'recursive': recursive,
                 'pattern': pattern,
-                'message': f"Storing {source} into bag box '{box.name}'..."
+                'message': f"Stored {operation.files_succeeded if operation else 0} files into bag box '{box.name}'"
             }
 
         except Exception as e:
+            logger.error(f"BAG storage failed: {e}")
             raise DatabaseError(f"Failed to store {source}: {e}")
 
     async def _update_box_url(self, box, new_url: str) -> None:
@@ -234,7 +290,7 @@ class FillService:
             conn = self.box_service.db._connection
             await conn.execute(
                 "UPDATE boxes SET url = ?, updated_at = ? WHERE id = ?",
-                (new_url, __import__('datetime').datetime.now(timezone.utc).isoformat(), box.id)
+                (new_url, datetime.now(timezone.utc).isoformat(), box.id)
             )
             await conn.commit()
             logger.info(f"Updated box '{box.name}' URL to: {new_url}")

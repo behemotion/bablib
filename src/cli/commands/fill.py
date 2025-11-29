@@ -59,7 +59,7 @@ def fill(
             if not target_shelf:
                 current = await shelf_service.get_current_shelf()
                 if not current:
-                    console.print("[red]No current shelf set. Use 'docbro shelf current <name>' to set one.[/red]")
+                    console.print("[red]No current shelf set. Use 'bablib shelf current <name>' to set one.[/red]")
                     raise click.Abort()
                 target_shelf = current.name
 

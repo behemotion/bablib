@@ -109,7 +109,7 @@ async def test_crawling_project_settings_override(project_manager):
         type_specific_settings={
             "crawl_depth": 5,
             "rate_limit": 0.5,
-            "user_agent": "DocBro-Test/1.0",
+            "user_agent": "Bablib-Test/1.0",
             "follow_redirects": True,
             "max_pages": 100
         }
@@ -125,7 +125,7 @@ async def test_crawling_project_settings_override(project_manager):
     config = await project_manager.get_project_config(project_name)
     assert config.type_specific_settings["crawl_depth"] == 5
     assert config.type_specific_settings["rate_limit"] == 0.5
-    assert config.type_specific_settings["user_agent"] == "DocBro-Test/1.0"
+    assert config.type_specific_settings["user_agent"] == "Bablib-Test/1.0"
 
 
 @pytest.mark.asyncio

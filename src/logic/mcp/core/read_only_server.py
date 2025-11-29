@@ -48,9 +48,9 @@ class McpReadOnlyServer:
 
 # Create FastAPI app
 app = FastAPI(
-    title="DocBro MCP Read-Only Server",
+    title="Bablib MCP Read-Only Server",
     version="1.0.0",
-    description="MCP server providing read-only access to DocBro projects and documentation"
+    description="MCP server providing read-only access to Bablib projects and documentation"
 )
 
 
@@ -109,7 +109,7 @@ async def initialize_services():
     # Initialize MCP protocol components
     capabilities = ServerCapabilities.default_read_only()
     protocol_handler = ProtocolHandler(
-        server_name="docbro",
+        server_name="bablib",
         server_version="1.0.0",
         capabilities=capabilities,
     )
@@ -138,7 +138,7 @@ async def startup_event():
 
 @app.post("/mcp/v1/list_projects")
 async def list_projects(request: Request):
-    """List all DocBro projects with optional filtering."""
+    """List all Bablib projects with optional filtering."""
     try:
         # Parse request body
         body = await request.json()
@@ -394,14 +394,14 @@ async def mcp_protocol_endpoint(request: Request):
 
 @app.get("/mcp/v1/health")
 async def health_check():
-    """Health check endpoint using DocBro health command."""
+    """Health check endpoint using Bablib health command."""
     try:
-        # Execute health check using existing DocBro health command
+        # Execute health check using existing Bablib health command
         import subprocess
         import json
 
         result = subprocess.run(
-            ["uv", "run", "docbro", "health", "--json"],
+            ["uv", "run", "bablib", "health", "--json"],
             capture_output=True,
             text=True,
             timeout=10
@@ -417,7 +417,7 @@ async def health_check():
                 data={
                     "server_type": "read-only",
                     "status": "healthy",
-                    "docbro_health": health_data
+                    "bablib_health": health_data
                 }
             )
         else:
@@ -425,7 +425,7 @@ async def health_check():
                 data={
                     "server_type": "read-only",
                     "status": "degraded",
-                    "docbro_health": {
+                    "bablib_health": {
                         "error": result.stderr,
                         "exit_code": result.returncode
                     }

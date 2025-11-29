@@ -1,4 +1,4 @@
-# Manual Testing Plan - DocBro Complete System Validation
+# Manual Testing Plan - Bablib Complete System Validation
 
 **Date:** 2025-09-30
 **Objective:** Comprehensive manual testing of all commands, configurations, and installation scenarios
@@ -23,57 +23,57 @@
 - [ ] Test 2.7: Installation timing validation (<30s requirement)
 
 ### Phase 3: Setup Command Tree Testing
-- [ ] Test 3.1: `docbro setup` - Interactive menu navigation
-- [ ] Test 3.2: `docbro setup --init`
-- [ ] Test 3.3: `docbro setup --init --auto`
-- [ ] Test 3.4: `docbro setup --init --vector-store sqlite_vec`
-- [ ] Test 3.5: `docbro setup --init --vector-store qdrant`
-- [ ] Test 3.6: `docbro setup --reset`
-- [ ] Test 3.7: `docbro setup --reset --preserve-data`
-- [ ] Test 3.8: `docbro setup --uninstall`
-- [ ] Test 3.9: `docbro setup --uninstall --force`
+- [ ] Test 3.1: `bablib setup` - Interactive menu navigation
+- [ ] Test 3.2: `bablib setup --init`
+- [ ] Test 3.3: `bablib setup --init --auto`
+- [ ] Test 3.4: `bablib setup --init --vector-store sqlite_vec`
+- [ ] Test 3.5: `bablib setup --init --vector-store qdrant`
+- [ ] Test 3.6: `bablib setup --reset`
+- [ ] Test 3.7: `bablib setup --reset --preserve-data`
+- [ ] Test 3.8: `bablib setup --uninstall`
+- [ ] Test 3.9: `bablib setup --uninstall --force`
 
 ### Phase 4: Shelf Command Tree Testing
-- [ ] Test 4.1: `docbro shelf create <name>`
-- [ ] Test 4.2: `docbro shelf create <name> --init`
-- [ ] Test 4.3: `docbro shelf create <name> --description "text"`
-- [ ] Test 4.4: `docbro shelf create <name> --set-current`
-- [ ] Test 4.5: `docbro shelf list`
-- [ ] Test 4.6: `docbro shelf list --verbose`
-- [ ] Test 4.7: `docbro shelf list --current-only`
-- [ ] Test 4.8: `docbro shelf list --limit 5`
-- [ ] Test 4.9: `docbro shelf current`
-- [ ] Test 4.10: `docbro shelf current <name>`
-- [ ] Test 4.11: `docbro shelf rename <old> <new>`
-- [ ] Test 4.12: `docbro shelf delete <name>`
-- [ ] Test 4.13: `docbro shelf delete <name> --force`
-- [ ] Test 4.14: `docbro shelf delete <name> --no-backup`
+- [ ] Test 4.1: `bablib shelf create <name>`
+- [ ] Test 4.2: `bablib shelf create <name> --init`
+- [ ] Test 4.3: `bablib shelf create <name> --description "text"`
+- [ ] Test 4.4: `bablib shelf create <name> --set-current`
+- [ ] Test 4.5: `bablib shelf list`
+- [ ] Test 4.6: `bablib shelf list --verbose`
+- [ ] Test 4.7: `bablib shelf list --current-only`
+- [ ] Test 4.8: `bablib shelf list --limit 5`
+- [ ] Test 4.9: `bablib shelf current`
+- [ ] Test 4.10: `bablib shelf current <name>`
+- [ ] Test 4.11: `bablib shelf rename <old> <new>`
+- [ ] Test 4.12: `bablib shelf delete <name>`
+- [ ] Test 4.13: `bablib shelf delete <name> --force`
+- [ ] Test 4.14: `bablib shelf delete <name> --no-backup`
 - [ ] Test 4.15: Context detection - access non-existent shelf
 
 ### Phase 5: Box Command Tree Testing
-- [ ] Test 5.1: `docbro box create <name> --type drag`
-- [ ] Test 5.2: `docbro box create <name> --type rag`
-- [ ] Test 5.3: `docbro box create <name> --type bag`
-- [ ] Test 5.4: `docbro box create <name> --type drag --init`
-- [ ] Test 5.5: `docbro box create <name> --shelf <shelf_name>`
-- [ ] Test 5.6: `docbro box create <name> --description "text"`
-- [ ] Test 5.7: `docbro box list`
-- [ ] Test 5.8: `docbro box list --shelf <name>`
-- [ ] Test 5.9: `docbro box list --type drag`
-- [ ] Test 5.10: `docbro box list --verbose`
-- [ ] Test 5.11: `docbro box list --limit 5`
-- [ ] Test 5.12: `docbro box add <box> --to-shelf <shelf>`
-- [ ] Test 5.13: `docbro box remove <box> --from-shelf <shelf>`
-- [ ] Test 5.14: `docbro box rename <old> <new>`
-- [ ] Test 5.15: `docbro box delete <name>`
-- [ ] Test 5.16: `docbro box delete <name> --force`
-- [ ] Test 5.17: `docbro box inspect <name>` - empty box prompting
+- [ ] Test 5.1: `bablib box create <name> --type drag`
+- [ ] Test 5.2: `bablib box create <name> --type rag`
+- [ ] Test 5.3: `bablib box create <name> --type bag`
+- [ ] Test 5.4: `bablib box create <name> --type drag --init`
+- [ ] Test 5.5: `bablib box create <name> --shelf <shelf_name>`
+- [ ] Test 5.6: `bablib box create <name> --description "text"`
+- [ ] Test 5.7: `bablib box list`
+- [ ] Test 5.8: `bablib box list --shelf <name>`
+- [ ] Test 5.9: `bablib box list --type drag`
+- [ ] Test 5.10: `bablib box list --verbose`
+- [ ] Test 5.11: `bablib box list --limit 5`
+- [ ] Test 5.12: `bablib box add <box> --to-shelf <shelf>`
+- [ ] Test 5.13: `bablib box remove <box> --from-shelf <shelf>`
+- [ ] Test 5.14: `bablib box rename <old> <new>`
+- [ ] Test 5.15: `bablib box delete <name>`
+- [ ] Test 5.16: `bablib box delete <name> --force`
+- [ ] Test 5.17: `bablib box inspect <name>` - empty box prompting
 - [ ] Test 5.18: Context detection - access non-existent box
 
 ### Phase 6: Fill Command Testing
-- [ ] Test 6.1: `docbro fill <box> --source <url>` (drag type)
-- [ ] Test 6.2: `docbro fill <box> --source <path>` (rag type)
-- [ ] Test 6.3: `docbro fill <box> --source <path>` (bag type)
+- [ ] Test 6.1: `bablib fill <box> --source <url>` (drag type)
+- [ ] Test 6.2: `bablib fill <box> --source <path>` (rag type)
+- [ ] Test 6.3: `bablib fill <box> --source <path>` (bag type)
 - [ ] Test 6.4: Fill with --max-pages flag (drag)
 - [ ] Test 6.5: Fill with --rate-limit flag (drag)
 - [ ] Test 6.6: Fill with --depth flag (drag)
@@ -84,22 +84,22 @@
 - [ ] Test 6.11: Fill with --shelf flag
 
 ### Phase 7: Serve Command Testing
-- [ ] Test 7.1: `docbro serve` (default read-only)
-- [ ] Test 7.2: `docbro serve --init` (wizard)
-- [ ] Test 7.3: `docbro serve --host 0.0.0.0`
-- [ ] Test 7.4: `docbro serve --port 9999`
-- [ ] Test 7.5: `docbro serve --foreground`
-- [ ] Test 7.6: `docbro serve --admin`
-- [ ] Test 7.7: `docbro serve --admin --host 127.0.0.1`
-- [ ] Test 7.8: `docbro serve --admin --port 9999`
+- [ ] Test 7.1: `bablib serve` (default read-only)
+- [ ] Test 7.2: `bablib serve --init` (wizard)
+- [ ] Test 7.3: `bablib serve --host 0.0.0.0`
+- [ ] Test 7.4: `bablib serve --port 9999`
+- [ ] Test 7.5: `bablib serve --foreground`
+- [ ] Test 7.6: `bablib serve --admin`
+- [ ] Test 7.7: `bablib serve --admin --host 127.0.0.1`
+- [ ] Test 7.8: `bablib serve --admin --port 9999`
 - [ ] Test 7.9: Both servers running concurrently
 
 ### Phase 8: Health Command Testing
-- [ ] Test 8.1: `docbro health`
-- [ ] Test 8.2: `docbro health --system`
-- [ ] Test 8.3: `docbro health --services`
-- [ ] Test 8.4: `docbro health --config`
-- [ ] Test 8.5: `docbro health --projects`
+- [ ] Test 8.1: `bablib health`
+- [ ] Test 8.2: `bablib health --system`
+- [ ] Test 8.3: `bablib health --services`
+- [ ] Test 8.4: `bablib health --config`
+- [ ] Test 8.5: `bablib health --projects`
 
 ### Phase 9: Context-Aware Features Testing
 - [ ] Test 9.1: Shelf wizard flow (complete wizard)
@@ -174,11 +174,11 @@
 - Python Version: 3.9.6 ⚠️ (Requirement: 3.13+)
 - UV Version: 0.8.22 ✅
 - Existing UV Tools: specify-cli v0.0.17
-- DocBro Config: Not present (clean state)
-- DocBro Data: Exists at ~/.local/share/docbro/ (from previous installation)
+- Bablib Config: Not present (clean state)
+- Bablib Data: Exists at ~/.local/share/bablib/ (from previous installation)
 
 **Test Data Prepared:**
-- Test directory: ~/test-docbro-data/
+- Test directory: ~/test-bablib-data/
 - Test files created: sample1.txt, sample2.txt
 - Test URLs: Will use https://docs.python.org/3/ for crawl tests
 
@@ -199,8 +199,8 @@
 **Results:**
 - Installation completed successfully
 - 54 packages installed
-- DocBro version: 0.3.2
-- Executable available: `docbro`
+- Bablib version: 0.3.2
+- Executable available: `bablib`
 - Help text displays correctly with Shelf-Box system documentation
 
 **Observations:**
@@ -214,7 +214,7 @@
 #### Test 2.4: Setup with --auto Flag ❌
 **Timestamp:** 2025-09-30 12:45:00
 **Status:** FAILED
-**Command:** `docbro setup --init --auto --non-interactive`
+**Command:** `bablib setup --init --auto --non-interactive`
 
 **Error Found:**
 ```
@@ -267,7 +267,7 @@ AttributeError: type object 'datetime.datetime' has no attribute 'UTC'
 **Timestamp:** 2025-09-30 12:51:00
 **Status:** PASSED
 **Duration:** 8.111s
-**Command:** `docbro setup --init --auto --non-interactive`
+**Command:** `bablib setup --init --auto --non-interactive`
 
 **Results:**
 - ✅ Setup initialization successful
@@ -279,7 +279,7 @@ AttributeError: type object 'datetime.datetime' has no attribute 'UTC'
 **Observations:**
 - Duration within acceptable range
 - Rich UI formatting works correctly
-- Configuration persisted to ~/.config/docbro/
+- Configuration persisted to ~/.config/bablib/
 
 ### Execution Notes
 - Each test will be documented with: Status, Timestamp, Observations, Issues
@@ -300,7 +300,7 @@ AttributeError: type object 'datetime.datetime' has no attribute 'UTC'
 
 **ISSUE #3 [CRITICAL]:** Box commands fail without current shelf
 - **Status:** OPEN
-- **Command:** `docbro box create "name" --type drag`
+- **Command:** `bablib box create "name" --type drag`
 - **Error:** "No current shelf set. Please specify --shelf or set current shelf"
 - **Impact:** Cannot create boxes without setting current shelf first
 - **Expected:** Should work with --shelf parameter or prompt for shelf
@@ -308,7 +308,7 @@ AttributeError: type object 'datetime.datetime' has no attribute 'UTC'
 
 **ISSUE #4 [CRITICAL]:** Box list command crashes with AttributeError
 - **Status:** OPEN
-- **Command:** `docbro box list`
+- **Command:** `bablib box list`
 - **Error:** `'str' object has no attribute 'value'`
 - **Impact:** Cannot list boxes at all
 - **Likely Cause:** Enum serialization issue with box type
@@ -317,14 +317,14 @@ AttributeError: type object 'datetime.datetime' has no attribute 'UTC'
 
 **ISSUE #5 [HIGH]:** Config file location mismatch on macOS
 - **Status:** OPEN
-- **Setup Creates:** `~/.config/docbro/settings.yaml` (XDG standard)
-- **Health Checks:** `~/Library/Application Support/docbro/settings.yaml` (macOS standard)
+- **Setup Creates:** `~/.config/bablib/settings.yaml` (XDG standard)
+- **Health Checks:** `~/Library/Application Support/bablib/settings.yaml` (macOS standard)
 - **Impact:** Health check reports "Global settings file not found" despite successful setup
 - **Recommendation:** Standardize on one location or check both
 
 **ISSUE #6 [HIGH]:** Shelf/Box creation commands extremely slow
 - **Status:** OPEN
-- **Command:** `docbro shelf create "name"`
+- **Command:** `bablib shelf create "name"`
 - **Duration:** ~120 seconds (timeout limit)
 - **Expected:** <5 seconds
 - **Impact:** Poor user experience, appears hung
@@ -334,7 +334,7 @@ AttributeError: type object 'datetime.datetime' has no attribute 'UTC'
 - **Status:** OPEN
 - **Documentation Says:** `--description` flag for shelf create
 - **Actual Flag:** `--shelf-description`
-- **Command:** `docbro shelf create "name" --description "text"`
+- **Command:** `bablib shelf create "name" --description "text"`
 - **Error:** "No such option: --description Did you mean --shelf-description?"
 - **Impact:** Documentation doesn't match implementation
 
@@ -498,7 +498,7 @@ Performance issues discovered:
    - Performance regression tests for command execution time
 
 2. **Improve Error Messages**
-   - "No current shelf set" should suggest solution (`docbro shelf current <name>`)
+   - "No current shelf set" should suggest solution (`bablib shelf current <name>`)
    - Enum serialization errors should be more user-friendly
 
 3. **Add Command Timeouts**
@@ -535,7 +535,7 @@ Performance issues discovered:
 #### Test 5.1: Create drag type box ❌
 **Timestamp:** 2025-09-30 22:51:00
 **Status:** FAILED
-**Command:** `docbro box create test-drag-box --type drag`
+**Command:** `bablib box create test-drag-box --type drag`
 
 **Error Found:**
 ```
@@ -557,7 +557,7 @@ Aborted!
 #### Test 5.2: Create rag type box ✅
 **Timestamp:** 2025-09-30 22:51:30
 **Status:** PASSED
-**Command:** `docbro box create test-rag-box --type rag`
+**Command:** `bablib box create test-rag-box --type rag`
 
 **Results:**
 - ✅ Rag box created successfully
@@ -570,7 +570,7 @@ Aborted!
 #### Test 5.3: Create bag type box ✅
 **Timestamp:** 2025-09-30 22:51:45
 **Status:** PASSED
-**Command:** `docbro box create test-bag-box --type bag`
+**Command:** `bablib box create test-bag-box --type bag`
 
 **Results:**
 - ✅ Bag box created successfully
@@ -583,7 +583,7 @@ Aborted!
 #### Test 5.7: List all boxes ✅
 **Timestamp:** 2025-09-30 22:52:00
 **Status:** PASSED
-**Command:** `docbro box list`
+**Command:** `bablib box list`
 
 **Results:**
 - ✅ **ISSUE #4 FIXED:** Box list no longer crashes
@@ -601,7 +601,7 @@ Aborted!
 #### Test 5.9: List boxes filtered by type ⚠️
 **Timestamp:** 2025-09-30 22:52:15
 **Status:** PARTIAL (possible bug)
-**Command:** `docbro box list --type rag`
+**Command:** `bablib box list --type rag`
 
 **Results:**
 - ✅ Command executes without error
@@ -614,7 +614,7 @@ Aborted!
 #### Test 5.10: List boxes with verbose output ✅
 **Timestamp:** 2025-09-30 22:52:30
 **Status:** PASSED
-**Command:** `docbro box list --verbose`
+**Command:** `bablib box list --verbose`
 
 **Results:**
 - ✅ Additional columns displayed: ID, URL
@@ -627,7 +627,7 @@ Aborted!
 #### Test 5.14: Rename box ✅
 **Timestamp:** 2025-09-30 22:53:00
 **Status:** PASSED
-**Command:** `docbro box rename test-bag-box test-bag-renamed`
+**Command:** `bablib box rename test-bag-box test-bag-renamed`
 
 **Results:**
 - ✅ Rename operation successful
@@ -640,7 +640,7 @@ Aborted!
 #### Test 5.16: Delete box with force ✅
 **Timestamp:** 2025-09-30 22:53:15
 **Status:** PASSED
-**Command:** `docbro box delete test-rag-box --force`
+**Command:** `bablib box delete test-rag-box --force`
 
 **Results:**
 - ✅ Delete operation successful
@@ -653,7 +653,7 @@ Aborted!
 #### Test 5.12: Add box to shelf ✅
 **Timestamp:** 2025-09-30 22:53:45
 **Status:** PASSED
-**Command:** `docbro box add test-bag-renamed --to-shelf test-shelf-2`
+**Command:** `bablib box add test-bag-renamed --to-shelf test-shelf-2`
 
 **Results:**
 - ✅ Box added to second shelf successfully
@@ -666,7 +666,7 @@ Aborted!
 #### Test 5.13: Remove box from shelf ✅
 **Timestamp:** 2025-09-30 22:54:00
 **Status:** PASSED
-**Command:** `docbro box remove test-bag-renamed --from-shelf test-shelf-1`
+**Command:** `bablib box remove test-bag-renamed --from-shelf test-shelf-1`
 
 **Results:**
 - ✅ Box removed from shelf successfully
@@ -679,7 +679,7 @@ Aborted!
 #### Test 5.8: List boxes filtered by shelf ✅
 **Timestamp:** 2025-09-30 22:54:15
 **Status:** PASSED
-**Command:** `docbro box list --shelf test-shelf-1`
+**Command:** `bablib box list --shelf test-shelf-1`
 
 **Results:**
 - ✅ Shelf filter works correctly
@@ -723,7 +723,7 @@ Aborted!
 #### Test 6.3: Fill bag box with file ✅
 **Timestamp:** 2025-09-30 22:55:00
 **Status:** PASSED
-**Command:** `docbro fill test-bag-renamed --source ~/test-docbro-data/test-file-1.txt --shelf test-shelf-2`
+**Command:** `bablib fill test-bag-renamed --source ~/test-bablib-data/test-file-1.txt --shelf test-shelf-2`
 
 **Results:**
 - ✅ Source validation successful
@@ -742,7 +742,7 @@ Aborted!
 #### Test 6.2: Fill rag box with document ✅
 **Timestamp:** 2025-09-30 22:55:30
 **Status:** PASSED
-**Command:** `docbro fill test-with-shelf-rag --source ~/test-docbro-data/test-file-1.txt --shelf test-shelf-1`
+**Command:** `bablib fill test-with-shelf-rag --source ~/test-bablib-data/test-file-1.txt --shelf test-shelf-1`
 
 **Results:**
 - ✅ Source validation successful
@@ -761,7 +761,7 @@ Aborted!
 #### Test 6.1: Fill drag box with URL ⚠️
 **Timestamp:** 2025-09-30 22:56:00
 **Status:** BLOCKED
-**Command:** `docbro fill test-drag-auto --source https://example.com --shelf test-shelf-1`
+**Command:** `bablib fill test-drag-auto --source https://example.com --shelf test-shelf-1`
 
 **Results:**
 - ⚠️ Context detection triggered: "Box 'test-drag-auto' not found"
@@ -781,7 +781,7 @@ Aborted!
 #### Test 6.9 & 6.10: Fill with recursive and pattern flags ✅
 **Timestamp:** 2025-09-30 22:56:30
 **Status:** PASSED
-**Command:** `docbro fill test-bag-renamed --source ~/test-docbro-data/ --recursive --pattern "*.txt" --shelf test-shelf-2`
+**Command:** `bablib fill test-bag-renamed --source ~/test-bablib-data/ --recursive --pattern "*.txt" --shelf test-shelf-2`
 
 **Results:**
 - ✅ Directory source validated
@@ -802,7 +802,7 @@ Aborted!
 #### Test 6.7 & 6.8: Fill with chunk-size and overlap flags ✅
 **Timestamp:** 2025-09-30 22:57:00
 **Status:** PASSED
-**Command:** `docbro fill test-with-shelf-rag --source ~/test-docbro-data/test-file-2.txt --chunk-size 300 --overlap 50 --shelf test-shelf-1`
+**Command:** `bablib fill test-with-shelf-rag --source ~/test-bablib-data/test-file-2.txt --chunk-size 300 --overlap 50 --shelf test-shelf-1`
 
 **Results:**
 - ✅ Custom chunk_size applied: 300 (override default 500)
@@ -877,7 +877,7 @@ Aborted!
 
 **ISSUE #11 [HIGH - NEW]:** Cannot create empty drag boxes
 - **Status:** OPEN
-- **Command:** `docbro box create <name> --type drag`
+- **Command:** `bablib box create <name> --type drag`
 - **Error:** "Invalid box: Drag boxes require a URL"
 - **Location:** `src/models/box.py` - Box.validate_type_specific_fields()
 - **Root Cause:** Model validation requires drag boxes to have URL
@@ -901,7 +901,7 @@ Aborted!
 
 **ISSUE #12 [MEDIUM - NEW]:** Type filter may not work correctly
 - **Status:** NEEDS INVESTIGATION
-- **Command:** `docbro box list --type rag`
+- **Command:** `bablib box list --type rag`
 - **Observation:** Shows all boxes, not just rag type
 - **Impact:** Filter functionality unclear
 - **Recommendation:** Verify expected behavior and test thoroughly
@@ -1048,7 +1048,7 @@ Aborted!
 ```bash
 # Before fix: FAILED with "Drag boxes require a URL"
 # After fix: SUCCESS
-$ docbro box create test-drag-empty --type drag
+$ bablib box create test-drag-empty --type drag
 Created drag box 'test-drag-empty'
   Added to shelf: test-shelf-1
   Purpose: Website crawling - Extract documentation from web pages
@@ -1071,7 +1071,7 @@ Created drag box 'test-drag-empty'
 
 **Problem Example:**
 ```bash
-$ docbro box list --type rag
+$ bablib box list --type rag
 # With current shelf set, both filters provided but only shelf used
 # Result: Shows ALL box types in shelf, not just rag boxes
 ```
@@ -1087,7 +1087,7 @@ $ docbro box list --type rag
 **Verification Tests:**
 ```bash
 # Test 1: Type filter with current shelf
-$ docbro box list --type rag
+$ bablib box list --type rag
 ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃ Name                ┃ Type ┃ Shelves      ┃ Created    ┃
 ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
@@ -1096,7 +1096,7 @@ $ docbro box list --type rag
 └─────────────────────┴──────┴──────────────┴────────────┘
 
 # Test 2: Different type filter
-$ docbro box list --type drag
+$ bablib box list --type drag
 ┏━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃ Name            ┃ Type ┃ Shelves      ┃ Created    ┃
 ┡━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
@@ -1104,7 +1104,7 @@ $ docbro box list --type drag
 └─────────────────┴──────┴──────────────┴────────────┘
 
 # Test 3: No filter shows all types
-$ docbro box list
+$ bablib box list
 ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃ Name                ┃ Type ┃ Shelves      ┃ Created    ┃
 ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
@@ -1114,7 +1114,7 @@ $ docbro box list
 └─────────────────────┴──────┴──────────────┴────────────┘
 
 # Test 4: Both filters explicitly specified
-$ docbro box list --shelf test-shelf-2 --type bag
+$ bablib box list --shelf test-shelf-2 --type bag
 ┏━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃ Name             ┃ Type ┃ Shelves      ┃ Created    ┃
 ┡━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
@@ -1235,7 +1235,7 @@ $ docbro box list --shelf test-shelf-2 --type bag
 #### Test 7.5: Read-only serve in foreground ✅
 **Timestamp:** 2025-09-30 23:15:30
 **Status:** PASSED
-**Command:** `docbro serve --foreground` (5s timeout)
+**Command:** `bablib serve --foreground` (5s timeout)
 
 **Results:**
 - ✅ Server starts successfully
@@ -1256,7 +1256,7 @@ $ docbro box list --shelf test-shelf-2 --type bag
 #### Test 7.6 & 7.7: Admin serve in foreground ✅
 **Timestamp:** 2025-09-30 23:16:00
 **Status:** PASSED
-**Command:** `docbro serve --admin --foreground` (5s timeout)
+**Command:** `bablib serve --admin --foreground` (5s timeout)
 
 **Results:**
 - ✅ Admin server starts successfully
@@ -1300,7 +1300,7 @@ $ docbro box list --shelf test-shelf-2 --type bag
 #### Test 8.1: Basic health check ✅
 **Timestamp:** 2025-09-30 23:16:30
 **Status:** PASSED
-**Command:** `docbro health`
+**Command:** `bablib health`
 
 **Results:**
 - ✅ Comprehensive health check executed
@@ -1328,9 +1328,9 @@ $ docbro box list --shelf test-shelf-2 --type bag
 
 **Issue Confirmation:**
 - **ISSUE #5 CONFIRMED:** Health check looks for settings in:
-  - `/Users/alexandr/Library/Application Support/docbro/settings.yaml` (macOS)
+  - `/Users/alexandr/Library/Application Support/bablib/settings.yaml` (macOS)
   - But setup created it in:
-  - `~/.config/docbro/settings.yaml` (XDG)
+  - `~/.config/bablib/settings.yaml` (XDG)
 - Impact: False negative on health check despite successful setup
 
 ---
@@ -1338,7 +1338,7 @@ $ docbro box list --shelf test-shelf-2 --type bag
 #### Test 8.2: Health check --system ✅
 **Timestamp:** 2025-09-30 23:17:00
 **Status:** PASSED
-**Command:** `docbro health --system`
+**Command:** `bablib health --system`
 
 **Results:**
 - ✅ System-specific checks executed
@@ -1363,7 +1363,7 @@ $ docbro box list --shelf test-shelf-2 --type bag
 #### Test 8.3: Health check --services ✅
 **Timestamp:** 2025-09-30 23:17:15
 **Status:** PASSED
-**Command:** `docbro health --services`
+**Command:** `bablib health --services`
 
 **Results:**
 - ✅ Service-specific checks executed
@@ -1390,7 +1390,7 @@ $ docbro box list --shelf test-shelf-2 --type bag
 #### Test 8.4: Health check --config ✅
 **Timestamp:** 2025-09-30 23:17:30
 **Status:** PASSED
-**Command:** `docbro health --config`
+**Command:** `bablib health --config`
 
 **Results:**
 - ✅ Configuration-specific checks executed
@@ -1407,7 +1407,7 @@ $ docbro box list --shelf test-shelf-2 --type bag
 **Observations:**
 - Filter working correctly
 - Config location issue clearly visible
-- Suggests running 'docbro setup' to fix
+- Suggests running 'bablib setup' to fix
 
 ---
 
@@ -1430,8 +1430,8 @@ $ docbro box list --shelf test-shelf-2 --type bag
 
 **Issue Confirmation:**
 - ⚠️ **ISSUE #5 CONFIRMED:** Config file location mismatch
-  - Setup creates: `~/.config/docbro/settings.yaml`
-  - Health checks: `~/Library/Application Support/docbro/settings.yaml`
+  - Setup creates: `~/.config/bablib/settings.yaml`
+  - Health checks: `~/Library/Application Support/bablib/settings.yaml`
   - Impact: False negative warnings on health checks
 
 ---
@@ -1621,7 +1621,7 @@ $ docbro box list --shelf test-shelf-2 --type bag
 
 **Overall Assessment:** ✅ **STRONG**
 
-The DocBro system is functionally solid with:
+The Bablib system is functionally solid with:
 - ✅ All critical bugs resolved
 - ✅ Core workflows operational (shelf, box, fill, serve, health)
 - ✅ Flag standardization properly implemented
@@ -1639,7 +1639,7 @@ The DocBro system is functionally solid with:
 
 **Test Performed:**
 ```bash
-$ docbro health --json 2>&1 | head -20
+$ bablib health --json 2>&1 | head -20
 ```
 
 **Results:**
@@ -1657,28 +1657,28 @@ $ docbro health --json 2>&1 | head -20
 **File Locations Checked:**
 ```bash
 # XDG location (should exist)
-$ ls -la ~/.config/docbro/settings.yaml
--rw-r--r--@ 1 alexandr  staff  937 30 Sep 21:15 /Users/alexandr/.config/docbro/settings.yaml ✅
+$ ls -la ~/.config/bablib/settings.yaml
+-rw-r--r--@ 1 alexandr  staff  937 30 Sep 21:15 /Users/alexandr/.config/bablib/settings.yaml ✅
 
 # macOS location (should NOT exist)
-$ ls -la ~/Library/Application\ Support/docbro/settings.yaml
-ls: /Users/alexandr/Library/Application Support/docbro/settings.yaml: No such file or directory ✅
+$ ls -la ~/Library/Application\ Support/bablib/settings.yaml
+ls: /Users/alexandr/Library/Application Support/bablib/settings.yaml: No such file or directory ✅
 ```
 
 **Health Check Test:**
 ```bash
-$ docbro health --config
+$ bablib health --config
 ```
 
 **Results:**
 - ✅ Global Settings: **HEALTHY**
-- ✅ Configuration loaded from `/Users/alexandr/.config/docbro/settings.yaml`
+- ✅ Configuration loaded from `/Users/alexandr/.config/bablib/settings.yaml`
 - ✅ Vector Store Configuration: **HEALTHY** (sqlite_vec)
 - ✅ Overall Status: **HEALTHY** (3/3 checks passed)
 
 **Code Verification:**
-- Both setup and health checks use `get_docbro_config_dir()` from `src/lib/paths.py`
-- Returns `~/.config/docbro` on all platforms (XDG-compliant)
+- Both setup and health checks use `get_bablib_config_dir()` from `src/lib/paths.py`
+- Returns `~/.config/bablib` on all platforms (XDG-compliant)
 - No macOS-specific path logic found in current codebase
 
 **Conclusion:** ISSUE #5 is **resolved or was misidentified**. All components use consistent XDG-compliant paths.
@@ -1690,10 +1690,10 @@ $ docbro health --config
 **Documentation Check:**
 ```bash
 # CLAUDE.md line 107
-docbro shelf create <name> [--shelf-description "text"] [--set-current]
+bablib shelf create <name> [--shelf-description "text"] [--set-current]
 
 # CLAUDE.md line 116
-docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-description "text"]
+bablib box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-description "text"]
 ```
 
 **Results:**
@@ -1720,7 +1720,7 @@ docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-descripti
 #### Test 7.3 & 7.4: Custom host and port ✅
 **Timestamp:** 2025-09-30 23:30:15
 **Status:** PASSED
-**Command:** `docbro serve --host 0.0.0.0 --port 9999 --foreground`
+**Command:** `bablib serve --host 0.0.0.0 --port 9999 --foreground`
 
 **Results:**
 - ✅ Custom host accepted: 0.0.0.0
@@ -1740,7 +1740,7 @@ docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-descripti
 #### Test 7.8: Admin server custom port ✅
 **Timestamp:** 2025-09-30 23:30:30
 **Status:** PASSED
-**Command:** `docbro serve --admin --port 9999 --foreground`
+**Command:** `bablib serve --admin --port 9999 --foreground`
 
 **Results:**
 - ✅ Admin server accepts custom port
@@ -1759,7 +1759,7 @@ docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-descripti
 #### Test 7.9: Concurrent server operation ✅
 **Timestamp:** 2025-09-30 23:30:45
 **Status:** PASSED
-**Commands:** Both `docbro serve --port 9383` and `docbro serve --admin --port 9384` running simultaneously
+**Commands:** Both `bablib serve --port 9383` and `bablib serve --admin --port 9384` running simultaneously
 
 **Results:**
 - ✅ Read-only server started on 0.0.0.0:9383
@@ -1779,7 +1779,7 @@ docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-descripti
 #### Test 7.2: Serve --init flag availability ✅
 **Timestamp:** 2025-09-30 23:31:00
 **Status:** PASSED (flag exists, wizard not tested)
-**Command:** `docbro serve --help`
+**Command:** `bablib serve --help`
 
 **Results:**
 - ✅ `--init, -i` flag documented in help
@@ -1836,7 +1836,7 @@ docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-descripti
 #### Test 9.6: Box inspect command ✅⚠️
 **Timestamp:** 2025-09-30 23:32:00
 **Status:** CONFIRMED EXISTS (performance issue encountered)
-**Command:** `docbro box inspect`
+**Command:** `bablib box inspect`
 
 **Results:**
 - ✅ Box inspect command exists in CLI
@@ -1884,7 +1884,7 @@ docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-descripti
     "data": {
         "server_type": "read-only",
         "status": "degraded",
-        "docbro_health": {
+        "bablib_health": {
             "error": "No such option: --json",
             "exit_code": 2
         }
@@ -1916,7 +1916,7 @@ docbro box create <name> --type <drag|rag|bag> [--shelf <name>] [--box-descripti
 - ✅ `GET /mcp/v1/health` - Health check
 
 **Admin Server Endpoints Found:**
-- ✅ `POST /mcp/v1/execute_command` - Execute DocBro command
+- ✅ `POST /mcp/v1/execute_command` - Execute Bablib command
 - ✅ `POST /mcp/v1/project_create` - Create new project
 - ✅ `POST /mcp/v1/create_shelf` - Create shelf
 - ✅ `POST /mcp/v1/add_basket` - Add box to shelf
@@ -1985,11 +1985,11 @@ All critical issues resolved ✅
 
 **ISSUE #5 [HIGH - RESOLVED]:** Config file location mismatch on macOS
 - **Status:** ✅ **RESOLVED** (Already Fixed)
-- **Setup Creates:** `~/.config/docbro/settings.yaml` (XDG standard) ✅
-- **Health Checks:** Also uses `~/.config/docbro/settings.yaml` (XDG standard) ✅
+- **Setup Creates:** `~/.config/bablib/settings.yaml` (XDG standard) ✅
+- **Health Checks:** Also uses `~/.config/bablib/settings.yaml` (XDG standard) ✅
 - **Verification Date:** 2025-10-01 00:48
-- **Test:** `docbro health --config` reports "✅ HEALTHY" for Global Settings
-- **Resolution:** Both setup and health checks use `get_docbro_config_dir()` from src/lib/paths.py
+- **Test:** `bablib health --config` reports "✅ HEALTHY" for Global Settings
+- **Resolution:** Both setup and health checks use `get_bablib_config_dir()` from src/lib/paths.py
 - **Root Cause:** Original issue was from earlier testing session, code has since been fixed or was misidentified
 
 **ISSUE #6 [HIGH - RESOLVED]:** Performance issues
@@ -2004,11 +2004,11 @@ All critical issues resolved ✅
 
 **ISSUE #13 [HIGH - RESOLVED]:** Health command missing --json flag
 - **Status:** ✅ **RESOLVED** (False Alarm)
-- **Discovery:** MCP health endpoint tries to call `docbro health --json`
+- **Discovery:** MCP health endpoint tries to call `bablib health --json`
 - **Error:** "No such option: --json" (from old installation)
 - **Verification Date:** 2025-10-01 00:46
 - **Resolution:** Flag already exists in health command (line 36 of src/cli/commands/health.py)
-- **Test:** `docbro health --json` works correctly, returns valid JSON output
+- **Test:** `bablib health --json` works correctly, returns valid JSON output
 - **Root Cause:** Error was likely from cached/old installation, not actual missing flag
 
 ### Medium Priority Issues
@@ -2123,7 +2123,7 @@ All critical issues resolved ✅
 
 **Overall Assessment:** ✅ **STRONG PROGRESS**
 
-DocBro system demonstrates:
+Bablib system demonstrates:
 - ✅ 100% critical bug resolution
 - ✅ Core workflows operational
 - ✅ MCP dual-server architecture validated
@@ -2207,15 +2207,15 @@ DocBro system demonstrates:
 **Performance Tests:**
 ```bash
 # Shelf create: 0.709s ✅
-$ time docbro shelf create perf-test-shelf
+$ time bablib shelf create perf-test-shelf
 # Result: Well under 5s target
 
 # Box create: 0.517s ✅
-$ time docbro box create perf-test-box --type rag
+$ time bablib box create perf-test-box --type rag
 # Result: Well under 5s target
 
 # Box inspect: AttributeError → 30s timeout ❌
-$ time docbro box inspect perf-test-box
+$ time bablib box inspect perf-test-box
 # Error: 'CommandContext' object has no attribute 'box_type'
 ```
 
@@ -2231,10 +2231,10 @@ $ time docbro box inspect perf-test-box
 
 **Verification After Fix:**
 ```bash
-$ time docbro shelf create test-perf-shelf
+$ time bablib shelf create test-perf-shelf
 # Result: 0.709s ✅
 
-$ time docbro box create test-perf-box --type rag
+$ time bablib box create test-perf-box --type rag
 # Result: 0.517s ✅
 ```
 
@@ -2372,7 +2372,7 @@ This is **context-aware interactive behavior**, not a performance issue.
 
 **Example Before Fix:**
 ```bash
-$ docbro health --config
+$ bablib health --config
 ✅ Overall Status: HEALTHY
 (3/3 checks passed)
 Execution Time: 0.0 seconds    # Actual: ~0.002 seconds
@@ -2391,12 +2391,12 @@ Smart precision formatting based on execution time ranges:
 
 **Results After Fix:**
 ```bash
-$ docbro health --config
+$ bablib health --config
 ✅ Overall Status: HEALTHY
 (3/3 checks passed)
 Execution Time: 1.7 ms         # Clear and accurate!
 
-$ docbro health --config --verbose
+$ bablib health --config --verbose
   ✅ Global Settings: Global settings file is valid
      Execution time: 0.9ms
   ✅ Project Configurations: No project configurations to validate
@@ -2405,7 +2405,7 @@ $ docbro health --config --verbose
      Execution time: 0.7ms
 Total Execution Time: 1.7ms
 
-$ docbro health
+$ bablib health
 ⭕ Overall Status: UNAVAILABLE
 (10/13 checks passed)
 Execution Time: 0.06 seconds   # Perfect for sub-second times

@@ -16,11 +16,11 @@ class InstallationContext(BaseModel):
         validate_assignment=True)
 
     install_method: str = Field(..., description="Installation method")
-    install_date: datetime = Field(..., description="When DocBro was installed")
-    version: str = Field(..., description="DocBro version")
+    install_date: datetime = Field(..., description="When Bablib was installed")
+    version: str = Field(..., description="Bablib version")
     python_version: str = Field(..., description="Python version used")
     uv_version: str | None = Field(None, description="UV version if available")
-    install_path: Path = Field(..., description="Path to docbro executable")
+    install_path: Path = Field(..., description="Path to bablib executable")
     is_global: bool = Field(..., description="True for global, False for project-local")
     user_data_dir: Path = Field(..., description="User data directory")
     config_dir: Path = Field(..., description="Configuration directory")
@@ -171,7 +171,7 @@ class PackageMetadata(BaseModel):
         validate_assignment=True
     )
 
-    name: str = Field(default="docbro", description="Package name")
+    name: str = Field(default="bablib", description="Package name")
     version: str = Field(..., description="Package version")
     description: str = Field(..., description="Package description")
     homepage: str = Field(..., description="Homepage URL")
@@ -184,9 +184,9 @@ class PackageMetadata(BaseModel):
     @field_validator('name')
     @classmethod
     def validate_name(cls, v: str) -> str:
-        """Validate name is always 'docbro'."""
-        if v != "docbro":
-            raise ValueError("name must be 'docbro'")
+        """Validate name is always 'bablib'."""
+        if v != "bablib":
+            raise ValueError("name must be 'bablib'")
         return v
 
     @field_validator('version')
@@ -208,7 +208,7 @@ class PackageMetadata(BaseModel):
 
 
 class InstallationRequest(BaseModel):
-    """Request model for starting DocBro installation process."""
+    """Request model for starting Bablib installation process."""
 
     model_config = ConfigDict(
         str_strip_whitespace=True,
